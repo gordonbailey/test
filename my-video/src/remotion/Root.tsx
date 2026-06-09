@@ -9,6 +9,7 @@ import {
 } from "../../types/constants";
 import { Main } from "./MyComp/Main";
 import { NextLogo } from "./MyComp/NextLogo";
+import { SuperDonorsVideo, SUPER_DONORS_DURATION } from "./SuperDonors/SuperDonorsVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -32,6 +33,15 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           outProgress: 0,
         }}
+      />
+      <Composition
+        id="SuperDonors"
+        component={SuperDonorsVideo}
+        durationInFrames={SUPER_DONORS_DURATION}
+        fps={VIDEO_FPS}
+        width={VIDEO_WIDTH}
+        height={VIDEO_HEIGHT}
+        defaultProps={{}}
       />
     </>
   );
