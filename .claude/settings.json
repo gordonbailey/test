@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "heart-docs": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://heart.gofundme.com/api/heart-docs-mcp"
+      ]
+    }
+  }
+}
