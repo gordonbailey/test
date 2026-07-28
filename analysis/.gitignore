@@ -5,3 +5,4 @@ out/
 
 __pycache__/
 report_*.json
+lookup_data.json

@@ -211,9 +211,34 @@ coefficient (×1.28) is the one to treat most cautiously: it is a capability
 marker as much as a cause. Validating any of these properly means a holdout
 test — move the lever for a random subset and measure what happens.
 
+## Account lookup UI
+
+`build_lookup.py` precomputes a scorecard and ranked recommendations for every
+eligible account and emits a single JSON payload for embedding in a
+self-contained page:
+
+```bash
+python build_lookup.py <export.csv> -o lookup_data.json
+```
+
+The published report's **Account lookup** tab consumes that payload: search by
+organization name, filter by account owner (a seller's book) or by status, and
+select an account to get the same cohort placement, percentile scorecard, and
+ranked lever table shown in the worked examples.
+
+Recommendations are computed in Python by the engine, not recomputed in the
+browser — the page only renders. That is deliberate: a JavaScript
+reimplementation of the quantile and elasticity logic would be free to drift
+from the model that was actually validated. The payload is ~1.25 MB for 3,161
+accounts, encoded positionally with lever names as indices into a shared table.
+
+`lookup_data.json` is gitignored along with the other outputs — it contains
+named account-level customer data.
+
 ## Files
 
 - `cohort_engine.py` — the library: canonicalize → screen → cohort → benchmark
   → model → recommend. Each stage is independently callable.
 - `run_analysis.py` — CLI that runs the pipeline and writes all outputs.
+- `build_lookup.py` — emits the per-account payload for the lookup UI.
 - `test_cohort_engine.py` — checks on the invariants that matter.
