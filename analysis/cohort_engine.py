@@ -592,30 +592,35 @@ LEVERS = {
         "source": "avg_gift",
         "transform": "log",
         "label": "Average gift size",
+        "unit": "money",
         "action": "Donor upgrade and ask-ladder strategy",
     },
     "log_recurring_donors": {
         "source": "recurring_donors",
         "transform": "log1p",
         "label": "Recurring donors",
+        "unit": "count",
         "action": "Launch or grow a monthly giving program",
     },
     "channel_breadth": {
         "source": "channel_breadth",
         "transform": "none",
         "label": "Channels in use",
+        "unit": "count",
         "action": "Add a fundraising channel (events, P2P, crowdfunding)",
     },
     "log_active_campaigns": {
         "source": "active_campaigns",
         "transform": "log1p",
         "label": "Active campaigns",
+        "unit": "count",
         "action": "Increase campaign cadence",
     },
     "has_crm": {
         "source": "has_crm",
         "transform": "none",
         "label": "CRM integrated",
+        "unit": "boolean",
         "action": "Integrate a donor CRM",
     },
 }
@@ -939,6 +944,259 @@ def recommend(
         .sort_values("projected_lift", ascending=False)
         .reset_index(drop=True)
     )
+
+
+# --------------------------------------------------------------------------
+# Seller-facing verdict
+# --------------------------------------------------------------------------
+
+# Component metrics eligible to be named as a driver of the gap, with the
+# phrasing a seller would use out loud. `raised_365` is excluded -- it is the
+# outcome, so naming it as its own cause says nothing.
+DRIVER_PHRASING = {
+    "recurring_donors": ("recurring donor base", "{v:,.0f}", "{m:,.0f}"),
+    "avg_gift": ("average gift size", "${v:,.0f}", "${m:,.0f}"),
+    "channel_breadth": ("channel mix", "{v:,.0f} of 7 channels", "{m:,.0f}"),
+    "active_campaigns": ("campaign volume", "{v:,.0f} active", "{m:,.0f}"),
+    "gifts_lifetime": ("donor transaction volume", "{v:,.0f}", "{m:,.0f}"),
+}
+
+def _ordinal(n: float) -> str:
+    """23 -> '23rd'. The naive f'{n}th' produced "23th" in customer-facing copy."""
+    i = int(round(n))
+    if 10 <= i % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(i % 10, "th")
+    return f"{i}{suffix}"
+
+
+def _lever_value(rec: dict, which: str) -> str:
+    """Format a lever value in its own units."""
+    unit = next(
+        (spec.get("unit", "count") for spec in LEVERS.values()
+         if spec["label"] == rec["lever"]),
+        "count",
+    )
+    value = rec[which]
+    if unit == "money":
+        return f"${value:,.0f}"
+    return f"{value:,.0f}"
+
+
+def _describe_move(rec: dict) -> str:
+    """The 'move X from A to B' clause, or a state change for a boolean lever."""
+    unit = next(
+        (spec.get("unit", "count") for spec in LEVERS.values()
+         if spec["label"] == rec["lever"]),
+        "count",
+    )
+    if unit == "boolean":
+        return "connect one (this account has no CRM integrated today)"
+    return (
+        f"move {rec['lever'].lower()} from {_lever_value(rec,'current_value')} "
+        f"toward {_lever_value(rec,'cohort_target_value')} "
+        f"({_ordinal(rec['target_pctl'])} percentile of peers)"
+    )
+
+
+# A driver is only worth naming if the account is genuinely behind on it.
+DRIVER_MAX_PCTL = 50.0
+MAX_DRIVERS = 3
+
+
+def gap_drivers(account_row: pd.Series, limit: int = MAX_DRIVERS) -> list[dict]:
+    """The component metrics this account is furthest behind its cohort on.
+
+    Ranked by percentile ascending, filtered to those actually below the cohort
+    midpoint, so the verdict never claims a strength is a weakness.
+    """
+    rows = []
+    for metric, (label, vfmt, mfmt) in DRIVER_PHRASING.items():
+        pctl = account_row.get(f"pctl_{metric}")
+        value = account_row.get(metric)
+        median = account_row.get(f"cohort_median_{metric}")
+        if pd.isna(pctl) or pd.isna(value) or pctl >= DRIVER_MAX_PCTL:
+            continue
+        rows.append(
+            {
+                "metric": metric,
+                "label": label,
+                "percentile": float(pctl),
+                "value": float(value),
+                "cohort_median": None if pd.isna(median) else float(median),
+                "value_text": vfmt.format(v=value),
+                "median_text": None if pd.isna(median) else mfmt.format(m=median),
+            }
+        )
+    rows.sort(key=lambda r: r["percentile"])
+    return rows[:limit]
+
+
+def seller_verdict(
+    account_row: pd.Series, recommendations: pd.DataFrame | None = None
+) -> dict:
+    """A copy-ready verdict for a seller to read to a nonprofit.
+
+    Returns the structured pieces plus rendered prose. Four cases, because the
+    same percentile means different things at different points of the range and
+    reading the wrong one to a customer is worse than saying nothing:
+
+        optimization  -- using the platform, behind peers. Ranked lever actions.
+        activation    -- barely onboarded. Onboarding, not lever coaching.
+        on_track      -- inside the normal range. Nearest upside only.
+        exceptional   -- far ahead. No advice; study it instead.
+
+    The engine holds this wording so the CLI and the report cannot drift into
+    telling a customer two different stories. The report mirrors these templates
+    in JavaScript for rendering; keep the two in step.
+    """
+    # Sector comes from the account, never from the cohort label: a backed-off
+    # cohort is literally named "All sectors | <band>", which would render as
+    # "too few All sectors peers at this size".
+    sector = account_row["sector"]
+    band = str(account_row["size_band"])
+    peers = int(account_row["cohort_size"]) - 1
+    raised = float(account_row["raised_365"])
+    pctl = float(account_row[f"pctl_{OUTCOME_METRIC}"])
+    median = float(account_row[f"cohort_median_{OUTCOME_METRIC}"])
+    gap = float(account_row["gap_to_cohort_median"])
+    diagnosis = account_row["diagnosis"]
+    matched_on_sector = account_row["cohort_level"] == "sector x size"
+
+    if matched_on_sector:
+        peer_group = (
+            f"{peers} other {sector} organizations in the {band} revenue band"
+        )
+    else:
+        peer_group = (
+            f"{peers} other organizations in the {band} revenue band, across all "
+            f"sectors (too few {sector} peers at this size to compare within the "
+            f"sector)"
+        )
+
+    drivers = gap_drivers(account_row)
+    recs = [] if recommendations is None or recommendations.empty else (
+        recommendations.to_dict("records")
+    )
+
+    if diagnosis.startswith("Minimal platform adoption"):
+        case = "activation"
+        headline = (
+            f"Compared with {peer_group}, {account_row['Account Name']} raised "
+            f"${raised:,.0f} in the last 12 months against a peer median of "
+            f"${median:,.0f} — under a tenth of it."
+        )
+        reading = (
+            "At this level the gap is an adoption gap, not a fundraising-performance "
+            "gap. Peer benchmarks assume a running program; this account does not "
+            "have one yet, so lever comparisons would mislead."
+        )
+        actions = [
+            "Get a first campaign live and a donation page configured.",
+            "Confirm the account is set up on the channels its plan includes.",
+            "Revisit the peer comparison once a full quarter of activity exists.",
+        ]
+    elif diagnosis.startswith("Underperforming at scale"):
+        case = "optimization"
+        headline = (
+            f"Compared with {peer_group}, {account_row['Account Name']} raised "
+            f"${raised:,.0f} in the last 12 months — the {_ordinal(pctl)} percentile "
+            f"of that group, and ${gap:,.0f} below the peer median of "
+            f"${median:,.0f}."
+        )
+        if drivers:
+            parts = [
+                f"{d['label']} sits at the {_ordinal(d['percentile'])} percentile "
+                f"({d['value_text']}" 
+                + (f" against a peer median of {d['median_text']}" if d["median_text"] else "")
+                + ")"
+                for d in drivers
+            ]
+            reading = "Most of the gap traces to: " + "; ".join(parts) + "."
+        else:
+            reading = (
+                "No single component metric stands out as the cause — the shortfall "
+                "is spread across the account's whole profile."
+            )
+        actions = [
+            f"{r['action']} — {_describe_move(r)}. "
+            f"Modelled effect: roughly +${r['projected_lift']:,.0f} a year."
+            for r in recs
+        ]
+    elif account_row.get("is_exceptional"):
+        case = "exceptional"
+        ratio = float(account_row["cohort_ratio"])
+        headline = (
+            f"Compared with {peer_group}, {account_row['Account Name']} raised "
+            f"${raised:,.0f} in the last 12 months — {ratio:.1f}× the peer median "
+            f"of ${median:,.0f}, in the {_ordinal(pctl)} percentile."
+        )
+        reading = (
+            "This account is far enough ahead of its peer group that peer "
+            "benchmarks no longer describe it. Where it looks low on a component "
+            "metric, that is usually how it wins rather than a weakness — a very "
+            "small average gift, for instance, is what a mass-market model looks "
+            "like. No lever recommendations are offered."
+        )
+        actions = [
+            "Ask what it does differently and write it up as a playbook for peers.",
+            "Protect the renewal — this is a reference account, not a coaching case.",
+        ]
+    else:
+        case = "on_track"
+        headline = (
+            f"Compared with {peer_group}, {account_row['Account Name']} raised "
+            f"${raised:,.0f} in the last 12 months — the {_ordinal(pctl)} percentile "
+            f"of that group, against a peer median of ${median:,.0f}."
+        )
+        reading = (
+            "That is inside the normal range for this peer group, so there is no "
+            "performance problem to raise. The upside below is optional."
+        )
+        actions = [
+            f"{r['action']} — {_describe_move(r)}. Modelled effect: roughly "
+            f"+${r['projected_lift']:,.0f} a year."
+            for r in recs[:2]
+        ]
+
+    confidence = (
+        f"Benchmarks come from {peers + 1} comparable organizations. Modelled "
+        f"effects carry about ±{np.exp(CV_MAE_LOG_POINTS):.1f}× uncertainty per "
+        "organization and are associations, not proven cause and effect — use the "
+        "ordering of the actions to decide where to start, and do not present the "
+        "dollar figures as targets."
+    )
+
+    return {
+        "case": case,
+        "account": account_row["Account Name"],
+        "peer_group": peer_group,
+        "headline": headline,
+        "reading": reading,
+        "actions": actions,
+        "confidence": confidence,
+        "drivers": drivers,
+    }
+
+
+def render_verdict(verdict: dict) -> str:
+    """Plain-text rendering of `seller_verdict`, for the CLI."""
+    lines = [
+        f"PEER GROUP     {verdict['peer_group']}",
+        "",
+        f"WHERE THEY STAND",
+        f"  {verdict['headline']}",
+        "",
+        "WHAT IT MEANS",
+        f"  {verdict['reading']}",
+        "",
+        "RECOMMENDED ACTIONS" if verdict["actions"] else "RECOMMENDED ACTIONS  (none)",
+    ]
+    for i, action in enumerate(verdict["actions"], 1):
+        lines.append(f"  {i}. {action}")
+    lines += ["", "CONFIDENCE", f"  {verdict['confidence']}"]
+    return "\n".join(lines)
 
 
 def scorecard(account_row: pd.Series) -> dict:

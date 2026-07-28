@@ -375,6 +375,61 @@ def main(path: str) -> int:
     ]
     check(not implausible, "lever elasticities are plausible", f"{implausible}")
 
+    print("\nSeller verdict")
+    check(
+        [ce._ordinal(n) for n in (1, 2, 3, 4, 11, 12, 13, 21, 23, 51, 100)]
+        == ["1st","2nd","3rd","4th","11th","12th","13th","21st","23rd","51st","100th"],
+        "ordinals are correct (no '23th' in customer-facing copy)",
+    )
+    seen_cases = set()
+    verdict_problems = []
+    for _, row in bm.iterrows():
+        mrow = model_df[model_df["Account Name"] == row["Account Name"]]
+        recs = (
+            ce.recommend(mrow.iloc[0], fit, model_df)
+            if not mrow.empty else pd.DataFrame()
+        )
+        v = ce.seller_verdict(row, recs)
+        seen_cases.add(v["case"])
+        text = " ".join([v["headline"], v["reading"], *v["actions"]])
+        # A backed-off cohort is labelled "All sectors | <band>"; parsing the
+        # sector out of that label leaked into copy as "too few All sectors peers".
+        if "All sectors" in text:
+            verdict_problems.append(f"{row['Account Name']}: leaked cohort label")
+        if "th percentile" in text:
+            import re as _re
+            for m in _re.finditer(r"(\d+)th percentile", text):
+                n = int(m.group(1))
+                if not (10 <= n % 100 <= 20) and n % 10 in (1, 2, 3):
+                    verdict_problems.append(f"{row['Account Name']}: '{n}th'")
+        # Drivers must be genuine weaknesses, never strengths.
+        if any(dr["percentile"] >= ce.DRIVER_MAX_PCTL for dr in v["drivers"]):
+            verdict_problems.append(f"{row['Account Name']}: driver above midpoint")
+    check(not verdict_problems, "verdict copy is clean for all accounts",
+          f"{len(verdict_problems)} issues, e.g. {verdict_problems[:3]}")
+    check(
+        seen_cases == {"optimization", "activation", "on_track", "exceptional"},
+        "all four verdict cases occur in the book",
+        f"saw {seen_cases}",
+    )
+    # The two tails must never be handed lever actions.
+    for case, frame in (
+        ("activation", bm[bm["diagnosis"].str.startswith("Minimal platform")]),
+        ("exceptional", bm[bm["is_exceptional"] == 1]),
+    ):
+        row = frame.iloc[0]
+        mrow = model_df[model_df["Account Name"] == row["Account Name"]]
+        recs = ce.recommend(mrow.iloc[0], fit, model_df) if not mrow.empty else pd.DataFrame()
+        v = ce.seller_verdict(row, recs)
+        check(
+            v["case"] == case and not any("Modelled effect" in a for a in v["actions"]),
+            f"{case} verdict offers no modelled lever effects",
+        )
+    check(
+        "±" in ce.seller_verdict(bm.iloc[0], pd.DataFrame())["confidence"],
+        "every verdict carries the uncertainty caveat",
+    )
+
     print("\nValidation")
     v = ce.validate_model(model_df)
     check(

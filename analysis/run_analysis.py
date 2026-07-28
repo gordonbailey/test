@@ -192,6 +192,11 @@ def main() -> None:
                 f"({r['projected_lift_pct']:+.0f}%)"
             )
 
+        verdict = ce.seller_verdict(row, recs)
+        card["verdict"] = verdict
+        print()
+        print(ce.render_verdict(verdict))
+
     (outdir / "examples.json").write_text(json.dumps(examples, indent=2, default=str))
     print(f"\nWrote outputs to {outdir.resolve()}")
 

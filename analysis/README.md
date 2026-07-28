@@ -309,6 +309,38 @@ coefficient (×1.28) is the one to treat most cautiously: it is a capability
 marker as much as a cause. Validating any of these properly means a holdout
 test — move the lever for a random subset and measure what happens.
 
+## Stage 7 — Seller verdict
+
+`seller_verdict()` produces a copy-ready talk track per account, and
+`render_verdict()` prints it. `run_analysis.py --account "<name>"` emits it for
+one organization.
+
+Four cases, because the same percentile means different things at different
+points of the range and reading the wrong one to a customer is worse than saying
+nothing:
+
+| Case | Trigger | What it says |
+|---|---|---|
+| `optimization` | bottom quartile, above the adoption floor | Peer group, percentile, dollar gap, the component metrics driving it, ranked lever actions |
+| `activation` | below 10% of cohort median | Adoption gap, not a performance gap. Onboarding steps, no lever advice |
+| `exceptional` | ≥5× cohort median | Peer benchmarks no longer describe it. Study it as a playbook; protect the renewal |
+| `on_track` | 25th–75th percentile | Inside the normal range; nothing to raise. Two optional upsides |
+
+Every verdict ends with the uncertainty caveat (±1.9× per organization,
+associations not causation) so the ordering gets used and the dollar figures do
+not get quoted as targets.
+
+The wording lives here rather than in the report so the CLI and the page cannot
+drift into telling a customer two different stories. The report mirrors these
+templates in JavaScript for rendering — the non-trivial parts (which gap drivers
+get named, the ranked actions) are computed in Python and shipped in the
+payload, so only sentence assembly is duplicated. **Edit one side, edit the
+other.** The test suite renders a verdict for all 3,161 accounts and asserts the
+copy is clean: correct ordinals (an earlier version printed "23th"), no leaked
+cohort label (`sector` must come from the account, not from the
+"All sectors | <band>" cohort name), no driver named that is actually a strength,
+and no modelled lever effects at either tail.
+
 ## Account lookup UI
 
 `build_lookup.py` precomputes a scorecard and ranked recommendations for every

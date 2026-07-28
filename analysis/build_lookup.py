@@ -115,6 +115,15 @@ def main() -> None:
                 [r(row.get(metric), digits), r(row.get(f"pctl_{metric}"), 1)]
             )
 
+        # Verdict drivers: which component metrics the account is furthest behind
+        # on. Computed here so the copy the UI renders picks the same drivers the
+        # CLI does; the sentence templates themselves are mirrored in JS.
+        drivers = [
+            [dr["metric"], round(dr["percentile"], 1), dr["value_text"],
+             dr["median_text"]]
+            for dr in ce.gap_drivers(row)
+        ]
+
         recs = []
         model_row = model_by_name.get(name)
         if model_row is not None:
@@ -154,6 +163,7 @@ def main() -> None:
                 "gap": r(row["gap_to_cohort_median"]),
                 "m": metrics,
                 "r": recs,
+                "dv": drivers,
             }
         )
 
@@ -171,6 +181,10 @@ def main() -> None:
         # earlier version did, and silently dropped four of eight bands from the
         # filter when the bands were resplit.
         "sizeBands": list(ce.SIZE_BAND_LABELS),
+        "driverLabels": {k: v[0] for k, v in ce.DRIVER_PHRASING.items()},
+        "leverUnits": {
+            spec["label"]: spec.get("unit", "count") for spec in ce.LEVERS.values()
+        },
         "maxStepPctl": ce.MAX_LEVER_STEP_PCTL,
         "minAdoption": ce.MINIMAL_ADOPTION_RATIO,
         "exceptionalMultiple": ce.EXCEPTIONAL_MULTIPLE,
