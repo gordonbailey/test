@@ -4,3 +4,4 @@ out/
 *.pkl
 
 __pycache__/
+report_*.json
