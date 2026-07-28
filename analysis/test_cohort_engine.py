@@ -163,10 +163,47 @@ def main(path: str) -> int:
             f"{mismatches} of {len(backed)} mismatched",
         )
 
+    print("\nExceptional performers")
+    exc = bm["is_exceptional"] == 1
+    check(
+        (bm.loc[exc, "cohort_ratio"] >= ce.EXCEPTIONAL_MULTIPLE).all(),
+        "every exceptional account clears the multiple",
+    )
+    check(
+        (bm.loc[~exc & bm["cohort_ratio"].notna(), "cohort_ratio"]
+         < ce.EXCEPTIONAL_MULTIPLE).all(),
+        "no non-exceptional account clears the multiple",
+    )
+    check(exc.sum() > 0, "the flag identifies some accounts")
+    # The whole point of defining this on the multiple rather than a percentile:
+    # exceptional counts must vary across cohorts. A within-cohort percentile cut
+    # would put an identical share in every cohort and rank nothing.
+    per_cohort = bm.groupby("cohort")["is_exceptional"].mean()
+    check(
+        per_cohort.nunique() > 1 and per_cohort.std() > 0.01,
+        "exceptional share varies across cohorts (so it can rank them)",
+        f"std {per_cohort.std():.4f}",
+    )
+    # Every exceptional account must beat its cohort median, since the threshold
+    # is a multiple above 1.0.
+    check(
+        (bm.loc[exc, f"pctl_{ce.OUTCOME_METRIC}"] > 50).all(),
+        "exceptional accounts all sit above their cohort median",
+    )
+    # But they are NOT necessarily "Overperforming": in a cohort skewed enough
+    # that p75/median exceeds the multiple, 5x the median still lands below the
+    # 75th percentile. One cohort here (Health | Over $25M, p75/median = 5.50x)
+    # does exactly that. The two definitions measure different things on purpose
+    # -- a percentile ranks within a cohort, a multiple compares across them --
+    # so this asserts the overlap is high without requiring containment.
+    overlap = (bm.loc[exc, "status"] == "Overperforming").mean()
+    check(overlap > 0.95, "exceptional accounts are almost all overperformers",
+          f"overlap {overlap:.3f}")
+
     print("\nActivation / optimization split")
     activation = bm["diagnosis"].str.startswith("Minimal platform adoption")
     check(
-        (bm.loc[activation, "adoption_ratio"] < ce.MINIMAL_ADOPTION_RATIO).all(),
+        (bm.loc[activation, "cohort_ratio"] < ce.MINIMAL_ADOPTION_RATIO).all(),
         "activation cases are all below the adoption floor",
     )
     check(

@@ -377,6 +377,14 @@ OVERPERFORM_PCTL = 75.0
 # is an artifact of a near-zero denominator, not a finding.
 MINIMAL_ADOPTION_RATIO = 0.10
 
+# An account raising at least this multiple of its cohort median is an
+# "exceptional performer". Defined on the multiple rather than on a within-cohort
+# percentile because percentiles cannot rank cohorts against each other -- the
+# top decile of every cohort is exactly 10% of it, whatever the cohort looks
+# like. The multiple varies genuinely: some cohorts are tightly bunched and some
+# have breakaway leaders, and that difference is the interesting signal.
+EXCEPTIONAL_MULTIPLE = 5.0
+
 # Largest percentile jump a single recommendation may propose. Advice to move a
 # lever from the 5th to the 75th percentile in one step is not actionable and
 # sits outside the range of comparable peers; recommendations are capped to an
@@ -459,18 +467,30 @@ def benchmark(df: pd.DataFrame) -> pd.DataFrame:
         out[f"cohort_median_{OUTCOME_METRIC}"] - out[OUTCOME_METRIC]
     )
 
+    # Annual raised as a multiple of the cohort median. Because the cohort is
+    # matched on scale, this multiple is comparable *across* cohorts -- which a
+    # within-cohort percentile is not, since every cohort has 10% of its members
+    # above its own 90th percentile by construction. Both the activation floor
+    # and the exceptional-performer threshold are cuts on this one quantity.
+    cohort_ratio = out[OUTCOME_METRIC] / out[f"cohort_median_{OUTCOME_METRIC}"]
+    out["cohort_ratio"] = cohort_ratio
+
+    # Standouts: beating cohort peers by a wide margin after size is controlled
+    # for. Worth studying as playbooks rather than merely flagged as "good".
+    out["is_exceptional"] = (
+        (cohort_ratio >= EXCEPTIONAL_MULTIPLE) & out["status"].ne("Not benchmarkable")
+    ).astype(int)
+
     # Separate "barely on the platform" from "using the platform and trailing".
     # Both land in the bottom quartile, but they call for opposite conversations:
     # an organization raising $2k against a $590k cohort median does not need a
     # donor-upgrade strategy, it needs onboarding. Lumping them together is how
     # a benchmarking product ends up recommending an ask-ladder redesign to
     # someone who has not launched a campaign yet.
-    adoption_ratio = out[OUTCOME_METRIC] / out[f"cohort_median_{OUTCOME_METRIC}"]
-    out["adoption_ratio"] = adoption_ratio
     out["diagnosis"] = np.select(
         [
             out["status"] == "Not benchmarkable",
-            adoption_ratio < MINIMAL_ADOPTION_RATIO,
+            cohort_ratio < MINIMAL_ADOPTION_RATIO,
             out["status"] == "Underperforming",
             out["status"] == "On track",
         ],
@@ -709,7 +729,7 @@ def recommend(
         return pd.DataFrame()
 
     # Not-yet-activated accounts get no lever advice. See MINIMAL_ADOPTION_RATIO.
-    if account_row.get("adoption_ratio", np.inf) < MINIMAL_ADOPTION_RATIO:
+    if account_row.get("cohort_ratio", np.inf) < MINIMAL_ADOPTION_RATIO:
         return pd.DataFrame()
 
     current_raised = account_row["raised_365"]
@@ -784,7 +804,8 @@ def scorecard(account_row: pd.Series) -> dict:
         "cohort_level": account_row["cohort_level"],
         "status": account_row["status"],
         "diagnosis": account_row["diagnosis"],
-        "adoption_ratio": account_row.get("adoption_ratio"),
+        "cohort_ratio": account_row.get("cohort_ratio"),
+        "is_exceptional": bool(account_row.get("is_exceptional", 0)),
         "raised_365": account_row["raised_365"],
         "cohort_median_raised": account_row["cohort_median_raised_365"],
         "gap_to_median": account_row["gap_to_cohort_median"],

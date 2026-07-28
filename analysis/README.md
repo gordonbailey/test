@@ -129,6 +129,27 @@ suppressed for them. Of 772 underperformers:
 - **498** are genuine optimization opportunities ($63.2M combined gap to median)
 - **274** are activation cases needing onboarding, not lever tuning
 
+### Exceptional performers
+
+A separate cut on the same quantity, at the other end: an account raising
+**≥ 5× its cohort median** (`EXCEPTIONAL_MULTIPLE`). **368 accounts** qualify,
+raising $1.78B between them.
+
+The threshold is a *multiple*, not a top-percentile cut, and that choice is
+load-bearing. A within-cohort percentile cannot rank cohorts against each other
+— the top decile of every cohort is exactly 10% of it, however tightly or
+loosely bunched it is. The multiple varies genuinely: Health · Over $25M has
+26.1% of its accounts above 5× median, while most cohorts sit near 8%. Those
+high-dispersion cohorts are where the leaders are worth studying as playbooks.
+
+One consequence worth knowing: exceptional is *almost* but not exactly a subset
+of "Overperforming". In a cohort skewed enough that p75/median exceeds 5, an
+account at 5× the median still lands below the 75th percentile. Exactly one
+cohort here does that (Health · Over $25M, p75/median = 5.50×), so one account
+is exceptional-by-multiple and "On track" by percentile. The two measures
+answer different questions on purpose, and the test suite asserts high overlap
+rather than containment.
+
 ## Stage 5 — Lever model
 
 ```
@@ -221,10 +242,27 @@ self-contained page:
 python build_lookup.py <export.csv> -o lookup_data.json
 ```
 
-The published report's **Account lookup** tab consumes that payload: search by
-organization name, filter by account owner (a seller's book) or by status, and
-select an account to get the same cohort placement, percentile scorecard, and
-ranked lever table shown in the worked examples.
+The published report consumes that payload in two places.
+
+**Account lookup tab** — search by organization name, filter by account owner
+(a seller's book) or by status, sort by gap / raised / percentile / outperformance
+multiple, and select an account for the same cohort placement, percentile
+scorecard, and ranked lever table shown in the worked examples.
+
+**Cohort explorer (section 4)** — filter cohorts by sector and size band, switch
+the displayed metric across all six benchmark measures, and sort by size,
+median, exceptional-performer count or share, or spread (p75 ÷ median).
+Selecting a cohort opens its decile distribution, per-metric peer benchmarks,
+status mix, and two complementary rosters: leaders (playbook candidates) and
+optimization candidates ranked by gap. Any account in either roster links
+through to its full scorecard.
+
+Cohort distributions and quantiles for the non-default metrics are computed in
+the browser rather than shipped per cohort per metric, which would have
+multiplied the payload. The JS quantile routine reproduces numpy's default
+linear interpolation, and a `__verifyQuantiles()` self-check compares its output
+against the Python-computed quartiles for annual raised (worst relative
+disagreement: 2e-5, which is the transport rounding).
 
 Recommendations are computed in Python by the engine, not recomputed in the
 browser — the page only renders. That is deliberate: a JavaScript
@@ -240,5 +278,10 @@ named account-level customer data.
 - `cohort_engine.py` — the library: canonicalize → screen → cohort → benchmark
   → model → recommend. Each stage is independently callable.
 - `run_analysis.py` — CLI that runs the pipeline and writes all outputs.
-- `build_lookup.py` — emits the per-account payload for the lookup UI.
+- `build_lookup.py` — emits the per-account and per-cohort payload for the
+  interactive UI. Cohort stats are derived from each cohort's *reference
+  population* (asserted equal to the engine's `cohort_size`), not from the set
+  of accounts wearing the cohort label — for a backed-off cohort those differ,
+  and reading the label group reported a wrong peer count and cohort median for
+  all 216 of them.
 - `test_cohort_engine.py` — checks on the invariants that matter.

@@ -66,6 +66,10 @@ def main() -> None:
     print(bm["status"].value_counts().to_string())
     print("\nDiagnosis split:")
     print(bm["diagnosis"].value_counts().to_string())
+    print(
+        f"\nExceptional performers (>={ce.EXCEPTIONAL_MULTIPLE:g}x cohort median): "
+        f"{int(bm['is_exceptional'].sum())}"
+    )
 
     print("\nFitting lever model...")
     model_df = ce.build_model_frame(bm)
@@ -103,7 +107,8 @@ def main() -> None:
         "cohort_size",
         "status",
         "diagnosis",
-        "adoption_ratio",
+        "cohort_ratio",
+        "is_exceptional",
         "raised_365",
         "gap_to_cohort_median",
         *[f"pctl_{m}" for m in ce.BENCHMARK_METRICS],
@@ -126,6 +131,7 @@ def main() -> None:
         ),
         "status_counts": bm["status"].value_counts().to_dict(),
         "diagnosis_counts": bm["diagnosis"].value_counts().to_dict(),
+        "exceptional_performers": int(bm["is_exceptional"].sum()),
         "underperforming_gap_total": float(
             bm.loc[bm["status"] == "Underperforming", "gap_to_cohort_median"].sum()
         ),

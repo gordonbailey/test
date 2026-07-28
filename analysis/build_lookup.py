@@ -59,17 +59,48 @@ def main() -> None:
         model_by_name.setdefault(row["Account Name"], row)
 
     # Cohort-level reference stats, sent once instead of repeated per account.
+    #
+    # These MUST come from the reference population, not from the set of accounts
+    # carrying the cohort label. For a backed-off cohort the two differ: 61
+    # accounts wear the "All sectors | Over $25M" label while the population they
+    # are actually scored against is all 509 accounts in that size band. Reading
+    # the label group instead reported a wrong peer count and a wrong cohort
+    # median for all 216 backed-off accounts.
     cohorts = {}
     for name, group in bm.groupby("cohort"):
+        if group["ref_dimension"].iloc[0] == "cell":
+            pop = bm[bm["cell"] == group["cell"].iloc[0]]
+            ref_dim, ref_sector = "cell", group["sector"].iloc[0]
+        else:
+            pop = bm[bm["size_band"] == group["size_band"].iloc[0]]
+            ref_dim, ref_sector = "band", None
+
+        # The engine already recorded the reference population size per account;
+        # if this disagrees, one of the two is wrong and the numbers downstream
+        # cannot be trusted.
+        expected = int(group["cohort_size"].iloc[0])
+        assert len(pop) == expected, (
+            f"{name}: population {len(pop)} != engine cohort_size {expected}"
+        )
+
         cohorts[name] = {
-            "n": int(len(group)),
+            "n": int(len(pop)),
             "lvl": group["cohort_level"].iloc[0],
-            "med": r(group["raised_365"].median()),
-            "p25": r(group["raised_365"].quantile(0.25)),
-            "p75": r(group["raised_365"].quantile(0.75)),
-            "mg": r(group["avg_gift"].median()),
-            "mr": r(group["recurring_donors"].median()),
-            "mc": r(group["channel_breadth"].median(), 1),
+            "labelled": int(len(group)),
+            "refDim": ref_dim,
+            "sector": ref_sector,
+            "band": str(group["size_band"].iloc[0]),
+            "med": r(pop["raised_365"].median()),
+            "p25": r(pop["raised_365"].quantile(0.25)),
+            "p75": r(pop["raised_365"].quantile(0.75)),
+            "p90": r(pop["raised_365"].quantile(0.90)),
+            "mg": r(pop["avg_gift"].median(), 2),
+            "mr": r(pop["recurring_donors"].median(), 1),
+            "mc": r(pop["channel_breadth"].median(), 1),
+            "mk": r(pop["active_campaigns"].median(), 1),
+            "ml": r(pop["gifts_lifetime"].median()),
+            "exc": int(pop["is_exceptional"].sum()),
+            "st": {k: int(v) for k, v in pop["status"].value_counts().items()},
         }
     cohort_ids = {name: i for i, name in enumerate(sorted(cohorts))}
 
@@ -118,7 +149,8 @@ def main() -> None:
                 "rev": r(row["org_revenue"]),
                 "st": row["status"],
                 "dg": row["diagnosis"],
-                "ar": r(row.get("adoption_ratio"), 3),
+                "cr": r(row.get("cohort_ratio"), 3),
+                "x": int(row.get("is_exceptional", 0)),
                 "gap": r(row["gap_to_cohort_median"]),
                 "m": metrics,
                 "r": recs,
@@ -137,6 +169,7 @@ def main() -> None:
         "accounts": accounts,
         "maxStepPctl": ce.MAX_LEVER_STEP_PCTL,
         "minAdoption": ce.MINIMAL_ADOPTION_RATIO,
+        "exceptionalMultiple": ce.EXCEPTIONAL_MULTIPLE,
         "cvMultiplier": r(ce.validate_model(model_df)["cv_mae_as_multiplier"], 2),
     }
 
@@ -145,6 +178,12 @@ def main() -> None:
 
     owners = {a["o"] for a in accounts}
     with_recs = sum(1 for a in accounts if a["r"])
+    exceptional = sum(1 for a in accounts if a["x"])
+    print(f"exceptional (>={ce.EXCEPTIONAL_MULTIPLE:g}x cohort median): {exceptional}")
+    backed = [c for c in cohorts.values() if c["refDim"] == "band"]
+    print(f"backed-off cohorts: {len(backed)} "
+          f"(labelled {sum(c['labelled'] for c in backed)} accounts, "
+          f"scored against populations of {[c['n'] for c in backed]})")
     print(f"accounts:      {len(accounts)}")
     print(f"owners:        {len(owners)}")
     print(f"with lever advice: {with_recs}")
