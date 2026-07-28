@@ -173,24 +173,68 @@ Cohort fixed effects absorb everything constant within a peer group, so lever
 coefficients describe variation *within* a peer set. Standard errors are HC3-robust
 (Breusch–Pagan p ≈ 1e-50 — fundraising residuals fan out with scale).
 
-Lifetime dollars raised and lifetime gift count are **deliberately excluded** as
-predictors. They are near-arithmetic restatements of the outcome and would have
-produced a model with a high R² and no advice in it.
+**Cross-validated R² is 0.733** (in-sample 0.744), with cross-validated MAE of
+0.65 log points — about ×1.9 per organization.
+
+### Getting from 0.645 to 0.733
+
+The first version reached CV R² 0.645. Most of the gap was one missing idea:
+what the organization raised in *prior years*.
+
+| Specification | CV R² |
+|---|---|
+| Levers + org scale only | 0.645 |
+| + prior-period annual run rate | 0.712 |
+| + contract tenure | 0.730 |
+| + channel concentration, donor base | **0.733** (shipped) |
+| Gradient boosting, same features | 0.786 (ceiling) |
+
+The prior-period figure is legitimate rather than leakage, and that had to be
+verified first: `raised_lifetime` fully contains `raised_365` — the inequality
+holds on 100% of eligible rows with zero violations — so the difference is
+genuinely the years *before* the outcome window. Spread over contract tenure it
+becomes a historical annual run rate, the strongest single predictor available.
+
+**A first attempt overfitted in a way cross-validation did not catch.** Including
+prior dollars, the run rate *and* tenure together posted CV R² 0.742 — but
+run rate ≈ prior ÷ tenure, so the three are near-linearly dependent. VIFs reached
+**728** and the coefficients (−1.08, +1.52, +5.00) were large values cancelling
+out. Predictions survive that; interpretation and stability do not. The shipped
+model keeps run rate and tenure but not prior dollars, and holds the run rate at
+its established-account mean where there is no history so the new-account
+indicator is not encoding the same fact twice. Same fit, **max VIF 4.1**.
+
+`EXCLUDED_PREDICTORS` records what stays out and why: lifetime totals (contain
+the outcome), MRR and committed GDV (priced off expected fundraising, so
+circular, and worth only +0.010), and trailing-year campaign count (overlaps the
+active-campaigns lever and degraded its identification for no gain).
+
+**The honest cost: every lever shrank.** Average gift +0.64 → +0.43, recurring
+donors +0.47 → +0.34, active campaigns **+0.26 → +0.06**. Nothing about
+fundraising changed — the earlier coefficients were absorbing "this organization
+was already a big fundraiser" and crediting it to the levers. Controlling for
+history strips that out, so recommendations are smaller and better identified.
+Campaign cadence in particular was largely proxying for scale and should now be
+read as a weak lever.
+
+Lever × history interactions reach CV 0.764 but double the fold-to-fold variance
+and entangle main effects with their interactions — recorded as available
+headroom, not shipped. Beyond the 0.79 boosting ceiling sits irreducible noise: a
+viral campaign or disaster response is not predictable from firmographics, which
+is why 0.9 is not a realistic target on this data.
 
 | Lever | Effect | p |
 |---|---|---|
-| Average gift size | +1% → **+0.64%** raised | 5e-103 |
-| Recurring donors | +1% → **+0.47%** raised | 9e-267 |
-| Active campaigns | +1% → **+0.26%** raised | 1e-27 |
-| CRM integrated | **×1.27** raised | 3e-9 |
-| Channels in use | **×1.12** per channel | 7e-15 |
+| Average gift size | +1% → **+0.43%** raised | 5e-39 |
+| Recurring donors | +1% → **+0.34%** raised | 1e-78 |
+| Active campaigns | +1% → **+0.06%** raised | 5e-3 |
+| CRM integrated | **×1.32** raised | 1e-15 |
+| Channels in use | **×1.19** per channel | 6e-21 |
 
-All VIFs below 2.0, so the levers are not proxies for each other. Coefficients
-stay stable when the strongest lever is dropped (R² 0.658 → 0.588), so no single
-lever is carrying the model.
+All VIFs below 4.1, so no term is a proxy for another.
 
 Organization headcount is retained as a control but is **not significant**
-(p = 0.46) — consistent with the exploratory finding that staff size barely
+(p = 0.10) — consistent with the exploratory finding that staff size barely
 predicts fundraising outcomes.
 
 ## Stage 6 — Recommendations
@@ -249,10 +293,10 @@ differ enormously, which is the honest version of the original problem
 statement. Percentile bands are a fair reading of the data; a claim that an
 organization "should" be at its cohort median is not.
 
-**Individual predictions are wide.** 5-fold CV R² is 0.645 against an in-sample
-0.656, so the model generalizes — but cross-validated MAE is 0.78 log points,
-a median error of about **×2.2** on any single organization's predicted annual
-raised. Use lever *rankings*; do not quote the dollar figures as forecasts.
+**Individual predictions are still wide.** 5-fold CV R² is 0.733 against an
+in-sample 0.744, so the model generalizes — but cross-validated MAE is 0.65 log
+points, a median error of about **×1.9** on any single organization's predicted
+annual raised. Improved from ×2.2, still not small. Use lever *rankings*; do not quote the dollar figures as forecasts.
 `recommend()` returns `lift_low`/`lift_high` from the coefficient confidence
 interval, which bounds the estimated average effect and is narrower than the
 per-organization spread.
@@ -281,6 +325,14 @@ The published report consumes that payload in two places.
 (a seller's book) or by status, sort by gap / raised / percentile / outperformance
 multiple, and select an account for the same cohort placement, percentile
 scorecard, and ranked lever table shown in the worked examples.
+
+Selecting an account also lists **the other organizations in its cohort** —
+the actual reference population, resolved the same way the engine resolves it
+(the sector × size cell where viable, otherwise the whole size band), so the
+roster never shows 61 peers for an account ranked against 509. It can be
+compared on any of the six metrics, filtered to exceptional performers,
+optimization candidates or nearest neighbours, and the selected account is
+pinned into view with its rank even when the list is truncated.
 
 **Cohort explorer (section 4)** — filter cohorts by sector and size band, switch
 the displayed metric across all six benchmark measures, and sort by size,

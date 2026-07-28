@@ -128,6 +128,25 @@ FUNDRAISING_STAFF_MIDPOINTS = {
 # IRS-filed figures are used instead.
 UNRELIABLE_REVENUE_FIELD = "Annual Revenue"
 
+# Ordinal donor-count buckets, mapped to midpoints so they can enter a
+# regression. The open-ended top bucket is held just above its floor.
+INDIVIDUAL_DONOR_MIDPOINTS = {
+    "0": 0.0,
+    "<100": 50.0,
+    "<2,500": 1_250.0,
+    "100-1,000": 550.0,
+    "1,000-2,500": 1_750.0,
+    "2,500-8,000": 5_250.0,
+    "8,000-10,000": 9_000.0,
+    "10,000-25,000": 17_500.0,
+    ">25,000": 30_000.0,
+}
+
+# Snapshot date of the export, used to measure contract tenure. Passed explicitly
+# rather than read from the clock so the same file always produces the same
+# numbers; override via `canonicalize(raw, as_of=...)` for a newer extract.
+AS_OF_DATE = pd.Timestamp("2026-07-28")
+
 
 def load_raw(path: str) -> pd.DataFrame:
     """Read the book-of-business export.
@@ -148,7 +167,7 @@ def _to_numeric(series: pd.Series) -> pd.Series:
     )
 
 
-def canonicalize(raw: pd.DataFrame) -> pd.DataFrame:
+def canonicalize(raw: pd.DataFrame, as_of: pd.Timestamp = AS_OF_DATE) -> pd.DataFrame:
     """Derive one unified definition per concept from the raw export.
 
     Resolves three specific ambiguities in the source data:
@@ -249,6 +268,32 @@ def canonicalize(raw: pd.DataFrame) -> pd.DataFrame:
     df["fundraising_staff"] = df["Paid Fundraising Staff"].map(
         FUNDRAISING_STAFF_MIDPOINTS
     )
+    df["individual_donors"] = df["# Individual Donors"].map(
+        INDIVIDUAL_DONOR_MIDPOINTS
+    )
+
+    # -- Prior fundraising history ----------------------------------------
+    # `raised_lifetime` fully contains `raised_365` (verified: the inequality
+    # holds on 100% of eligible rows, zero violations), so the difference is
+    # genuinely the years BEFORE the outcome window -- a lagged predictor, not
+    # leakage. This is the single largest legitimate source of predictive power
+    # available: what an organization raised historically is the best guide to
+    # what it raises now.
+    df["raised_prior"] = (df["raised_lifetime"] - df["raised_365"]).clip(lower=0)
+    df["is_new_account"] = (df["raised_prior"] <= 1).astype(int)
+
+    df["contract_start"] = pd.to_datetime(df["Contract Start Date"], errors="coerce")
+    df["tenure_years"] = (
+        (as_of - df["contract_start"]).dt.days / 365.25
+    ).clip(lower=0)
+
+    # Historical annual run rate: prior dollars spread over the years before the
+    # trailing window. Stated explicitly rather than left for the model to infer
+    # from prior and tenure together -- those two plus their implied ratio are
+    # near-linearly dependent, and including all three drove VIFs past 700 and
+    # produced coefficients that cancelled each other out.
+    prior_years = (df["tenure_years"] - 1).clip(lower=0.5)
+    df["prior_run_rate"] = df["raised_prior"] / prior_years
 
     return df
 
@@ -421,10 +466,10 @@ MAX_LEVER_STEP_PCTL = 25.0
 
 # Out-of-sample error of the lever model, from 5-fold cross-validation on the
 # eligible population (see `validate_model`). In log points, so it reads as a
-# multiplicative error: exp(0.78) is roughly a factor of 2.2 either way on any
+# multiplicative error: exp(0.65) is roughly a factor of 1.9 either way on any
 # single organization's predicted annual raised. Recorded here because it is
 # the honest bound on how a recommendation may be presented.
-CV_MAE_LOG_POINTS = 0.78
+CV_MAE_LOG_POINTS = 0.65
 
 
 def _pct_rank(series: pd.Series) -> pd.Series:
@@ -575,12 +620,53 @@ LEVERS = {
     },
 }
 
-# Context variables: held constant so lever effects are not confounded by org
-# scale, but never recommended -- an organization cannot decide to have more
-# employees this quarter in order to fundraise better.
+# Context variables: held constant so lever effects are not confounded, but
+# never recommended -- an organization cannot decide to have more employees this
+# quarter, or a longer history, in order to fundraise better.
+#
+# The history terms carry most of the model's predictive power (cross-validated
+# R-squared 0.645 -> 0.733). They are controls, not findings: knowing an
+# organization's past run rate predicts its current year well, and says nothing
+# about what to do differently. Their real service to the lever estimates is
+# removing confounding -- without them, "has more recurring donors" partly meant
+# "was already a big fundraiser", and every lever was credited for it.
 CONTEXT = {
     "log_org_revenue": {"source": "org_revenue", "transform": "log"},
     "log_employees": {"source": "employees", "transform": "log1p"},
+    "log_prior_run_rate": {
+        "source": "prior_run_rate",
+        "transform": "log1p",
+        "new_account_centered": True,
+    },
+    "is_new_account": {"source": "is_new_account", "transform": "none"},
+    "log_tenure": {"source": "tenure_years", "transform": "log1p"},
+    "top_channel_share": {"source": "top_channel_share", "transform": "none"},
+    "log_individual_donors": {
+        "source": "individual_donors",
+        "transform": "log1p",
+    },
+}
+
+# Terms deliberately NOT included, and why:
+#
+#   raised_lifetime / gifts_lifetime / channels_lifetime_sum -- each contains the
+#     outcome window. Only the prior-period difference is usable.
+#   MRR in Contract, Total Committed GDV -- both are set by sales from expected
+#     fundraising volume, so predicting fundraising with them is circular. Worth
+#     +0.010 CV R-squared, not worth the confounding.
+#   Total # Campaigns (Last 365) -- overlaps the active-campaigns lever and made
+#     it harder to identify (lever p 0.029 -> 0.005 once dropped) for no gain
+#     (CV 0.7326 -> 0.7325).
+#   lever x history interactions -- reach CV 0.764, but fold variance doubles and
+#     main effects entangle with their interactions. Available headroom, not a
+#     safe default.
+EXCLUDED_PREDICTORS = {
+    "raised_lifetime": "contains the outcome window",
+    "gifts_lifetime": "contains the outcome window",
+    "channels_lifetime_sum": "equals raised_lifetime; contains the outcome",
+    "MRR in Contract": "priced from expected fundraising -- circular",
+    "Total Committed GDV": "committed from expected fundraising -- circular",
+    "campaigns_365": "overlaps the active-campaigns lever",
 }
 
 
@@ -612,6 +698,19 @@ def build_model_frame(df: pd.DataFrame) -> pd.DataFrame:
             transformed = transformed.fillna(cohort_median)
             # A cohort with no observed values at all still needs a number.
             transformed = transformed.fillna(transformed.median())
+
+        # A new account has no run rate by definition, so `is_new_account` and a
+        # zero-filled run rate encode the same fact twice (VIF 12.3). Holding the
+        # run rate at its established-account mean for those rows lets the dummy
+        # carry the level shift while the continuous term varies only where it is
+        # defined -- same fit, VIF 4.1.
+        if spec.get("new_account_centered"):
+            established = out["is_new_account"] == 0
+            if established.any():
+                transformed = transformed.where(
+                    established, transformed[established].mean()
+                )
+
         out[name] = transformed
         out[f"{name}_imputed"] = missing.astype(int)
 

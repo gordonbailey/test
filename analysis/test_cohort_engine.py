@@ -317,16 +317,78 @@ def main(path: str) -> int:
                 "activation cases receive no lever advice",
             )
 
+    print("\nHistory controls")
+    # The prior-period predictor is only legitimate if the lifetime figure fully
+    # contains the outcome window -- otherwise the difference is not "the years
+    # before" and the model is partly predicting the outcome from itself.
+    both = df[df["raised_365"].notna() & df["raised_lifetime"].notna()]
+    violations = (both["raised_365"] > both["raised_lifetime"] + 1).sum()
+    check(
+        violations == 0,
+        "trailing-365 raised never exceeds lifetime raised (prior period is valid)",
+        f"{violations} rows violate it",
+    )
+    check(
+        (eligible["raised_prior"] >= 0).all(),
+        "prior-period raised is non-negative",
+    )
+    check(
+        (
+            eligible.loc[eligible["is_new_account"] == 1, "raised_prior"] <= 1
+        ).all(),
+        "new-account flag agrees with zero prior history",
+    )
+    # Terms that would leak the outcome or price off it must stay out.
+    model_terms = set(ce.LEVERS) | set(ce.CONTEXT)
+    sources = {spec["source"] for spec in {**ce.LEVERS, **ce.CONTEXT}.values()}
+    leaked = sources & set(ce.EXCLUDED_PREDICTORS)
+    check(not leaked, "no excluded predictor entered the model", f"leaked: {leaked}")
+    check(
+        "raised_365" not in sources and "raised_lifetime" not in sources,
+        "the outcome and its lifetime superset are not predictors",
+    )
+
+    # Severe multicollinearity makes coefficients meaningless even when the fit
+    # looks fine; an earlier specification hit VIF 728 by including prior, run
+    # rate and tenure together.
+    from statsmodels.stats.outliers_influence import variance_inflation_factor
+    import statsmodels.api as sm_
+
+    terms = list(ce.LEVERS) + list(ce.CONTEXT)
+    Xv = sm_.add_constant(model_df[terms].astype(float))
+    vifs = {
+        c: variance_inflation_factor(Xv.values, i)
+        for i, c in enumerate(Xv.columns)
+        if c != "const"
+    }
+    worst = max(vifs, key=vifs.get)
+    check(
+        vifs[worst] < 10,
+        "no model term has VIF >= 10",
+        f"{worst} has VIF {vifs[worst]:.1f}",
+    )
+    # Log-log elasticities outside (0, 1.2) signal terms fighting each other.
+    implausible = [
+        l for l in ce.LEVERS
+        if ce.LEVERS[l]["transform"] in ("log", "log1p")
+        and not 0 < fit.params[l] < 1.2
+    ]
+    check(not implausible, "lever elasticities are plausible", f"{implausible}")
+
     print("\nValidation")
     v = ce.validate_model(model_df)
-    check(v["cv_r2_mean"] > 0.5, "cross-validated R2 is materially positive")
+    check(
+        v["cv_r2_mean"] > 0.70,
+        "cross-validated R2 clears the 0.70 target",
+        f"{v['cv_r2_mean']:.3f}",
+    )
     check(
         v["in_sample_r2"] - v["cv_r2_mean"] < 0.05,
         "in-sample and CV R2 are close (no gross overfit)",
         f"{v['in_sample_r2']:.3f} vs {v['cv_r2_mean']:.3f}",
     )
     check(
-        abs(v["cv_mae_log_points"] - ce.CV_MAE_LOG_POINTS) < 0.1,
+        abs(v["cv_mae_log_points"] - ce.CV_MAE_LOG_POINTS) < 0.05,
         "documented CV MAE constant still matches reality",
         f"measured {v['cv_mae_log_points']:.3f} vs documented {ce.CV_MAE_LOG_POINTS}",
     )
