@@ -390,11 +390,28 @@ accounts, encoded positionally with lever names as indices into a shared table.
 `lookup_data.json` is gitignored along with the other outputs — it contains
 named account-level customer data.
 
+## Report page
+
+`report/` holds the published UI — four tabs: a plain-language guide, high-level
+findings, per-account scorecards with a client PNG export, and a technical
+methodology review written for the data team. See `report/README.md`.
+
+```bash
+python build_report_data.py <export.csv>                 # aggregate series
+python build_lookup.py <export.csv> -o lookup_data.json  # per-account payload
+python report/build.py                                   # single self-contained page
+```
+
+All three outputs are gitignored: two are derived aggregates, and
+`lookup_data.json` carries named account-level customer data.
+
 ## Files
 
 - `cohort_engine.py` — the library: canonicalize → screen → cohort → benchmark
   → model → recommend. Each stage is independently callable.
 - `run_analysis.py` — CLI that runs the pipeline and writes all outputs.
+- `build_report_data.py` — emits the aggregate series and methodology tables
+  the report page inlines.
 - `build_lookup.py` — emits the per-account and per-cohort payload for the
   interactive UI. Cohort stats are derived from each cohort's *reference
   population* (asserted equal to the engine's `cohort_size`), not from the set

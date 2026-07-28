@@ -1,0 +1,156 @@
+<h3 style="margin-top:22px">Contents</h3>
+<div class="card flat reveal" style="margin-bottom:8px">
+  <ol class="sub" style="margin:0;padding-left:22px;columns:2;column-gap:32px">
+    <li><a href="#m1" style="color:var(--brand-strong)">Specification</a></li>
+    <li><a href="#m2" style="color:var(--brand-strong)">Field canonicalization</a></li>
+    <li><a href="#m3" style="color:var(--brand-strong)">Eligibility &amp; selection bias</a></li>
+    <li><a href="#m4" style="color:var(--brand-strong)">Cohort construction</a></li>
+    <li><a href="#m5" style="color:var(--brand-strong)">Model specification &amp; diagnostics</a></li>
+    <li><a href="#m6" style="color:var(--brand-strong)">Fit ladder &amp; what was rejected</a></li>
+    <li><a href="#m7" style="color:var(--brand-strong)">Recommendation mechanics</a></li>
+    <li><a href="#m8" style="color:var(--brand-strong)">Done well</a></li>
+    <li><a href="#m9" style="color:var(--brand-strong)">Done poorly, or not at all</a></li>
+    <li><a href="#m10" style="color:var(--brand-strong)">Reproduction</a></li>
+  </ol>
+</div>
+
+<h2 id="m1">1 · Specification</h2>
+<div class="card reveal">
+  <div class="tw"><table>
+    <tbody>
+      <tr><th style="width:30%">Unit of analysis</th><td>Organization (account). <b>Not campaign</b> — the export has no per-campaign rows.</td></tr>
+      <tr><th>Outcome</th><td><code>raised_365</code> = <code>Txn - Last 365</code>, trailing-twelve-month dollars raised. Modelled as <code>log(raised_365)</code>.</td></tr>
+      <tr><th>Estimator</th><td>OLS with cohort fixed effects (37 dummies, one dropped), HC3 heteroskedasticity-robust covariance.</td></tr>
+      <tr><th>Sample</th><td>n = 3,161 of 6,759 (46.8%), complete-case on four required fields plus two activity floors.</td></tr>
+      <tr><th>Fit</th><td>In-sample R² 0.744 · 5-fold CV R² 0.7325 (σ 0.0085) · CV MAE 0.649 log points (≈ ×1.91).</td></tr>
+      <tr><th>Reference date</th><td><code>AS_OF_DATE = 2026-07-28</code>, passed explicitly rather than read from the clock so re-runs are deterministic.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<div class="note warn"><b>Heteroskedasticity is not incidental.</b> Breusch–Pagan p ≈ 1e-50 — residual variance rises with scale, as fundraising residuals do. HC3 rather than HC1 because several cohorts are small (n = 31 at the top band) and HC3's leverage correction matters there.</div>
+
+<h2 id="m2">2 · Field canonicalization</h2>
+<p class="sub">Three concepts had multiple conflicting sources. Resolutions and the evidence for each:</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:16%">Concept</th><th style="width:30%">Evidence</th><th>Resolution</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Sector</b></td>
+        <td>First letter of <code>NTEE Code</code> agrees with the letter in <code>NTEE Category</code> on <b>100%</b> of non-null rows. The <i>label</i> is inconsistent: R–V render "Public, Societal Benefit", W renders "Public&nbsp;&amp;&nbsp;Societal Benefit".</td>
+        <td>Rebuild from the code letter via the 10 NTEE major groups. <code>Z</code> (NTEE's own "Unknown, Unclassified") is deliberately unmapped so it fails the eligibility gate rather than forming a spurious peer group.</td>
+      </tr>
+      <tr>
+        <td><b>Org size</b></td>
+        <td><code>Annual Revenue</code> is CRM free text: 86 rows = exactly $10,000,000; 29 = exactly $1,000,000,000; 12 = exactly $1. Spearman vs <code>IRS Annual Revenue</code> = 0.923 but with those spikes. <code>990 Value</code> vs <code>IRS Annual Revenue</code>: Spearman 0.766, median ratio 0.729 — they measure different things.</td>
+        <td><code>org_revenue</code> = <code>IRS Annual Revenue</code> where &gt; 0, else <code>990 Value</code> where &gt; 0. <code>Annual Revenue</code> excluded from all sizing. A filed zero is treated as "no usable filing", not "no revenue".</td>
+      </tr>
+      <tr>
+        <td><b>Time window</b></td>
+        <td>The seven channel dollar columns sum to <code>Txn - Online</code> to within $1 on <b>6,418 / 6,759 rows (95%)</b>: $11.381B vs $11.373B. <code>Txn - Last 365</code> totals $2.666B, median ratio 3.28.</td>
+        <td>Channel columns and <code>Txn - Online</code> are <b>lifetime</b>. Outcome is trailing-365 only. <code>avg_gift</code> = lifetime dollars ÷ lifetime gifts, used as an explanatory trait, never folded into the outcome.</td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>
+
+<h2 id="m3">3 · Eligibility and selection bias</h2>
+<div class="card reveal"><div class="bars" id="m-funnel" style="--lw:236px"></div></div>
+<p class="sub" style="margin-top:16px">Gates: <code>sector</code> non-null · <code>org_revenue</code> &gt; 0 · <code>raised_365</code> non-null · <code>avg_gift</code> computable · <code>raised_365 ≥ $1,000</code> · <code>gifts_lifetime ≥ 25</code>.</p>
+<div class="note bad"><b>The selection is not random, and this is the largest single threat to external validity.</b> Excluded accounts skew smaller, newer and less engaged: the two binding gates are missing NTEE code (1,589) and missing IRS revenue (901), both of which correlate with being a small self-serve account. Every finding describes the <i>benchmarkable half</i> of the book. Nothing here should be extrapolated to the other 3,598 accounts, and the $60.0M "coachable gap" is a floor on the book-wide figure, not an estimate of it.</div>
+<p class="sub"><code>Paid Fundraising Staff</code> (50% coverage) and <code>#&nbsp;Individual&nbsp;Donors</code> (61% among eligible) are carried as optional enrichment rather than gates — requiring them would have cut n to a few hundred. Where used as model terms they are cohort-median imputed with an imputation indicator retained.</p>
+
+<h2 id="m4">4 · Cohort construction</h2>
+<p class="sub">Cohort = sector × size band. Bands on <code>org_revenue</code>, cut at 100k / 250k / 1M / 5M / 25M / 100M / 1B. Minimum cell size 30; thin cells back off to the size band.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th>Band</th><th class="n">n</th><th class="n">Span (dex)</th><th class="n">Spearman(revenue, raised)</th></tr></thead>
+    <tbody id="m-bands"></tbody>
+  </table></div>
+</div>
+<div class="note"><b>Identity vs reference population are separate columns on purpose.</b> A backed-off account is <i>labelled</i> <code>All sectors | &lt;band&gt;</code> but is <i>scored against</i> every account in that band — <code>ref_dimension</code> selects which. The first implementation conflated them and scored 61 accounts against only each other while claiming an all-sector comparison; a from-scratch recomputation of band ranks is now asserted in the test suite.</div>
+<div class="note warn"><b>Residual within-band size signal remains.</b> Spearman(org_revenue, raised_365) inside bands runs +0.05 to +0.22, so a percentile carries a little size information on top of performance. The worst offender is <code>$250k–$1M</code> at +0.222 despite spanning only 0.60 dex — narrowing bands further will not fix it, because that correlation is a real capacity effect rather than a banding artifact.</div>
+
+<h2 id="m5">5 · Model specification and diagnostics</h2>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th>Term</th><th class="n">Coef</th><th class="n">p</th><th class="n">VIF</th><th>Role</th></tr></thead>
+    <tbody id="m-terms"></tbody>
+  </table></div>
+</div>
+<p class="sub" style="margin-top:14px">Max VIF 4.1. Residual skew 0.13, excess kurtosis 1.05 — near-symmetric in logs, which is the reason for the log link. Cohort fixed effects absorb all time-invariant cohort characteristics, so lever coefficients are within-peer-group.</p>
+<div class="note bad"><b>Every lever coefficient fell when history was added, and the drop is the interesting part.</b> Average gift 0.640 → 0.432, recurring donors 0.474 → 0.340, active campaigns <b>0.256 → 0.063</b>. The earlier specification was attributing "this organization was already a large fundraiser" to the levers. Campaign cadence in particular was mostly a scale proxy: it survives at p = 0.005 but with roughly a quarter of its former effect, and should be presented as a weak lever.</div>
+
+<h2 id="m6">6 · Fit ladder and what was rejected</h2>
+<div class="card reveal"><div class="bars" id="m-ladder" style="--lw:250px;--vw:104px"></div></div>
+<h3>Rejected predictors</h3>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:26%">Term</th><th style="width:20%">Effect on CV R²</th><th>Why excluded</th></tr></thead>
+    <tbody>
+      <tr><td><code>raised_lifetime</code>, <code>gifts_lifetime</code>, <code>channels_lifetime_sum</code></td><td>large, spurious</td><td>Each contains the outcome window. Only the prior-period difference is admissible.</td></tr>
+      <tr><td><code>MRR in Contract</code>, <code>Total Committed GDV</code></td><td>+0.010 combined</td><td>Both are priced/committed from expected fundraising volume, so regressing fundraising on them is circular. Not worth the confounding for a hundredth of R².</td></tr>
+      <tr><td><code>Total # Campaigns (Last 365)</code></td><td>−0.0001</td><td>Overlaps the active-campaigns lever and degraded its identification (p 0.029 → 0.005 once dropped) for no fit gain.</td></tr>
+      <tr><td><code>log_prior</code> alongside <code>log_run_rate</code> + <code>log_tenure</code></td><td>+0.010</td><td><b>Rejected on diagnostics, not fit.</b> run_rate ≈ prior ÷ tenure, so the three are near-linearly dependent: VIF <b>728</b>, coefficients −1.08 / +1.52 / +5.00 cancelling. CV does not detect this — collinearity harms interpretation and stability, not prediction.</td></tr>
+      <tr><td>lever × history interactions</td><td>+0.031</td><td>Reach CV 0.764, but fold σ doubles (0.006 → 0.012) and main effects entangle with their interactions. Recorded as available headroom.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<div class="note"><b>Ceiling check.</b> HistGradientBoosting on the identical feature set reaches CV R² 0.786–0.791. The ~0.05 gap to the shipped OLS is the price of keeping interpretable coefficients, which the recommendation layer requires. Nothing tried approached 0.9, and it is unlikely anything would: a viral campaign or a disaster-response spike is not predictable from firmographics.</div>
+
+<h2 id="m7">7 · Recommendation mechanics</h2>
+<p class="sub">For account <i>i</i> and lever <i>k</i>: target = quantile of cohort peers at min(75, current percentile + 25). Projected effect = <code>raised · exp(β_k · Δ_k)</code>, with bounds from the coefficient's 95% CI. Levers where the account already leads are dropped rather than shown as negative advice.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:24%">Guard</th><th style="width:20%">Threshold</th><th>Failure it prevents</th></tr></thead>
+    <tbody>
+      <tr><td>Bounded step</td><td><code>MAX_LEVER_STEP_PCTL = 25</code></td><td>Unbounded, a p5 → p75 jump on a small base produced a <b>+2,560%</b> projection.</td></tr>
+      <tr><td>Activation floor</td><td><code>cohort_ratio &lt; 0.10</code></td><td>268 barely-onboarded accounts were being handed donor-upgrade strategies.</td></tr>
+      <tr><td>Exceptional ceiling</td><td><code>cohort_ratio ≥ 5.0</code></td><td>374 accounts. The top raiser (903× its median, $26 average gift by design) was advised to raise that gift for <b>+$413M</b>.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<div class="note"><b>642 accounts (20%) get a scorecard but no ranked advice</b> — both tails, by design. The model carries cohort fixed effects but no lever × position interaction, so it applies one elasticity to a cohort's median member and to an outlier three orders of magnitude above it alike. Suppression is the honest response to that limitation; interactions would be the fix, and they are not shipped.</div>
+
+<h2 id="m8">8 · Done well</h2>
+<div class="card reveal">
+  <ul class="sub" style="margin:0;padding-left:20px">
+    <li><b>The lifetime/trailing-window distinction was caught before modelling.</b> The channel-sum reconciliation ($11.381B vs $11.373B on 95% of rows) is what established it. Had it been missed, the outcome would have silently mixed windows and every finding would be wrong in a way no diagnostic would have flagged.</li>
+    <li><b>Prior-period history was validated as non-overlapping before use</b> — <code>raised_365 ≤ raised_lifetime</code> on 100% of rows, zero violations — which is what makes it a legitimate lagged predictor rather than leakage. This is asserted in the test suite, so it re-checks on every new extract.</li>
+    <li><b>Collinearity was caught by diagnostics that cross-validation could not see.</b> The VIF-728 specification had the <i>better</i> CV R². Shipping it would have produced an unstable model with uninterpretable coefficients.</li>
+    <li><b>Both tails are suppressed rather than fudged.</b> The failure modes are documented with the actual absurd outputs they produced, and tests assert advice never escapes the middle band.</li>
+    <li><b>The eligibility funnel is a first-class output.</b> The cost of the completeness rule is visible in every report rather than hidden in a 47% sample.</li>
+    <li><b>64 assertions cover the invariants</b>, several written specifically to catch defects already found once: reference-population ranking, band span, ordinal formatting, driver polarity, excluded predictors.</li>
+  </ul>
+</div>
+
+<h2 id="m9">9 · Done poorly, or not at all</h2>
+<div class="card reveal">
+  <ul class="sub" style="margin:0;padding-left:20px">
+    <li><b>Nothing here is causal, and the framing invites causal reading.</b> The output is a ranked list of actions with dollar figures attached — that is an intervention framing built on observational associations. A CRM coefficient of ×1.32 is as much a capability marker as an effect. <b>The correct next step is a holdout experiment</b> on one lever (recurring giving), and until that runs every number in the recommendation layer is suggestive only.</li>
+    <li><b>Three defects reached a published artifact before being caught.</b> Thin-cell accounts scored against the wrong reference population; open-ended size bands putting a $6.7B hospital with $26M foundations; cohort stats read from the label group rather than the reference population. All three were found by inspection or by a user question, <i>not</i> by the tests that existed at the time. The tests were then written. That ordering is the wrong way round.</li>
+    <li><b>Cause area contributes almost nothing and is kept anyway.</b> It explains 0.8% of variance in log raised against 16.7% for size band. It is retained because it makes the comparison credible to a nonprofit, which is a product judgment, not a statistical one. A defensible alternative — cohorting on operating profile instead — was never built.</li>
+    <li><b>Per-account prediction error is ×1.91 and the UI shows dollar figures to the dollar.</b> Mitigated with caveats in every surface, but a confidence interval on each projection would be better than a sentence asking people not to over-read a precise-looking number.</li>
+    <li><b>No temporal validation.</b> The export is a single snapshot, so the model is cross-sectional. There is no test of whether a lever moving in year <i>t</i> is followed by more raised in <i>t+1</i>, which is the question the recommendations actually imply. Two snapshots would enable it.</li>
+    <li><b>Imputation is cohort-median with an indicator, and unmodelled.</b> Fine for <code>employees</code> (25% missing) but crude. Missingness is almost certainly not random — sparse fields correlate with self-serve accounts — and no sensitivity analysis was run on the imputation choice.</li>
+    <li><b>Ordinal buckets are mapped to midpoints.</b> <code>Paid Fundraising Staff</code> and <code>#&nbsp;Individual&nbsp;Donors</code> arrive as ranges and become single numbers, with the open-ended top bucket ($&gt;25,000$ donors → 30,000) essentially guessed. An ordered-categorical treatment would be more honest.</li>
+    <li><b>The exceptional threshold (5×) is a judgment call, not a derived cut.</b> It behaves sensibly and its rationale is documented, but no sensitivity analysis over 3× / 5× / 10× was run to show how much the 374-account population moves.</li>
+    <li><b>Wording is duplicated between Python and JavaScript.</b> The verdict templates exist in both so the CLI and the page can render them; the structural inputs are computed once in Python, but the sentences are mirrored by hand and can drift.</li>
+    <li><b>No campaign-level analysis, which is what was originally asked for.</b> The data does not support it. This benchmarks organizations and channel mix, not campaigns.</li>
+  </ul>
+</div>
+
+<h2 id="m10">10 · Reproduction</h2>
+<div class="card reveal">
+  <p class="sub tight" style="margin-bottom:12px">Everything above regenerates from the branch. The test suite is the specification of record.</p>
+  <div class="tw"><table>
+    <thead><tr><th style="width:34%">Command</th><th>Produces</th></tr></thead>
+    <tbody>
+      <tr><td><code>python run_analysis.py &lt;csv&gt; --outdir out</code></td><td>Funnel, cohort roster, per-account benchmarks, lever effects, validation JSON, summary.</td></tr>
+      <tr><td><code>python run_analysis.py &lt;csv&gt; --account "&lt;name&gt;"</code></td><td>One scorecard plus the rendered seller verdict.</td></tr>
+      <tr><td><code>python test_cohort_engine.py &lt;csv&gt;</code></td><td>64 assertions across canonicalization, bands, cohorts, benchmarking, model diagnostics, recommendations and verdict copy.</td></tr>
+      <tr><td><code>python build_lookup.py &lt;csv&gt;</code></td><td>The payload this page reads.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<div class="note good"><b>Where to start a review.</b> <code>cohort_engine.py</code> reads top-to-bottom as the pipeline; every non-obvious choice carries a comment giving the evidence for it. The three defects in §9 are commented at the point where they were fixed, so the reasoning survives with the code rather than only in a commit message.</div>

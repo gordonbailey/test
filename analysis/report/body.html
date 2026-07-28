@@ -1,0 +1,286 @@
+<div class="wrap">
+
+<div class="masthead">
+  <div class="brandrow">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.7-7.5-10.1A4.4 4.4 0 0 1 12 7.9a4.4 4.4 0 0 1 7.5 3c0 5.4-7.5 10.1-7.5 10.1Z" fill="#fff"/></svg>
+    </div>
+    <div class="wordmark">GoFundMe Pro <span>· Fundraising Benchmarks</span></div>
+  </div>
+  <h1>How is this organization really doing?</h1>
+  <p class="lede">Every nonprofit raises a different amount for different reasons. This compares each one against organizations genuinely like it — same cause, same size — and turns the difference into a short list of what to try next.</p>
+</div>
+
+<div class="tabs" role="tablist" aria-label="Sections">
+  <button class="tab" id="tab-guide" role="tab" aria-selected="true" aria-controls="panel-guide">How it works</button>
+  <button class="tab" id="tab-find" role="tab" aria-selected="false" aria-controls="panel-find">Findings</button>
+  <button class="tab" id="tab-acct" role="tab" aria-selected="false" aria-controls="panel-acct">Account</button>
+  <button class="tab" id="tab-method" role="tab" aria-selected="false" aria-controls="panel-method">Methodology</button>
+</div>
+
+<!-- ══════════════════════════ HOW IT WORKS ══════════════════════════ -->
+<div class="panel" id="panel-guide" role="tabpanel" aria-labelledby="tab-guide">
+
+  <p class="eyebrow">The problem</p>
+  <h2 style="margin-top:0">"Raised $180,000" doesn't tell you anything</h2>
+  <p class="sub">A $180k year is outstanding for a small animal rescue and disappointing for a hospital foundation. Every organization has different donors, a different cause, different staff, a different budget. "Good" only means something <b>relative to organizations genuinely like you</b>.</p>
+  <p class="sub">So this builds that comparison group, scores each organization inside it, and turns the shortfall into a ranked list of things to actually do.</p>
+
+  <div class="stats reveal" style="margin-top:26px">
+    <div class="stat"><div class="k">Accounts reviewed</div><div class="v" data-count="6759">6,759</div><div class="d">from the CRM export</div></div>
+    <div class="stat"><div class="k">Comparable</div><div class="v" data-count="3161">3,161</div><div class="d">had enough clean data</div></div>
+    <div class="stat"><div class="k">Peer groups</div><div class="v" data-count="38">38</div><div class="d">cause area × size</div></div>
+    <div class="stat accent"><div class="k">Model accuracy</div><div class="v">73%</div><div class="d">of variation explained</div></div>
+  </div>
+
+  <h2>The five steps</h2>
+  <div class="card reveal"><div class="bars" id="g-steps" style="--lw:34px;--vw:0px;--lwm:28px;--vwm:0px"></div></div>
+
+  <h2>Step 1 — Agree what the words mean</h2>
+  <p class="sub">Three ideas each had more than one answer in the data. Each had to be reduced to one before any analysis could run.</p>
+  <div class="card reveal">
+    <div class="tw"><table>
+      <thead><tr><th style="width:19%">Idea</th><th style="width:39%">The problem</th><th>What was decided</th></tr></thead>
+      <tbody>
+        <tr><td><b>Cause area</b></td><td>The category label was written two different ways for the same category.</td><td>Rebuild it from the official IRS code letter. Accounts with no code are excluded rather than pooled into a fake "unknown" group.</td></tr>
+        <tr><td><b>Organization size</b></td><td>Three revenue fields disagreed. One was typed by hand: 86 accounts said exactly $10,000,000, 29 said exactly $1,000,000,000, 12 said exactly $1.</td><td>Discard the hand-typed field. Use the figure from the organization's IRS filing.</td></tr>
+        <tr><td><b>"Raised"</b></td><td>Some columns meant <i>last 12 months</i>, others <i>everything since they joined</i>. They look identical side by side.</td><td>Judge performance on the last 12 months only. Anything all-time is labelled and never mixed in.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="note"><b>Why this gets its own step.</b> Getting it wrong produces no error message — just confident, wrong answers. Comparing one organization's last 12 months against another's lifetime total would flatter whoever had been on the platform longest, and nothing in the output would look amiss.</div>
+
+  <h2>Step 2 — Decide who can be measured</h2>
+  <p class="sub">An organization can only be compared if we know its cause, its size and its results. Just over half the book was missing at least one.</p>
+  <div class="card reveal"><div class="bars" id="g-funnel" style="--lw:214px"></div></div>
+  <div class="note warn"><b>The two big losses are fixable.</b> 1,589 accounts have no IRS cause code and 901 have no filed revenue. Both are public information available by tax ID. Backfilling them would widen coverage more than any change to the analysis itself.</div>
+
+  <h2>Step 3 — Build the peer groups</h2>
+  <p class="sub">Each organization is grouped with others sharing its cause area and its revenue size. Size brackets step up in multiples, not fixed amounts, because fundraising capacity scales that way — $1M to $5M is a similar kind of leap as $100M to $500M.</p>
+  <div class="card reveal"><div class="bars" id="g-bands" style="--lw:130px"></div></div>
+  <p class="sub tight">A group needs at least <b>30 organizations</b>. In a group of four, one unusual member drags everyone's score around. Where a cause-and-size cell is too small, the organization is compared against every organization of its size instead — giving up the cause match rather than reporting a number built on five peers.</p>
+  <div class="note bad"><b>A mistake worth showing.</b> The largest bracket was originally just "over $25M" with no ceiling. That put NewYork-Presbyterian, at $6.7 <i>billion</i> in revenue, in the same peer group as $26M foundations — a 322-fold spread. Its scores computed correctly and were still misleading: it looked like it was raising 23× its peer median when the honest figure against organizations its own size is 6×. Brackets were split, and a test now fails if an open-ended one is ever reintroduced.</div>
+
+  <h2>Step 4 — Score everyone against their group</h2>
+  <p class="sub">Everyone gets a percentile. 50 is exactly mid-pack; 90 means only one in ten peers did better. Because the group is already matched on size, no further adjustment is needed — the comparison is size-fair by construction.</p>
+  <div class="card reveal"><div class="bars" id="g-status" style="--lw:206px"></div></div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card reveal">
+      <h3 style="margin-top:0">Not everyone at the bottom is underperforming</h3>
+      <p class="sub" style="margin:0">The very largest gaps belonged to organizations that had <b>barely started using the platform</b> — one raised $23,000 against a peer median of $777,000. That is not a fundraising problem; nothing has launched yet. <b>268 accounts</b> are flagged for onboarding instead and get no lever advice.</p>
+    </div>
+    <div class="card reveal">
+      <h3 style="margin-top:0">Not everyone at the top needs advice</h3>
+      <p class="sub" style="margin:0">The biggest fundraiser in the book has a <b>$26</b> average gift — near the bottom of its group — because it runs a mass-market model with 698,792 monthly donors. Told to raise that gift, the model projected <b>+$413M</b>: nonsense, and advice to abandon what works. <b>374 accounts</b> get a scorecard but no recommendations.</p>
+    </div>
+  </div>
+
+  <h2>Step 5 — Work out which actions matter</h2>
+  <p class="sub">A model compares organizations <i>within</i> each peer group and asks which operating differences go with raising more. Five things an organization can actually change came out significant.</p>
+  <div class="card reveal"><div class="bars" id="g-levers" style="--lw:214px;--vw:88px"></div></div>
+  <p class="sub tight">For one account, each lever is nudged from where it sits toward where its peers sit, and the model converts that into an expected change. Moves are capped at a realistic step — an early version advised jumping from the 5th to the 75th percentile in one go and projected "+2,560%".</p>
+
+  <h2>What to trust, and what not to</h2>
+  <div class="grid2">
+    <div class="card reveal">
+      <h3 style="margin-top:0;color:var(--good-ink)">Trust these</h3>
+      <ul class="sub" style="margin:0;padding-left:20px">
+        <li><b>Percentile position</b> — where an organization sits among genuinely comparable peers.</li>
+        <li><b>The order of the actions</b> — which lever is likeliest to matter most.</li>
+        <li><b>The three-way split</b> — whether this is an onboarding, coaching, or leave-well-alone conversation.</li>
+        <li><b>Who the peers are</b> — the full comparison set is listed by name.</li>
+      </ul>
+    </div>
+    <div class="card reveal">
+      <h3 style="margin-top:0;color:var(--crit)">Don't trust these</h3>
+      <ul class="sub" style="margin:0;padding-left:20px">
+        <li><b>Exact dollar projections</b> — individually off by roughly a factor of two. Never a target.</li>
+        <li><b>Cause and effect</b> — organizations with a CRM raise more, but the kind that installs one was often already ahead.</li>
+        <li><b>"Should be at the median"</b> — about 80% of the variation is <i>inside</i> peer groups, not between them.</li>
+        <li><b>Campaign-level questions</b> — the data is per organization; there are no individual campaign records.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>In one line:</b> this tells you where an organization stands against real peers and gives a sensibly ordered list of what to try. It does not tell you what will happen if they do it.</div>
+</div>
+
+<!-- ══════════════════════════ FINDINGS ══════════════════════════ -->
+<div class="panel" id="panel-find" role="tabpanel" aria-labelledby="tab-find" hidden>
+
+  <p class="eyebrow">Findings</p>
+  <h2 style="margin-top:0">Six things the data says</h2>
+  <p class="sub">Headline patterns across the 3,161 comparable accounts. Details of how any of this was derived live in the Methodology tab.</p>
+
+  <div class="stats reveal">
+    <div class="stat"><div class="k">Raised, trailing year</div><div class="v">$2.67B</div><div class="d">across the whole book</div></div>
+    <div class="stat accent"><div class="k">Top 1% of accounts</div><div class="v">46%</div><div class="d">of all money raised</div></div>
+    <div class="stat"><div class="k">Coachable gap</div><div class="v">$60.0M</div><div class="d">484 accounts below peer median</div></div>
+    <div class="stat"><div class="k">Standouts</div><div class="v">374</div><div class="d">raising ≥5× their peer median</div></div>
+  </div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">01</span> &nbsp;Fundraising is extraordinarily concentrated</h2>
+  <p class="sub">Share of all trailing-year dollars raised, by the top slice of accounts. The top 1% raise nearly half of everything.</p>
+  <div class="card reveal"><div class="bars" id="f-conc" style="--lw:150px"></div></div>
+  <div class="note"><b>What follows from it.</b> A flat per-account coverage model wastes effort. Half the money sits with about 30 organizations, and the median account raises $122,000 — those two facts call for different playbooks, not one.</div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">02</span> &nbsp;Almost everyone scales on volume, not gift size</h2>
+  <p class="sub">Of the 317 accounts in the top tenth of fundraisers, how did they get there — a bigger average gift, or more gifts?</p>
+  <div class="card reveal"><div class="bars" id="f-paths" style="--lw:196px"></div></div>
+  <div class="note good"><b>The most useful single finding here.</b> Volume-led outnumbers gift-led <b>13 to 1</b>. Growing the number of donors — especially recurring ones — is how nearly every top performer got there, and it matches what the model finds independently: recurring donors is the most robust lever of the five. When in doubt, that is the advice.</div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">03</span> &nbsp;One channel carries the platform</h2>
+  <p class="sub">Lifetime dollars raised by channel, all accounts.</p>
+  <div class="card reveal"><div class="bars" id="f-chan" style="--lw:150px"></div></div>
+  <div class="note"><b>Note the mismatch.</b> Campaign Studio is live on the most accounts (3,639) but raises a fifth of what donation pages do. Registration is barely used at all — 233 accounts, $9M. Adoption breadth and dollar contribution are not the same thing, and a "more channels" recommendation should be read with that in mind.</div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">04</span> &nbsp;Matched peers still differ enormously</h2>
+  <p class="sub">Within the largest peer groups — already matched on both cause and size — the 10th to 90th percentile range of trailing-year raised.</p>
+  <div class="card reveal">
+    <div class="legend"><span><i style="background:var(--track)"></i>10th–90th percentile</span><span><i style="background:var(--ink-3);width:2px;height:13px;border-radius:1px"></i>median</span></div>
+    <div id="f-spread"></div>
+  </div>
+  <div class="note warn"><b>Read percentiles, not targets.</b> In Human Services · $1M–$5M the 10th percentile raises $18k and the 90th raises $562k — a 30× spread among organizations of the same cause and size. Cohorting makes the comparison fair; it does not make peers alike. "You should be at the median" is not a claim this data supports.</div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">05</span> &nbsp;Some causes produce far more breakaway leaders</h2>
+  <p class="sub">Share of each sector's accounts raising at least 5× their own peer-group median. Because the comparison is within-cohort, this is not a size effect.</p>
+  <div class="card reveal"><div class="bars" id="f-sector" style="--lw:196px"></div></div>
+  <div class="note"><b>Where the playbooks are.</b> Religion Related produces standouts at 2–3× the rate of most sectors — congregational giving concentrates in a way other causes do not. Those are the accounts worth interviewing for what they do differently.</div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">06</span> &nbsp;What actually moves fundraising</h2>
+  <p class="sub">Effect of each lever on annual raised, holding peer group, organization scale and fundraising history constant.</p>
+  <div class="card reveal"><div class="bars" id="f-levers" style="--lw:196px;--vw:96px"></div></div>
+  <div class="note"><b>Association, not proof.</b> These come from comparing organizations, not from running an experiment. Organizations that already fundraise well are likelier to have installed a CRM in the first place, so each number blends "this helps" with "the kind of organization that does this was already ahead."</div>
+
+  <h2>Explore the peer groups</h2>
+  <p class="sub">All 38 groups. Filter, re-sort, switch the metric, and select any group to see its distribution, benchmarks and members.</p>
+  <div class="card reveal">
+    <div class="controls" style="margin-bottom:14px">
+      <div class="fld"><label for="c-sector">Sector</label><select id="c-sector"></select></div>
+      <div class="fld"><label for="c-band">Size band</label><select id="c-band"></select></div>
+      <div class="fld"><label for="c-metric">Metric</label><select id="c-metric"></select></div>
+      <div class="fld"><label for="c-sort">Sort by</label>
+        <select id="c-sort">
+          <option value="n">Group size</option>
+          <option value="med">Median (metric)</option>
+          <option value="exc">Standouts (count)</option>
+          <option value="excshare">Standouts (share)</option>
+          <option value="spread">Spread (p75 ÷ median)</option>
+          <option value="name">Name (A–Z)</option>
+        </select>
+      </div>
+    </div>
+    <p class="sub tight" id="c-hint" style="font-size:.82rem;color:var(--ink-3);margin-bottom:10px"></p>
+    <div class="legend">
+      <span><i style="background:var(--track)"></i>25th–75th percentile</span>
+      <span><i style="background:var(--ink-3);width:2px;height:13px;border-radius:1px"></i>median</span>
+      <span><i style="background:var(--s3)"></i>standouts (≥5× median)</span>
+    </div>
+    <div id="cohorts"></div>
+  </div>
+  <div id="c-detail" style="margin-top:18px"></div>
+</div>
+
+<!-- ══════════════════════════ ACCOUNT ══════════════════════════ -->
+<div class="panel" id="panel-acct" role="tabpanel" aria-labelledby="tab-acct" hidden>
+
+  <div class="presentbar">
+    <span>Presentation mode — peer and competitor names are hidden</span>
+    <button class="btn" id="exit-present" style="margin-left:auto">Exit</button>
+  </div>
+
+  <div class="hide-in-present">
+    <p class="eyebrow">Account</p>
+    <h2 style="margin-top:0">Look up an organization</h2>
+    <p class="sub">Search by name to see where it stands against its peer group and what to recommend.</p>
+
+    <div class="searchwrap">
+      <div class="searchbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search 3,161 organizations…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="suggest" aria-autocomplete="list">
+        <button class="clearbtn" id="qclear" aria-label="Clear search">×</button>
+      </div>
+      <div class="suggest" id="suggest" role="listbox" aria-label="Matching organizations" hidden></div>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div id="acct-empty" class="card flat" style="margin-top:26px;text-align:center;padding:44px 24px">
+    <div style="font-size:.95rem;color:var(--ink-2)">Search above, or pick one of the examples, to build a scorecard.</div>
+  </div>
+
+  <div id="acct" hidden>
+    <div class="hero" id="a-hero"></div>
+
+    <div class="toolbar hide-in-present" style="margin-top:18px">
+      <label class="switch">
+        <input type="checkbox" id="present-toggle">
+        <span class="track2"><span class="knob"></span></span>
+        Presentation mode
+      </label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="copy-tt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          Copy talk track
+        </button>
+        <button class="btn primary" id="dl-png">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+          Download client PNG
+        </button>
+      </div>
+    </div>
+
+    <h3 style="margin-top:30px">How it compares</h3>
+    <p class="sub tight" id="a-scale-note" style="font-size:.85rem"></p>
+    <div class="card" id="a-metrics"></div>
+
+    <div id="a-actions-wrap">
+      <h3 style="margin-top:30px">What we recommend</h3>
+      <p class="sub tight" id="a-actions-note" style="font-size:.85rem"></p>
+      <div class="acts" id="a-actions"></div>
+    </div>
+
+    <details class="disc hide-in-present" id="a-tt-disc" style="margin-top:26px">
+      <summary>
+        <span>Talk track — full wording for the conversation</span>
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+      </summary>
+      <div class="discbody"><div class="tt" id="a-tt"></div></div>
+    </details>
+
+    <details class="disc hide-in-present" id="a-peers-disc" style="margin-top:12px">
+      <summary>
+        <span>The peer group <span class="cnt" id="a-peers-count"></span></span>
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+      </summary>
+      <div class="discbody">
+        <p class="sub tight" id="a-peers-note" style="font-size:.85rem"></p>
+        <div class="controls" style="margin-bottom:12px">
+          <div class="fld"><label for="r-metric">Compare on</label><select id="r-metric"></select></div>
+          <div class="fld"><label for="r-only">Show</label>
+            <select id="r-only">
+              <option value="">All peers</option>
+              <option value="exc">Standouts only</option>
+              <option value="near">Closest to this account</option>
+            </select>
+          </div>
+        </div>
+        <div class="peers" id="a-peers"></div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ══════════════════════════ METHODOLOGY ══════════════════════════ -->
+<div class="panel" id="panel-method" role="tabpanel" aria-labelledby="tab-method" hidden>
+  <p class="eyebrow">For the data team</p>
+  <h2 style="margin-top:0">Methodology</h2>
+  <p class="sub">Specification, diagnostics and known weaknesses. Written for review — every number below is reproducible from <code>analysis/</code> on the branch, and the test suite asserts the invariants named here.</p>
+  <div id="method-body"></div>
+</div>
+
+<footer>
+  Source: GoFundMe Pro book-of-business export (6,759 rows, 57 fields); 3,161 accounts eligible after data-quality screening.
+  Engine, tests and methodology: <code>analysis/</code> on <code>claude/advanced-statistical-analysis-jg1h09</code>.
+  Figures reflect the export snapshot of 2026-07-28.
+</footer>
+</div>

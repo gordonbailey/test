@@ -6,3 +6,6 @@ out/
 __pycache__/
 report_*.json
 lookup_data.json
+findings_extra.json
+report_data_compact.json
+report/report.html
