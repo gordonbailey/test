@@ -61,14 +61,42 @@ NTEE_MAJOR_GROUPS = {
 
 # Size bands on IRS-filed total revenue. Cut on order-of-magnitude boundaries
 # because fundraising capacity scales multiplicatively, not linearly.
-SIZE_BAND_EDGES = [0, 250_000, 1_000_000, 5_000_000, 25_000_000, np.inf]
+#
+# The top and bottom bands were originally left open-ended, which broke that
+# principle badly: "Over $25M" ran from $25M to $8.1B -- a 322x span, against
+# 4-5x for each middle band -- so a $6.7B hospital system was labelled a peer of
+# a $26M foundation. Residual size barely distorted the *ranking* (revenue
+# correlates with annual raised at only +0.10 inside that band), but it heavily
+# inflated `cohort_ratio`: that hospital measured 23.3x its "cohort median"
+# against ~6x its true size peers. Splitting both ends holds every band to at
+# most ~1.8 dex, at the cost of a few percent of sector-matched cohorts -- a
+# trade worth making, since size explains 16.2% of the variance in annual raised
+# and cause area only 0.8%.
+SIZE_BAND_EDGES = [
+    0,
+    100_000,
+    250_000,
+    1_000_000,
+    5_000_000,
+    25_000_000,
+    100_000_000,
+    1_000_000_000,
+    np.inf,
+]
 SIZE_BAND_LABELS = [
-    "Under $250k",
+    "Under $100k",
+    "$100k-$250k",
     "$250k-$1M",
     "$1M-$5M",
     "$5M-$25M",
-    "Over $25M",
+    "$25M-$100M",
+    "$100M-$1B",
+    "Over $1B",
 ]
+
+# Widest span any single band may cover, in orders of magnitude. Guards against
+# an open-ended bucket being reintroduced; the test suite asserts it.
+MAX_BAND_SPAN_DEX = 2.0
 
 # Lifetime online channel components. These sum to "Txn - Online" (verified on
 # 95% of rows to the dollar), which is a LIFETIME figure -- not trailing year.
@@ -728,8 +756,30 @@ def recommend(
     if cohort_peers.empty:
         return pd.DataFrame()
 
-    # Not-yet-activated accounts get no lever advice. See MINIMAL_ADOPTION_RATIO.
-    if account_row.get("cohort_ratio", np.inf) < MINIMAL_ADOPTION_RATIO:
+    # Lever advice is withheld at BOTH tails, for the same reason: the fitted
+    # elasticities describe variation among accounts near their cohort, and
+    # multiplying them onto a base far outside that range produces a number with
+    # no support behind it.
+    #
+    #   Bottom tail -- not yet activated. See MINIMAL_ADOPTION_RATIO. Moving a
+    #   lever from zero to a peer benchmark yielded "+2,560% lift" off a
+    #   near-zero denominator.
+    #
+    #   Top tail -- already exceptional. The book's largest raiser sits ~900x its
+    #   cohort median with a deliberately small average gift (a mass-market
+    #   model); the unsuppressed engine advised raising that gift for a projected
+    #   +$413M, which is both implausible and advice to abandon what works. The
+    #   model carries cohort fixed effects but no interaction term, so it applies
+    #   one elasticity to a cohort's median member and to an outlier 900x above
+    #   it alike.
+    #
+    # The scorecard percentiles are still shown for these accounts -- knowing an
+    # organization sits at p6 on average gift is useful; a dollar projection
+    # built on it is not.
+    ratio = account_row.get("cohort_ratio", np.nan)
+    if pd.notna(ratio) and (
+        ratio < MINIMAL_ADOPTION_RATIO or ratio >= EXCEPTIONAL_MULTIPLE
+    ):
         return pd.DataFrame()
 
     current_raised = account_row["raised_365"]

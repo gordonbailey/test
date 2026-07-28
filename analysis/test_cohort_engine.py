@@ -89,6 +89,35 @@ def main(path: str) -> int:
         "funnel removals reconcile with total drop",
     )
 
+    print("\nSize bands")
+    # An open-ended top or bottom band silently reintroduces the defect where a
+    # $6.7B hospital and a $26M foundation share a "peer" group.
+    spans = {}
+    for band in ce.SIZE_BAND_LABELS:
+        rev = eligible.loc[eligible["size_band"] == band, "org_revenue"]
+        if len(rev) < 2:
+            continue
+        spans[band] = np.log10(rev.max() / rev.min())
+    worst_band = max(spans, key=spans.get)
+    check(
+        spans[worst_band] <= ce.MAX_BAND_SPAN_DEX,
+        f"no size band spans more than {ce.MAX_BAND_SPAN_DEX} dex",
+        f"{worst_band} spans {spans[worst_band]:.2f} dex",
+    )
+    # Bands must be contiguous and ordered, or an account could fall in a gap.
+    check(
+        len(ce.SIZE_BAND_EDGES) == len(ce.SIZE_BAND_LABELS) + 1,
+        "band edges and labels are consistent",
+    )
+    check(
+        all(a < b for a, b in zip(ce.SIZE_BAND_EDGES, ce.SIZE_BAND_EDGES[1:])),
+        "band edges are strictly increasing",
+    )
+    check(
+        eligible["size_band"].notna().all(),
+        "every eligible account lands in a band",
+    )
+
     print("\nCohort assignment")
     counts = cohorts["cohort"].value_counts()
     check(
@@ -251,6 +280,31 @@ def main(path: str) -> int:
         and (recs["projected_lift"] <= recs["lift_high"]).all(),
         "projected lift sits inside its confidence bounds",
     )
+
+    # Exceptional performers must also get no lever advice -- same extrapolation
+    # problem as activation cases, at the opposite tail.
+    exc_rows = bm[bm["is_exceptional"] == 1].nlargest(1, "cohort_ratio")
+    if len(exc_rows):
+        exc_name = exc_rows["Account Name"].iloc[0]
+        exc_model = model_df[model_df["Account Name"] == exc_name]
+        if not exc_model.empty:
+            check(
+                ce.recommend(exc_model.iloc[0], fit, model_df).empty,
+                "exceptional performers receive no lever advice",
+                f"{exc_name} still got recommendations",
+            )
+    # And every account that DOES get advice must sit between the two tails.
+    advised = 0
+    for _, row in model_df.iterrows():
+        if not ce.recommend(row, fit, model_df).empty:
+            advised += 1
+            if not (
+                ce.MINIMAL_ADOPTION_RATIO <= row["cohort_ratio"] < ce.EXCEPTIONAL_MULTIPLE
+            ):
+                advised = -1
+                break
+    check(advised > 0, "advice is confined to accounts between the two tails",
+          "an account outside the tails bounds received advice")
 
     # Activation cases must get no lever advice at all.
     act = bm[activation]

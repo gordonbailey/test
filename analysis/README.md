@@ -89,7 +89,21 @@ than silently shrinking the population.
 
 Cohort = **sector × size band**, with size bands cut on order-of-magnitude
 boundaries because fundraising capacity scales multiplicatively:
-under $250k, $250k–$1M, $1M–$5M, $5M–$25M, over $25M.
+under $100k, $100k–$250k, $250k–$1M, $1M–$5M, $5M–$25M, $25M–$100M,
+$100M–$1B, over $1B.
+
+**The top and bottom bands were originally open-ended, and that was a defect.**
+"Over $25M" ran from $25M to $8.1B — a 322× span against 4–5× for each middle
+band — so NewYork-Presbyterian at $6.71B of revenue was grouped with $26M
+foundations, 33× smaller than its cohort's median peer. Residual size barely
+distorted the *ranking* (revenue correlates with annual raised at only +0.10
+inside that band, the weakest of any band), but it badly inflated
+`cohort_ratio`: NewYork-Presbyterian measured 23.3× its "cohort median" against
+6.2× its true size peers, which also drove a false reading of how exceptional it
+was. Splitting both ends holds every band to ≤1.8 dex (mean 0.83, down from
+1.34) and costs about 5 points of sector matching — worth paying, given size
+explains 16.7% of the variance in annual raised and cause area 0.8%.
+`MAX_BAND_SPAN_DEX` and a test now guard against an open-ended band returning.
 
 A cell needs 30 accounts to be usable — in a cohort of four, one outlier moves
 everyone. Thin cells back off to a size-band cohort.
@@ -102,7 +116,7 @@ them "All sectors" while quietly comparing them only to each other — the first
 version of this code did exactly that, and stranded 63 accounts as
 unbenchmarkable.
 
-Result: **34 cohorts**, 2,945 accounts matched on sector × size, 216 on size
+Result: **38 cohorts**, 2,773 accounts matched on sector × size, 388 on size
 only, none unbenchmarkable.
 
 ## Stage 4 — Benchmarking
@@ -126,14 +140,13 @@ So accounts raising **under 10% of their cohort median** are diagnosed
 `Minimal platform adoption — activation, not optimization`, and lever advice is
 suppressed for them. Of 772 underperformers:
 
-- **498** are genuine optimization opportunities ($63.2M combined gap to median)
-- **274** are activation cases needing onboarding, not lever tuning
+- **484** are genuine optimization opportunities ($60.0M combined gap to median)
+- **268** are activation cases needing onboarding, not lever tuning
 
 ### Exceptional performers
 
 A separate cut on the same quantity, at the other end: an account raising
-**≥ 5× its cohort median** (`EXCEPTIONAL_MULTIPLE`). **368 accounts** qualify,
-raising $1.78B between them.
+**≥ 5× its cohort median** (`EXCEPTIONAL_MULTIPLE`). **374 accounts** qualify.
 
 The threshold is a *multiple*, not a top-percentile cut, and that choice is
 load-bearing. A within-cohort percentile cannot rank cohorts against each other
@@ -166,18 +179,18 @@ produced a model with a high R² and no advice in it.
 
 | Lever | Effect | p |
 |---|---|---|
-| Average gift size | +1% → **+0.64%** raised | 1e-102 |
-| Recurring donors | +1% → **+0.47%** raised | 1e-265 |
-| Active campaigns | +1% → **+0.26%** raised | 4e-28 |
-| CRM integrated | **×1.28** raised | 1e-9 |
-| Channels in use | **×1.12** per channel | 5e-14 |
+| Average gift size | +1% → **+0.64%** raised | 5e-103 |
+| Recurring donors | +1% → **+0.47%** raised | 9e-267 |
+| Active campaigns | +1% → **+0.26%** raised | 1e-27 |
+| CRM integrated | **×1.27** raised | 3e-9 |
+| Channels in use | **×1.12** per channel | 7e-15 |
 
 All VIFs below 2.0, so the levers are not proxies for each other. Coefficients
-stay stable when the strongest lever is dropped (R² 0.656 → 0.587), so no single
+stay stable when the strongest lever is dropped (R² 0.658 → 0.588), so no single
 lever is carrying the model.
 
 Organization headcount is retained as a control but is **not significant**
-(p = 0.48) — consistent with the exploratory finding that staff size barely
+(p = 0.46) — consistent with the exploratory finding that staff size barely
 predicts fundraising outcomes.
 
 ## Stage 6 — Recommendations
@@ -186,7 +199,27 @@ For an account, each lever is moved toward its cohort's 75th percentile and the
 model converts that into an expected change in annual raised. Levers where the
 account already leads are dropped rather than shown as negative advice.
 
-Two guards, both added after the first version produced nonsense:
+Advice is withheld at **both tails**, for one reason: the fitted elasticities
+describe variation among accounts near their cohort, and multiplying them onto a
+base far outside that range produces a number with no support behind it.
+
+- **Bottom tail** — activation cases, below 10% of cohort median. Unsuppressed,
+  moving a lever from zero to a peer benchmark produced "+2,560% lift" off a
+  near-zero denominator.
+- **Top tail** — exceptional performers, at or above 5×. The book's largest
+  raiser sits 903× its cohort median with a deliberately small $26 average gift
+  (a mass-market model); unsuppressed, the engine advised raising that gift for a
+  projected **+$413M** — implausible, and advice to abandon exactly what works.
+  The model carries cohort fixed effects but no interaction term, so it applies
+  one elasticity to a cohort's median member and to an outlier 903× above it
+  alike.
+
+Scorecard percentiles still render for both groups: knowing an organization sits
+at p6 on average gift is useful, a dollar projection built on it is not. That is
+268 + 374 = 642 accounts (20% of eligible) receiving a scorecard but no ranking;
+the middle 80% is where recommendations apply.
+
+Two further guards, both added after the first version produced nonsense:
 
 - **Bounded steps.** A move is capped at 25 percentile points from where the
   account already sits. Advice to go from the 5th to the 75th percentile in one

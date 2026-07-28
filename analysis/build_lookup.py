@@ -167,6 +167,10 @@ def main() -> None:
         "cohortNames": sorted(cohorts),
         "cohorts": [cohorts[n] for n in sorted(cohorts)],
         "accounts": accounts,
+        # Shipped so the UI never hardcodes its own copy of the band list. An
+        # earlier version did, and silently dropped four of eight bands from the
+        # filter when the bands were resplit.
+        "sizeBands": list(ce.SIZE_BAND_LABELS),
         "maxStepPctl": ce.MAX_LEVER_STEP_PCTL,
         "minAdoption": ce.MINIMAL_ADOPTION_RATIO,
         "exceptionalMultiple": ce.EXCEPTIONAL_MULTIPLE,
