@@ -161,7 +161,10 @@ body.present{font-size:16.5px}
 body.present .heroname{font-size:1.9rem}
 body.present .hn .v{font-size:2.2rem}
 body.present .tabs{display:none}
-body.present .masthead h1,body.present .masthead .lede{display:none}
+/* The page title and lede frame the conversation well enough to keep, but the
+   internal status pill and the project breadcrumb have no place on a client's
+   screen. The rail is hidden by the shell's own present-mode rules. */
+body.present .phead .sp{display:none}
 .presentbar{
   display:none;align-items:center;gap:14px;flex-wrap:wrap;
   padding:11px 18px;background:var(--brand-tint);border:1px solid var(--brand);

@@ -1,10 +1,12 @@
 # Report UI
 
-The published page. Four tabs: **How it works** (plain-language walkthrough),
-**Findings** (high-level insights plus the cohort explorer), **Account**
-(per-organization scorecard, seller talk track, client PNG export), and
-**Methodology** (technical review for the data team, including an honest
-account of what was done poorly).
+One published page holding every internship project. A left rail lists the
+projects; each gets its own view. The benchmarking project is the one written
+in full, and keeps its five sub-tabs: **How it works** (plain-language
+walkthrough), **Findings** (high-level insights), **Cohorts** (peer-group
+explorer), **Account** (per-organization scorecard, seller talk track, client
+PNG export), and **Methodology** (technical review for the data team, including
+an honest account of what was done poorly).
 
 ## Build
 
@@ -18,12 +20,32 @@ so all CSS, JS and data are embedded.
 
 | File | Contents |
 |---|---|
+| `projects.json` | The project tree. Drives rail, home cards, breadcrumbs, router |
 | `head.html` | Palette, layout, animation |
+| `shell_css.html` | Rail, views, home cards, skeleton pages, mobile drawer |
 | `account_css.html` | Account-tab styles, including presentation mode |
-| `body.html` | Markup for all four tabs |
+| `body.html` | The benchmarking view's five sub-tabs |
 | `method.html` | Methodology tab copy |
-| `app.js` | Charts, cohort explorer, tab machinery |
+| `projects/<id>.html` | Optional written body for a project page |
+| `app.js` | Charts, cohort explorer, sub-tab machinery |
 | `account.js` | Search, scorecard, talk track, peers, canvas PNG |
+| `shell.js` | Hash router, rail behaviour, theme toggle |
+
+## Adding a project
+
+Append a node to `projects.json` — that is the whole task. The rail entry, the
+home card, the breadcrumb trail, the route and a page with the five standard
+headings are all generated from it. Set `parent` to nest it and `order` to
+place it among its siblings.
+
+To write the page, drop `projects/<id>.html` and flip `status` to `live`; the
+skeleton is replaced by that markup. Until then the page shows its `needs`
+text, so a reader can tell an empty page from a finished one at a glance —
+which is the point. Never fill a skeleton with plausible-sounding filler.
+
+`build.py` refuses to write the page if a node names an unknown parent, two
+nodes share an id, the view set drifts from the node list, or the markup has an
+unbalanced `</div>`.
 
 ## Palette
 
@@ -66,3 +88,15 @@ image synchronously with `toDataURL` and showing it in a modal that offers three
 independent paths — Save PNG (works when downloads are allowed), Copy image
 (clipboard, works when they are not), and right-click / long-press on the
 rendered `<img>` (always works). Verified in a sandbox with downloads denied.
+
+**The rail is hidden in presentation mode.** It lists the internal project tree
+— hackathon, corporate strategy, unfinished guides — which is not something to
+put on a customer's screen during a screen-share. The shell's present-mode rules
+drop the rail, the mobile toggle, the breadcrumb and the page's status pill, and
+collapse the grid to a single column so the account view runs full width.
+
+**`.railhead` needs a two-class selector.** It is both the brand block and a
+`.nlink`, and `.nlink` carries `flex:1`. At equal specificity the later rule
+wins, so a plain `.railhead{flex:none}` lost — and the brand block stretched
+down the entire rail, parking the logo halfway down the page. Hence
+`.railhead.nlink`.

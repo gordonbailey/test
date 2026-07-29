@@ -1,0 +1,175 @@
+{
+  "site": {
+    "title": "Customer Intelligence — Internship Portfolio",
+    "wordmark": "GoFundMe Pro",
+    "wordmarkSub": "Internship Portfolio",
+    "term": "Summer 2026",
+    "owner": "",
+    "h1": "Everything built this summer, in one place.",
+    "lede": "Six workstreams, from a peer benchmarking engine sellers can screen-share to the instrumentation and UTM plumbing underneath it. Each one keeps its own page with the same five headings: the problem, what was done, what came out of it, what it does not cover, and what the next person should pick up."
+  },
+
+  "_comment": [
+    "One node per page. `parent` nests it; `order` sorts within a parent.",
+    "status:  live      — real content, written and reviewed",
+    "         drafting  — partial content on the page",
+    "         awaiting  — page exists, content not yet supplied",
+    "`needs` is what has to be handed over before the page can be written. It",
+    "doubles as the card text while status is `awaiting`, so a blank page never",
+    "pretends to be a finished one.",
+    "`body` names a file in projects/ to inline as the page content. Omit it and",
+    "build.py renders the standard skeleton from `sections`."
+  ],
+
+  "sections": [
+    ["The problem", "Who was stuck, on what, and why it mattered."],
+    ["What was done", "The actual work, in order, including what was tried and dropped."],
+    ["What came out of it", "Findings, decisions, shipped artifacts, numbers where there are numbers."],
+    ["What it does not cover", "Scope held back deliberately, and the known soft spots."],
+    ["Pick this up next", "The first thing the next person should do."]
+  ],
+
+  "nodes": [
+    {
+      "id": "hackathon",
+      "title": "Hackathon",
+      "short": "Hackathon",
+      "order": 10,
+      "status": "awaiting",
+      "needs": "The build itself, the time box it was built in, who was on the team, and where the code or prototype ended up."
+    },
+
+    {
+      "id": "ci",
+      "title": "Customer Intelligence",
+      "short": "Customer Intelligence",
+      "order": 20,
+      "kind": "group",
+      "status": "drafting",
+      "blurb": "Three strands of the same question: how do we tell a customer something true about their own fundraising that they could not work out alone?"
+    },
+    {
+      "id": "benchmarking",
+      "parent": "ci",
+      "title": "Fundraising Benchmarking",
+      "short": "Benchmarking",
+      "order": 10,
+      "status": "live",
+      "blurb": "Groups every eligible nonprofit with organizations genuinely like it — same cause, same size — scores it inside that group, and turns the shortfall into a ranked list of levers. 3,161 accounts, 38 peer groups, 73% of variation explained.",
+      "h1": "How is this organization really doing?",
+      "lede": "Every nonprofit raises a different amount for different reasons. This compares each one against organizations genuinely like it — same cause, same size — and turns the difference into a short list of what to try next.",
+      "body": "__BENCHMARKING__"
+    },
+    {
+      "id": "compintel",
+      "parent": "ci",
+      "title": "Competitive Intelligence",
+      "short": "Competitive intelligence",
+      "order": 20,
+      "status": "awaiting",
+      "needs": "Which competitors were in scope, where the data came from, and what the comparison was actually used for — pricing, positioning, or product gaps."
+    },
+    {
+      "id": "interviews",
+      "parent": "ci",
+      "title": "Customer Interview Synthesis",
+      "short": "Interview synthesis",
+      "order": 30,
+      "status": "awaiting",
+      "needs": "How many interviews, how they were recruited, the coding scheme or themes you landed on, and the quotes you are willing to publish."
+    },
+
+    {
+      "id": "instrumentation",
+      "title": "Instrumentation",
+      "short": "Instrumentation",
+      "order": 30,
+      "status": "awaiting",
+      "needs": "What was not being tracked, the event and property spec you wrote, what shipped versus what is still proposed, and how it gets validated."
+    },
+    {
+      "id": "utm",
+      "title": "UTM",
+      "short": "UTM",
+      "order": 40,
+      "status": "awaiting",
+      "needs": "The tagging convention, what it replaced, who has to follow it, and how non-compliant links get caught."
+    },
+
+    {
+      "id": "guides",
+      "title": "Guides",
+      "short": "Guides",
+      "order": 50,
+      "kind": "group",
+      "status": "drafting",
+      "blurb": "Written so the next person does not have to reconstruct any of this from scratch."
+    },
+    {
+      "id": "guide-nonfunc",
+      "parent": "guides",
+      "title": "Non-Functional Guide",
+      "short": "Non-functional guide",
+      "order": 10,
+      "status": "awaiting",
+      "needs": "The guide itself, plus who the reader is — the requirements it covers, and the failure it is meant to prevent."
+    },
+    {
+      "id": "guide-dataarch",
+      "parent": "guides",
+      "title": "Data Architecture Repo Guide",
+      "short": "Data arch repo guide",
+      "order": 20,
+      "status": "awaiting",
+      "needs": "Which repo, how it is laid out, the path a change takes from branch to production, and the parts that bite newcomers."
+    },
+
+    {
+      "id": "strategy",
+      "title": "Corporate Strategy",
+      "short": "Corporate Strategy",
+      "order": 60,
+      "kind": "group",
+      "status": "drafting",
+      "blurb": "The growth argument the project work sits underneath."
+    },
+    {
+      "id": "gdv",
+      "parent": "strategy",
+      "title": "How to Grow GDV",
+      "short": "How to grow GDV",
+      "order": 10,
+      "kind": "group",
+      "status": "awaiting",
+      "needs": "The framing you settled on — which levers you argued GDV actually moves on, and the evidence behind each. The three questions below hang off it.",
+      "blurb": "Three sub-questions, each with its own page."
+    },
+    {
+      "id": "gdv-donors",
+      "parent": "gdv",
+      "title": "How Do We Acquire Better Donors?",
+      "short": "Acquire better donors",
+      "order": 10,
+      "status": "awaiting",
+      "needs": "What \"better\" means here — retention, gift size, referral, or lifetime value — and the acquisition sources you compared on it."
+    },
+    {
+      "id": "gdv-super",
+      "parent": "gdv",
+      "title": "How Do We Build Better Relationships With Super Donors?",
+      "short": "Super donor relationships",
+      "order": 20,
+      "status": "awaiting",
+      "needs": "Where the super-donor line sits, how many of them there are, and what is being proposed — product, service, or both."
+    },
+    {
+      "id": "gdv-cool",
+      "parent": "gdv",
+      "title": "How Do We Make Giving Cool?",
+      "short": "Make giving cool",
+      "order": 30,
+      "status": "awaiting",
+      "needs": "The audience you are aiming at, what currently makes giving feel uncool to them, and any concepts you tested."
+    }
+  ]
+}
