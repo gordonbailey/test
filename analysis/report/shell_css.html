@@ -259,6 +259,40 @@ a.btn{text-decoration:none}
   .rung{grid-template-columns:1fr;gap:4px}
 }
 
+/* Linked-artifact rows: kind chip, title link, one line of provenance. */
+.lnks{display:flex;flex-direction:column;gap:2px}
+.lnk{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid var(--line-2)}
+.lnk:last-child{border-bottom:none}
+.lnk>*{min-width:0}
+.lk{font-size:.67rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--track);padding:4px 8px;border-radius:6px;
+  text-align:center;white-space:nowrap}
+.lnk a{color:var(--brand-strong);font-weight:650;font-size:.92rem;text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--brand) 40%,transparent);
+  overflow-wrap:anywhere}
+.lnk a:hover{border-bottom-color:var(--brand)}
+.lnk a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.lm{display:block;font-size:.82rem;color:var(--ink-3);margin-top:3px;line-height:1.45}
+@media (max-width:620px){
+  .lnk{grid-template-columns:1fr;gap:6px}
+  .lk{justify-self:start}
+}
+
+/* In-table links inherit the same treatment. */
+td a{color:var(--brand-strong);text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--brand) 40%,transparent)}
+td a:hover{border-bottom-color:var(--brand)}
+
+/* Rows whose live status differs from the source deck. */
+tr.chg td{background:color-mix(in srgb,var(--warn) 6%,transparent)}
+tr.chg td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+
+/* Group headers and highlighted cells inside a long metric table. */
+td.grp{font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--brand);background:var(--brand-tint);padding-top:11px;padding-bottom:11px}
+td.hot{background:color-mix(in srgb,var(--brand) 7%,transparent)}
+
 /* ---------- mobile drawer ---------- */
 .railtoggle{
   display:none;position:fixed;top:12px;left:12px;z-index:60;

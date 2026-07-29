@@ -102,16 +102,20 @@
       "title": "Instrumentation",
       "short": "Instrumentation",
       "order": 30,
-      "status": "awaiting",
-      "needs": "What was not being tracked, the event and property spec you wrote, what shipped versus what is still proposed, and how it gets validated."
+      "status": "live",
+      "blurb": "A two-layer measurement framework for Pro admin: a lagging health scoreboard, and leading per-workflow instrumentation across eight areas where every KPI names the decision it informs.",
+      "h1": "How would we know if the admin experience got better?",
+      "lede": "Pro had a scoreboard and almost no game film — health metrics but nothing giving early signal on a specific workflow, and no agreed definition of \"active admin\", so two people could report different activation numbers from the same database and both be right."
     },
     {
       "id": "utm",
       "title": "UTM",
       "short": "UTM",
       "order": 40,
-      "status": "awaiting",
-      "needs": "The tagging convention, what it replaced, who has to follow it, and how non-compliant links get caught."
+      "status": "live",
+      "blurb": "Twelve Jira tickets across two epics, the ten-hop chain UTM has to survive, and every linked Confluence page, Figma file and PR pulled from the tickets themselves. Five ticket statuses had moved since the programme map was drawn.",
+      "h1": "Making UTM survive the whole donation stack",
+      "lede": "Marketing attribution was broken end to end: some Studio URLs carried UTMs, nothing persisted them to the transaction, and nothing surfaced them in reporting or the API. This maps the programme — origins, active epics, the system the tickets build, and what is still open — with every status verified against Jira rather than the slide."
     },
     {
       "id": "guides",
