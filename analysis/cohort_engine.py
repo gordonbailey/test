@@ -110,6 +110,37 @@ CHANNEL_COLUMNS = [
     "Ticketed",
 ]
 
+# Campaign types. The seven channel columns are NOT seven parallel channels:
+# "Donation Page" is where direct-giving traffic lands and "Campaign Studio" is
+# one way to build such a page, so they are a destination and a builder for the
+# same campaign type. The reporting attributes a dollar to whichever surface it
+# came through -- the columns partition online dollars exactly, verified on 95%
+# of rows -- but that means counting distinct columns overstates how many
+# genuinely different things an organization runs.
+#
+# The evidence: 60% of eligible accounts show dollars in BOTH Donation Page and
+# Campaign Studio, with Studio a median 13% of their direct-giving total. That is
+# what a builder looks like, not a separate channel.
+#
+# Rolling the seven up to three campaign types measurably improves the model
+# (cross-validated R-squared 0.7325 -> 0.7365) and, with both breadth measures
+# included, campaign-type breadth dominates (+0.276, p 3e-26) while channel
+# breadth collapses (+0.063, p 0.005). Most of what the channel lever measured
+# was campaign-type breadth all along.
+#
+# WARNING: this mapping is INFERRED from the product taxonomy (direct giving,
+# peer-to-peer, hosted event) and from the column names. It is not read from
+# product documentation. "Registration with Fundraising" is placed under
+# peer-to-peer because it carries a fundraising component; plain "Registration"
+# and "Ticketed" under hosted event; "Crowdfunding" under direct giving.
+# Confirm each assignment with the product team before relying on it -- it is one
+# dict, so a correction is a one-line change.
+CAMPAIGN_TYPES = {
+    "Direct giving": ["Donation Page", "Campaign Studio", "Crowdfunding"],
+    "Peer to peer": ["Peer to Peer", "RwF"],
+    "Hosted event": ["Ticketed", "Registration"],
+}
+
 # Ordinal buckets are stored as free text in the export. Mapped to the midpoint
 # of each bucket so they can enter a regression, with the open-ended top bucket
 # held just above its floor rather than extrapolated.
@@ -245,12 +276,30 @@ def canonicalize(raw: pd.DataFrame, as_of: pd.Timestamp = AS_OF_DATE) -> pd.Data
     df["channel_breadth"] = (channel_dollars > 0).sum(axis=1)
     df["channels_lifetime_sum"] = channel_dollars.sum(axis=1)
 
-    # Share of lifetime dollars from the single largest channel. High values
-    # mean concentration risk; it is a diversification lever, not an outcome.
+    # Share of lifetime dollars from the single largest channel. Retained for
+    # reference, but the campaign-type version below is the one used downstream.
     with np.errstate(invalid="ignore", divide="ignore"):
         df["top_channel_share"] = np.where(
             df["channels_lifetime_sum"] > 0,
             channel_dollars.max(axis=1) / df["channels_lifetime_sum"],
+            np.nan,
+        )
+
+    # -- Campaign types (the meaningful unit; see CAMPAIGN_TYPES) -----------
+    type_cols = []
+    for type_name, members in CAMPAIGN_TYPES.items():
+        present = [c for c in members if c in df.columns]
+        col = f"type_{type_name}"
+        df[col] = df[present].fillna(0).sum(axis=1) if present else 0.0
+        type_cols.append(col)
+
+    type_dollars = df[type_cols]
+    df["campaign_type_breadth"] = (type_dollars > 0).sum(axis=1)
+    df["types_lifetime_sum"] = type_dollars.sum(axis=1)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        df["top_type_share"] = np.where(
+            df["types_lifetime_sum"] > 0,
+            type_dollars.max(axis=1) / df["types_lifetime_sum"],
             np.nan,
         )
 
@@ -434,7 +483,7 @@ BENCHMARK_METRICS = {
     "avg_gift": "Average gift size (lifetime)",
     "gifts_lifetime": "Lifetime gift count",
     "recurring_donors": "Recurring donors",
-    "channel_breadth": "Number of channels used",
+    "campaign_type_breadth": "Campaign types used (of 3)",
     "active_campaigns": "Active campaigns",
 }
 
@@ -477,7 +526,10 @@ EXCEPTIONAL_MULTIPLE = 5.0
 # account is a measurement artifact. It flags 1,004 of 3,161 accounts (32%),
 # including 218 of the 484 "coachable gap" accounts (45%, $25.2M of the $60.0M
 # aggregate gap).
-NARROW_FOOTPRINT_CHANNELS = 2
+# Measured on CAMPAIGN TYPES, not raw channels. On channels the rule flagged 780
+# accounts and mislabelled 60 of them "broad" while they ran a single campaign
+# type through two builders -- exactly the confusion CAMPAIGN_TYPES resolves.
+NARROW_FOOTPRINT_TYPES = 1
 NARROW_FOOTPRINT_CONCENTRATION = 0.90
 
 # Largest percentile jump a single recommendation may propose. Advice to move a
@@ -580,8 +632,8 @@ def benchmark(df: pd.DataFrame) -> pd.DataFrame:
     # can actually see. Not a performance judgement -- a scope warning on the
     # measurement itself.
     out["platform_footprint"] = np.where(
-        (out["channel_breadth"] <= NARROW_FOOTPRINT_CHANNELS)
-        | (out["top_channel_share"] >= NARROW_FOOTPRINT_CONCENTRATION),
+        (out["campaign_type_breadth"] <= NARROW_FOOTPRINT_TYPES)
+        | (out["top_type_share"] >= NARROW_FOOTPRINT_CONCENTRATION),
         "narrow", "broad",
     )
     out["narrow_footprint"] = (out["platform_footprint"] == "narrow").astype(int)
@@ -634,12 +686,12 @@ LEVERS = {
         "unit": "count",
         "action": "Launch or grow a monthly giving program",
     },
-    "channel_breadth": {
-        "source": "channel_breadth",
+    "campaign_type_breadth": {
+        "source": "campaign_type_breadth",
         "transform": "none",
-        "label": "Channels in use",
+        "label": "Campaign types in use",
         "unit": "count",
-        "action": "Add a fundraising channel (events, P2P, crowdfunding)",
+        "action": "Run a campaign type they do not run with us yet",
     },
     "log_active_campaigns": {
         "source": "active_campaigns",
@@ -677,7 +729,7 @@ CONTEXT = {
     },
     "is_new_account": {"source": "is_new_account", "transform": "none"},
     "log_tenure": {"source": "tenure_years", "transform": "log1p"},
-    "top_channel_share": {"source": "top_channel_share", "transform": "none"},
+    "top_type_share": {"source": "top_type_share", "transform": "none"},
     "log_individual_donors": {
         "source": "individual_donors",
         "transform": "log1p",
@@ -988,7 +1040,8 @@ def recommend(
 DRIVER_PHRASING = {
     "recurring_donors": ("recurring donor base", "{v:,.0f}", "{m:,.0f}"),
     "avg_gift": ("average gift size", "${v:,.0f}", "${m:,.0f}"),
-    "channel_breadth": ("channel mix", "{v:,.0f} of 7 channels", "{m:,.0f}"),
+    "campaign_type_breadth": (
+        "campaign-type mix", "{v:,.0f} of 3 types", "{m:,.0f}"),
     "active_campaigns": ("campaign volume", "{v:,.0f} active", "{m:,.0f}"),
     "gifts_lifetime": ("donor transaction volume", "{v:,.0f}", "{m:,.0f}"),
 }
@@ -1195,12 +1248,12 @@ def seller_verdict(
     # A narrow-footprint account's shortfall is partly unmeasured, so the verdict
     # says so before anyone reads a gap figure out loud.
     footprint = account_row.get("platform_footprint")
-    channels = account_row.get("channel_breadth")
+    channels = account_row.get("campaign_type_breadth")
     scope = None
     if footprint == "narrow":
         scope = (
             f"Scope warning: this organization runs "
-            f"{int(channels) if pd.notna(channels) else 'few'} of seven campaign "
+            f"{int(channels) if pd.notna(channels) else 'few'} of three campaign "
             "types through the platform, so these figures cover only the part of "
             "its fundraising we can see. It may raise substantially more "
             "elsewhere. Roughly half the measured gap for accounts with this "

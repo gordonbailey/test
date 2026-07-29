@@ -151,7 +151,7 @@ const SCOPE = [
   ['Money raised through this platform', 'in', 'Trailing 12 months, all seven campaign types combined.'],
   ['Prior fundraising history', 'in', 'Years before the outcome window, spread over contract tenure.'],
   ['Donor base and gift size', 'in', 'Recurring donors, lifetime gift count, average gift.'],
-  ['Channel mix and campaign volume', 'in', 'How many of the seven channels are live, how concentrated, how many campaigns.'],
+  ['Campaign-type mix and volume', 'in', 'Which of the three campaign types are live (direct giving, P2P, hosted event), how concentrated, how many campaigns.'],
   ['CRM integration and platform admins', 'in', 'Carried as operating-capability controls.'],
   ['Fundraising the organization does elsewhere', 'out',
    'THE BIG ONE. No wallet-share field exists. An organization running only its P2P with us looks small here. Flagged per account, not corrected. Would need self-reported total fundraising, or 990 contributions revenue.'],
@@ -198,9 +198,21 @@ document.getElementById('f-paths').innerHTML = barRows([
   {label:'Neither', sub:'reached the top another way', value:P.neither, vtext:num(P.neither), color:'var(--s4)'},
 ]);
 
-document.getElementById('f-chan').innerHTML = barRows(
-  X.channels.map((c,i) => ({label:c.name, value:c.dollars, vtext:money(c.dollars),
-    vsub:`${num(c.accounts)} orgs`, color: i===0 ? 'var(--brand)' : 'var(--s2)'})));
+// Campaign types first, then the columns beneath each — the reporting splits a
+// direct-giving dollar by which surface built the page, which is why a raw
+// column list reads as more "channels" than an organization actually runs.
+document.getElementById('f-chan').innerHTML =
+  X.types.map(t => `
+    <div class="bar" style="min-height:36px">
+      <div class="l" style="font-weight:650;color:var(--ink)">${esc(t.name)}<small>${num(t.accounts)} orgs</small></div>
+      <div class="trk"><div class="fil" data-w="${(t.dollars/X.types[0].dollars)*100}" style="background:var(--brand)"></div></div>
+      <div class="v">${money(t.dollars)}<small>${(t.dollars/X.types.reduce((s,y)=>s+y.dollars,0)*100).toFixed(0)}%</small></div>
+    </div>` + t.members.map(m => `
+    <div class="bar" style="min-height:26px">
+      <div class="l" style="font-size:.78rem;color:var(--ink-3)">↳ ${esc(m.name)}</div>
+      <div class="trk" style="height:11px"><div class="fil" data-w="${(m.dollars/X.types[0].dollars)*100}" style="background:var(--s2);opacity:.65"></div></div>
+      <div class="v" style="font-size:.78rem;font-weight:400;color:var(--ink-2)">${money(m.dollars)}<small>${num(m.accounts)} orgs</small></div>
+    </div>`).join('')).join('');
 
 document.getElementById('f-spread').innerHTML = X.spread.map(s => {
   const max = Math.max(...X.spread.map(y => y.p90));
@@ -297,7 +309,7 @@ const metricValues = (ci, mi) => POP[ci].map(i => L.accounts[i].m[mi][0])
 const MFMT = {
   raised_365: v => money(v), avg_gift: v => '$' + Number(v).toFixed(0),
   gifts_lifetime: v => num(v), recurring_donors: v => num(v),
-  channel_breadth: v => Number(v).toFixed(1), active_campaigns: v => num(v),
+  campaign_type_breadth: v => Number(v).toFixed(1), active_campaigns: v => num(v),
 };
 const mfmt = (k,v) => v == null ? '—' : (MFMT[k] || num)(v);
 

@@ -119,28 +119,45 @@
   <div class="tw"><table>
     <thead><tr><th style="width:34%">Measurement</th><th class="n">Value</th><th>Reading</th></tr></thead>
     <tbody>
-      <tr><td>Accounts on ≤2 of 7 channels</td><td class="n">767 (24.3%)</td><td>Nearly a quarter of the eligible book has a narrow recorded footprint.</td></tr>
-      <tr><td>Accounts with ≥90% of dollars in one channel</td><td class="n">694 (22.0%)</td><td>310 accounts (9.8%) are single-channel outright.</td></tr>
-      <tr><td>Narrow-footprint flag (either condition)</td><td class="n">1,004 (31.8%)</td><td><code>NARROW_FOOTPRINT_CHANNELS = 2</code>, <code>NARROW_FOOTPRINT_CONCENTRATION = 0.90</code>.</td></tr>
-      <tr><td>Mean channels by diagnosis</td><td class="n">2.46 → 4.60</td><td>Activation 2.46 · coachable 3.11 · on track 3.89 · overperforming 4.60. Monotonic — footprint tracks the diagnosis.</td></tr>
-      <tr><td>Narrow flag within the coachable group</td><td class="n">218 / 484 (45%)</td><td>$25.2M of the $60.0M aggregate gap sits with accounts whose footprint is narrow.</td></tr>
+      <tr><td>Accounts running one campaign type</td><td class="n">478 (15.1%)</td><td>Of three: direct giving, peer-to-peer, hosted event.</td></tr>
+      <tr><td>Accounts with ≥90% of dollars in one type</td><td class="n">—</td><td>Second arm of the flag; concentration rather than absence.</td></tr>
+      <tr><td>Narrow-footprint flag (either condition)</td><td class="n">1,149 (36.3%)</td><td><code>NARROW_FOOTPRINT_TYPES = 1</code>, <code>NARROW_FOOTPRINT_CONCENTRATION = 0.90</code>.</td></tr>
+      <tr><td>Narrow flag within the coachable group</td><td class="n">195 / 484 (40%)</td><td>$22.5M of the $60.0M aggregate gap sits with accounts whose footprint is narrow.</td></tr>
       <tr><td>Median platform share of IRS revenue</td><td class="n">4.8%</td><td>Crude proxy — IRS revenue includes programme and grant income — but directionally the platform sees a slice.</td></tr>
     </tbody>
   </table></div>
 </div>
 <h3>Decomposing the gap</h3>
-<p class="sub">Narrow-footprint accounts (≤2 channels) raise <b>2.390 log points</b> less in lifetime dollars than broad-footprint accounts (≥4). Because <code>log(total) = log(channels) + log(dollars per channel)</code>, that splits exactly:</p>
+<p class="sub">Accounts running one campaign type raise <b>2.414 log points</b> less in lifetime dollars than accounts running all three. Because <code>log(total) = log(types) + log(dollars per type)</code>, that splits exactly:</p>
 <div class="card reveal">
   <div class="tw"><table>
     <thead><tr><th>Component</th><th class="n">Log points</th><th class="n">Share</th><th>Interpretation</th></tr></thead>
     <tbody>
-      <tr><td>Channel count</td><td class="n">1.169</td><td class="n">49%</td><td><b>Measurement artifact.</b> Mean 1.62 vs 5.04 channels — fewer channels mechanically means fewer dollars ever recorded.</td></tr>
-      <tr><td>Dollars per channel</td><td class="n">1.221</td><td class="n">51%</td><td><b>Genuine.</b> Narrow accounts are also smaller on the channels they do use.</td></tr>
+      <tr><td>Campaign-type count</td><td class="n">1.099</td><td class="n">46%</td><td><b>Measurement artifact.</b> Fewer types mechanically means fewer dollars ever recorded.</td></tr>
+      <tr><td>Dollars per type</td><td class="n">1.315</td><td class="n">54%</td><td><b>Genuine.</b> Narrow accounts are also smaller on the type they do run.</td></tr>
     </tbody>
   </table></div>
 </div>
 <p class="sub" style="margin-top:14px">Per-channel like-for-like comparisons within size band corroborate the split: on donation pages narrow accounts run 0.27–0.53× of broad accounts (p 6.6e-14), on peer-to-peer 0.19–0.72× (p 3.9e-06), on ticketed 0.16–1.53× (p 3.1e-10) — but on Campaign Studio the difference is <b>not significant</b> (p 0.063) and reverses in three bands. So the per-channel component is real but uneven, and no single-account correction is defensible.</p>
 <div class="note bad"><b>What was done about it, and what was not.</b> Flagged, not corrected — <code>platform_footprint</code> is emitted per account and every narrow-footprint verdict carries a scope warning ahead of any gap figure, asserted in the test suite. It is <b>not</b> a model term, because adding it would let the regression absorb a measurement problem as if it were a behavioural one, and <code>channel_breadth</code> is already a lever, which makes it doubly ambiguous: for a broad-footprint account "add a channel" is advice, and for a narrow-footprint one it may be asking the organization to move a programme it deliberately runs elsewhere. Closing this properly needs a wallet-share input — self-reported total fundraising, or contributions revenue off the 990 — at which point <code>raised_365 ÷ total contributions</code> becomes a real denominator and the benchmark can be run on platform share rather than platform dollars.</div>
+
+<h3>Correction: report columns are not campaign types</h3>
+<p class="sub">The first version treated all seven channel dollar columns as parallel channels. They are not. <code>Donation Page</code> is where direct-giving traffic lands and <code>Campaign Studio</code> is one way to build such a page, so the pair is a destination and a builder for a single campaign type.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th>Evidence</th><th class="n">Value</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td>Columns reconcile to <code>Txn - Online</code></td><td class="n">6,418 / 6,759</td><td>The columns <b>partition</b> online dollars, so there is no double counting — a dollar sits in exactly one column.</td></tr>
+      <tr><td>Accounts with both Donation Page and Campaign Studio</td><td class="n">1,892 (60%)</td><td>Studio-only 596 (19%), Donation-Page-only 472 (15%).</td></tr>
+      <tr><td>Studio share of their direct-giving dollars</td><td class="n">13% median</td><td>A minority slice of the same programme — a builder's signature, not a channel's.</td></tr>
+      <tr><td>CV R² on 7-channel breadth</td><td class="n">0.7325</td><td rowspan="2">Rolling up <b>improves</b> the fit with a coarser variable.</td></tr>
+      <tr><td>CV R² on 3-type breadth</td><td class="n">0.7365</td></tr>
+      <tr><td>Both breadths in one model</td><td class="n">type +0.276 (p 3e-26)<br>channel +0.063 (p 0.005)</td><td>Campaign-type breadth dominates; the channel term nearly vanishes. Most of what the old lever measured was type breadth.</td></tr>
+      <tr><td>Accounts "broad" on channels, one type</td><td class="n">60</td><td>Counted as diversified while running a single campaign type through two builders.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<div class="note warn"><b>The mapping is inferred and needs product confirmation.</b> Direct giving = Donation Page + Campaign Studio + Crowdfunding; peer-to-peer = Peer to Peer + RwF; hosted event = Ticketed + Registration. Derived from column names plus the stated taxonomy, not from documentation. <code>RwF</code> is assigned to peer-to-peer on the assumption that "Registration with Fundraising" carries a fundraising component, and <code>Crowdfunding</code> to direct giving; both are the assignments most likely to be wrong. <code>CAMPAIGN_TYPES</code> is a single dict and a test asserts every column maps exactly once, so a correction is one line and cannot silently drop or duplicate dollars.</div>
 
 <h2 id="m8">8 · Done well</h2>
 <div class="card reveal">
@@ -158,7 +175,7 @@
 <div class="card reveal">
   <ul class="sub" style="margin:0;padding-left:20px">
     <li><b>Nothing here is causal, and the framing invites causal reading.</b> The output is a ranked list of actions with dollar figures attached — that is an intervention framing built on observational associations. A CRM coefficient of ×1.32 is as much a capability marker as an effect. <b>The correct next step is a holdout experiment</b> on one lever (recurring giving), and until that runs every number in the recommendation layer is suggestive only.</li>
-    <li><b>Three defects reached a published artifact before being caught.</b> Thin-cell accounts scored against the wrong reference population; open-ended size bands putting a $6.7B hospital with $26M foundations; cohort stats read from the label group rather than the reference population. All three were found by inspection or by a user question, <i>not</i> by the tests that existed at the time. The tests were then written. That ordering is the wrong way round.</li>
+    <li><b>Four defects reached a published artifact before being caught.</b> Thin-cell accounts scored against the wrong reference population; open-ended size bands putting a $6.7B hospital with $26M foundations; cohort stats read from the label group rather than the reference population; and seven report columns treated as seven campaign types when two of them are a destination and a builder for one. Every one was found by inspection or by a user question, <i>not</i> by the tests that existed at the time. The tests were then written. That ordering is the wrong way round, and the last one is the clearest case: no amount of statistical care substitutes for knowing what a column means.</li>
     <li><b>Cause area contributes almost nothing and is kept anyway.</b> It explains 0.8% of variance in log raised against 16.7% for size band. It is retained because it makes the comparison credible to a nonprofit, which is a product judgment, not a statistical one. A defensible alternative — cohorting on operating profile instead — was never built.</li>
     <li><b>Per-account prediction error is ×1.91 and the UI shows dollar figures to the dollar.</b> Mitigated with caveats in every surface, but a confidence interval on each projection would be better than a sentence asking people not to over-read a precise-looking number.</li>
     <li><b>No temporal validation.</b> The export is a single snapshot, so the model is cross-sectional. There is no test of whether a lever moving in year <i>t</i> is followed by more raised in <i>t+1</i>, which is the question the recommendations actually imply. Two snapshots would enable it.</li>
@@ -166,7 +183,7 @@
     <li><b>Ordinal buckets are mapped to midpoints.</b> <code>Paid Fundraising Staff</code> and <code>#&nbsp;Individual&nbsp;Donors</code> arrive as ranges and become single numbers, with the open-ended top bucket ($&gt;25,000$ donors → 30,000) essentially guessed. An ordered-categorical treatment would be more honest.</li>
     <li><b>The exceptional threshold (5×) is a judgment call, not a derived cut.</b> It behaves sensibly and its rationale is documented, but no sensitivity analysis over 3× / 5× / 10× was run to show how much the 374-account population moves.</li>
     <li><b>Wording is duplicated between Python and JavaScript.</b> The verdict templates exist in both so the CLI and the page can render them; the structural inputs are computed once in Python, but the sentences are mirrored by hand and can drift.</li>
-    <li><b>Partial platform use is flagged but not corrected, and it is the largest measurement threat.</b> See §7b. 32% of accounts have a narrow recorded footprint and about half their apparent shortfall is channels we never see. A benchmark on platform <i>share</i> rather than platform <i>dollars</i> would fix it and needs one field the export does not have.</li>
+    <li><b>Partial platform use is flagged but not corrected, and it is the largest measurement threat.</b> See §7b. 36% of accounts have a narrow recorded footprint and about half their apparent shortfall is channels we never see. A benchmark on platform <i>share</i> rather than platform <i>dollars</i> would fix it and needs one field the export does not have.</li>
     <li><b>No campaign-level analysis, which is what was originally asked for.</b> The data has no campaign records and no weekly series, so per-campaign realistic potential, momentum against cohort week-over-week, and donation growth/decay curves are all out of reach. This benchmarks organizations and channel mix.</li>
   </ul>
 </div>

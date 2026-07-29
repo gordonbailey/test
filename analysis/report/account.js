@@ -20,7 +20,7 @@ let sel = null, sgRows = [], sgCursor = -1;
 rMetEl.innerHTML = L.metricOrder.map((k,i) => `<option value="${i}">${esc(L.metricLabels[i])}</option>`).join('');
 
 const SHORT = {raised_365:'Annual raised', avg_gift:'Average gift', gifts_lifetime:'Lifetime gifts',
-  recurring_donors:'Recurring donors', channel_breadth:'Channels used', active_campaigns:'Active campaigns'};
+  recurring_donors:'Recurring donors', campaign_type_breadth:'Campaign types', active_campaigns:'Active campaigns'};
 const statusTone = s => s === 'Overperforming' ? 'good' : s === 'Underperforming' ? 'warn' : 'info';
 const statusColor = s => s === 'Overperforming' ? 'var(--good)' : s === 'Underperforming' ? 'var(--warn)' : 'var(--s2)';
 const leverUnit = label => (L.leverUnits || {})[label] || 'count';
@@ -157,12 +157,12 @@ function select(i){
   // before quoting a gap -- including in front of the customer.
   const scopeEl = document.getElementById('a-scope');
   if (a.fp){
-    const nCh = L.nChannels || 7;
+    const nCh = L.nTypes || 3;
     scopeEl.hidden = false;
     scopeEl.innerHTML = `<b>Scope: we only see part of this organization's fundraising.</b>
-      It runs <b>${a.ch} of ${nCh}</b> campaign types through the platform${
-        a.tcs >= (L.narrowConcentration||0.9) ? `, with ${Math.round(a.tcs*100)}% of its dollars in one` : ''
-      }. If it runs direct giving or peer-to-peer elsewhere, that money is invisible here.
+      It runs <b>${a.ch} of ${nCh}</b> campaign types with us — direct giving, peer-to-peer,
+      hosted events${a.tcs >= (L.narrowConcentration||0.9) ? `, with ${Math.round(a.tcs*100)}% of its dollars in one` : ''
+      }. If it runs any of the others elsewhere, that money is invisible here.
       Across accounts with this footprint, about <b>half</b> the measured gap is channels we never
       record rather than weaker fundraising — confirm what they run elsewhere before treating any
       shortfall as real.`;
@@ -225,7 +225,7 @@ function buildVerdict(a){
     ? 'connect one (this account has no CRM integrated today)'
     : `move ${r.l.toLowerCase()} from ${leverVal(r.l,r.cv)} toward ${leverVal(r.l,r.tv)} (${ordinal(r.tp)} percentile of peers)`}. Modelled effect: roughly +${moneyFull(r.lift)} a year.`);
   const scope = a.fp
-    ? `Scope warning: this organization runs ${a.ch} of ${L.nChannels||7} campaign types through `
+    ? `Scope warning: this organization runs ${a.ch} of ${L.nTypes||3} campaign types through `
       + 'the platform, so these figures cover only the part of its fundraising we can see. It may '
       + 'raise substantially more elsewhere. Roughly half the measured gap for accounts with this '
       + 'footprint is the channels we never record rather than weaker fundraising — confirm what '
@@ -497,7 +497,7 @@ function drawPNG(){
   g.strokeStyle = LINE; g.beginPath(); g.moveTo(LEFT,H-72); g.lineTo(RIGHT,H-72); g.stroke();
   g.fillStyle = INK3; g.font = font(500,11.5);
   const foot = (a.fp
-      ? `These figures cover the ${a.ch} of ${L.nChannels||7} campaign types this organization runs on GoFundMe Pro, so fundraising run elsewhere is not included. `
+      ? `These figures cover the ${a.ch} of ${L.nTypes||3} campaign types this organization runs on GoFundMe Pro, so fundraising run elsewhere is not included. `
       : '')
     + 'Peer benchmarks are drawn from organizations of comparable cause area and annual revenue. '
     + 'Projected effects are modelled estimates, not guarantees, and are best used to decide which '

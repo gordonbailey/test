@@ -103,6 +103,19 @@ def main() -> None:
     # ---- extra findings + methodology tables -----------------------------
     extra = {}
 
+    # Campaign types are the meaningful unit; raw channels are kept beneath them
+    # so the builder-vs-destination split stays visible.
+    extra["types"] = [
+        {"name": t, "dollars": float(df[f"type_{t}"].sum()),
+         "accounts": int((df[f"type_{t}"] > 0).sum()),
+         "members": [
+             {"name": c, "dollars": float(df[c].fillna(0).sum()),
+              "accounts": int((df[c] > 0).sum())} for c in members
+         ]}
+        for t, members in ce.CAMPAIGN_TYPES.items()
+    ]
+    extra["types"].sort(key=lambda r: -r["dollars"])
+
     extra["channels"] = sorted(
         [{"name": c, "dollars": float(df[c].fillna(0).sum()),
           "accounts": int((df[c] > 0).sum())} for c in ce.CHANNEL_COLUMNS],
@@ -178,13 +191,13 @@ def main() -> None:
     # Footprint gap decomposition. log(total) = log(channels) + log(per channel),
     # so the narrow-vs-broad gap splits cleanly into a measurement component and
     # an activity component.
-    fp = bm[(bm["raised_lifetime"] > 0) & (bm["channel_breadth"] > 0)].copy()
-    fp["per_ch"] = fp["raised_lifetime"] / fp["channel_breadth"]
-    nar = fp[fp["channel_breadth"] <= 2]
-    bro = fp[fp["channel_breadth"] >= 4]
+    fp = bm[(bm["raised_lifetime"] > 0) & (bm["campaign_type_breadth"] > 0)].copy()
+    nar = fp[fp["campaign_type_breadth"] <= 1]
+    bro = fp[fp["campaign_type_breadth"] >= 3]
     lg = lambda s: np.log(s[s > 0])
     gap_total = float(lg(bro["raised_lifetime"]).mean() - lg(nar["raised_lifetime"]).mean())
-    gap_ch = float(np.log(bro["channel_breadth"]).mean() - np.log(nar["channel_breadth"]).mean())
+    gap_ch = float(np.log(bro["campaign_type_breadth"]).mean()
+                   - np.log(nar["campaign_type_breadth"]).mean())
     extra["footprint"] = {
         "gap_total": gap_total,
         "gap_channels": gap_ch,
@@ -203,9 +216,9 @@ def main() -> None:
             k: float(v) for k, v in
             bm.groupby("diagnosis")["narrow_footprint"].mean().items()
         },
-        "channel_breadth_hist": {
+        "type_breadth_hist": {
             str(int(k)): int(v) for k, v in
-            bm["channel_breadth"].value_counts().sort_index().items()
+            bm["campaign_type_breadth"].value_counts().sort_index().items()
         },
     }
 

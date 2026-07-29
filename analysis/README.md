@@ -163,6 +163,50 @@ is exceptional-by-multiple and "On track" by percentile. The two measures
 answer different questions on purpose, and the test suite asserts high overlap
 rather than containment.
 
+## Campaign types, not report columns
+
+The seven channel dollar columns are **not** seven parallel channels. `Donation
+Page` is where direct-giving traffic lands; `Campaign Studio` is one way to build
+such a page. The pair is a destination and a builder for the same campaign type,
+and the reporting attributes a dollar to whichever surface it came through.
+
+The columns do **partition** online dollars exactly (verified on 6,418 of 6,759
+rows), so there is no double counting — but counting distinct columns overstates
+how many genuinely different things an organization runs.
+
+Evidence, and the effect of fixing it:
+
+| | |
+|---|---|
+| Accounts with both Donation Page and Campaign Studio | 1,892 (60%) |
+| Studio share of their direct-giving dollars | 13% median |
+| CV R² with 7-channel breadth | 0.7325 |
+| CV R² with 3-campaign-type breadth | **0.7365** |
+| Both breadths in one model | type **+0.276** (p 3e-26), channel +0.063 (p 0.005) |
+| Accounts "broad" on channels but running one campaign type | 60 |
+
+So the rollup improves the fit with a coarser variable, campaign-type breadth
+absorbs nearly all of what the channel term was measuring, and the "diversify"
+lever now means *run a campaign type you do not run with us* rather than *use a
+second page builder*.
+
+`CAMPAIGN_TYPES` holds the mapping:
+
+```python
+"Direct giving": ["Donation Page", "Campaign Studio", "Crowdfunding"]
+"Peer to peer":  ["Peer to Peer", "RwF"]
+"Hosted event":  ["Ticketed", "Registration"]
+```
+
+**This mapping is inferred, not documented.** It comes from the column names and
+the stated product taxonomy (direct giving, peer-to-peer, hosted event), not from
+product documentation. `RwF` sits under peer-to-peer on the assumption that
+"Registration with Fundraising" carries a fundraising component, and
+`Crowdfunding` under direct giving; those two are the likeliest to be wrong.
+A test asserts every column maps exactly once and that type totals reconcile with
+channel totals, so a correction is a one-line change that cannot silently drop or
+duplicate dollars.
+
 ## Scope: what is measured and what is not
 
 The outcome is dollars raised **through this platform**, not the organization's
@@ -171,15 +215,14 @@ Pro and its direct giving elsewhere shows a small number here and is *not*
 underperforming — most of its programme is invisible. There is no wallet-share
 field in the export, so this cannot be corrected, only flagged.
 
-**Measured, not assumed.** Narrow-footprint accounts (≤2 of 7 channels) raise
-2.390 log points less in lifetime dollars than broad-footprint accounts (≥4).
-Because `log(total) = log(channels) + log(dollars per channel)`, that splits
-exactly:
+**Measured, not assumed.** Accounts running one campaign type raise 2.414 log
+points less in lifetime dollars than accounts running all three. Because
+`log(total) = log(types) + log(dollars per type)`, that splits exactly:
 
 | Component | Log points | Share | Reading |
 |---|---|---|---|
-| Channel count | 1.169 | **49%** | Measurement artifact — mean 1.62 vs 5.04 channels |
-| Dollars per channel | 1.221 | **51%** | Genuine — narrow accounts are smaller per channel too |
+| Campaign-type count | 1.099 | **46%** | Measurement artifact — fewer types, fewer dollars recorded |
+| Dollars per type | 1.315 | **54%** | Genuine — narrow accounts are smaller per type too |
 
 So roughly half the apparent shortfall of a narrow-footprint account is an
 artifact. Per-channel like-for-like comparisons within size band corroborate it:
@@ -188,16 +231,16 @@ ticketed 0.16–1.53× (p 3.1e-10) — but Campaign Studio is **not significant*
 (p 0.063) and reverses in three bands. The per-channel component is real but
 uneven, so no per-account correction is defensible.
 
-`NARROW_FOOTPRINT_CHANNELS = 2` and `NARROW_FOOTPRINT_CONCENTRATION = 0.90` flag
-**1,004 of 3,161 accounts (32%)**, including **218 of the 484 coachable-gap
-accounts (45%, $25.2M of the $60.0M aggregate gap)**. Every narrow-footprint
+`NARROW_FOOTPRINT_TYPES = 1` and `NARROW_FOOTPRINT_CONCENTRATION = 0.90` flag
+**1,149 of 3,161 accounts (36%)**, including **195 of the 484 coachable-gap
+accounts (40%, $22.5M of the $60.0M aggregate gap)**. Every narrow-footprint
 verdict carries a scope warning ahead of any gap figure, asserted in the tests,
 and it appears on the account scorecard, in the talk track and in the client PNG
 footer.
 
 Deliberately **not** a model term: adding it would let the regression absorb a
-measurement problem as if it were behavioural, and `channel_breadth` is already a
-lever — which makes "add a channel" advice for a broad-footprint account and
+measurement problem as if it were behavioural, and `campaign_type_breadth` is
+already a lever — which makes "add a channel" advice for a broad-footprint account and
 possibly a request to move an existing programme for a narrow one. Closing this
 needs a wallet-share input (self-reported total fundraising, or 990 contributions
 revenue), which would let the benchmark run on platform *share* rather than

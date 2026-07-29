@@ -237,8 +237,8 @@ def main(path: str) -> int:
     )
     check(
         (
-            (bm.loc[narrow, "channel_breadth"] <= ce.NARROW_FOOTPRINT_CHANNELS)
-            | (bm.loc[narrow, "top_channel_share"] >= ce.NARROW_FOOTPRINT_CONCENTRATION)
+            (bm.loc[narrow, "campaign_type_breadth"] <= ce.NARROW_FOOTPRINT_TYPES)
+            | (bm.loc[narrow, "top_type_share"] >= ce.NARROW_FOOTPRINT_CONCENTRATION)
         ).all(),
         "narrow footprint agrees with its own definition",
     )
@@ -265,6 +265,35 @@ def main(path: str) -> int:
     )
     check(broad_scope == 0, "broad-footprint verdicts carry no scope warning",
           f"{broad_scope} unexpected")
+
+    print("\nCampaign types")
+    # The rollup is only sound if the seven channels partition online dollars --
+    # if a dollar could appear in two columns, summing members would double-count.
+    both = df[df["Txn - Online"].notna()]
+    chan_sum = both[ce.CHANNEL_COLUMNS].fillna(0).sum(axis=1)
+    agree = ((chan_sum - both["Txn - Online"].fillna(0)).abs() < 1).mean()
+    check(agree > 0.90, "channel columns partition online dollars (no double count)",
+          f"only {agree:.1%} reconcile")
+    # Every channel must belong to exactly one campaign type, or dollars vanish
+    # or get counted twice in the rollup.
+    mapped = [c for members in ce.CAMPAIGN_TYPES.values() for c in members]
+    check(sorted(mapped) == sorted(ce.CHANNEL_COLUMNS),
+          "every channel maps to exactly one campaign type",
+          f"unmapped {set(ce.CHANNEL_COLUMNS)-set(mapped)}, "
+          f"duplicated {[c for c in set(mapped) if mapped.count(c) > 1]}")
+    check(
+        (eligible["campaign_type_breadth"] <= len(ce.CAMPAIGN_TYPES)).all()
+        and (eligible["campaign_type_breadth"] >= 0).all(),
+        "campaign-type breadth is within range",
+    )
+    # The rollup must not lose money relative to the raw channels.
+    lost = (eligible["types_lifetime_sum"] - eligible["channels_lifetime_sum"]).abs().max()
+    check(lost < 1.0, "campaign-type totals reconcile with channel totals",
+          f"max discrepancy ${lost:,.2f}")
+    check(
+        "campaign_type_breadth" in ce.LEVERS and "channel_breadth" not in ce.LEVERS,
+        "the diversify lever is campaign types, not raw channels",
+    )
 
     print("\nActivation / optimization split")
     activation = bm["diagnosis"].str.startswith("Minimal platform adoption")

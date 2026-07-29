@@ -104,14 +104,14 @@
       <tbody id="scope-table"></tbody>
     </table></div>
   </div>
-  <div class="note bad"><b>The most important gap: we only see the campaigns an organization runs with us.</b> An organization that runs its peer-to-peer with GoFundMe Pro and its direct giving somewhere else shows a small number here and is <i>not</i> underperforming — most of its programme is invisible to this analysis. There is no wallet-share field in the data, so this cannot be corrected, only flagged.</div>
+  <div class="note bad"><b>The most important gap: we only see the campaigns an organization runs with us.</b> An organization that runs its peer-to-peer with GoFundMe Pro and its direct giving somewhere else shows a small number here and is <i>not</i> underperforming — most of its programme is invisible to this analysis. There is no wallet-share field in the data, so this cannot be corrected, only flagged. <b>Footprint is now counted in campaign types (of three), not report columns</b> — an organization using two page builders for the same direct-giving programme is running one campaign type, not two.</div>
   <div class="card reveal">
     <h3 style="margin-top:0">How big is that effect? Measured, not assumed.</h3>
-    <p class="sub tight">Accounts using one or two of the seven campaign types raise about a tenth of what accounts using four or more raise. Splitting that gap:</p>
+    <p class="sub tight">Accounts running a single campaign type raise about <b>one eleventh</b> of what accounts running all three raise. Splitting that gap:</p>
     <div class="bars" id="g-footprint" style="--lw:250px"></div>
     <p class="sub" style="margin-top:14px;margin-bottom:0"><b>So roughly half of the apparent shortfall of a narrow-footprint organization is a measurement artifact</b> — channels we never record — and roughly half is genuinely lower activity on the channels we do see. That is why the flag is a scope warning rather than a correction: the honest statement is "part of this gap is not real, and we cannot tell you which part for any single organization."</p>
   </div>
-  <div class="note warn"><b>Who this affects.</b> <b>1,004 of 3,161 accounts (32%)</b> carry a narrow footprint, including <b>218 of the 484 "coachable gap" accounts (45%)</b> — <b>$25.2M of the $60.0M</b> aggregate gap. Those accounts show a scope warning on their scorecard, and a seller should confirm what the organization runs elsewhere before treating any shortfall as real. It also makes "add a fundraising channel" a partly circular recommendation: it may be advising an organization to move a programme it deliberately runs elsewhere.</div>
+  <div class="note warn"><b>Who this affects.</b> <b>1,149 of 3,161 accounts (36%)</b> carry a narrow footprint — one campaign type, or 90%+ of dollars concentrated in one — including <b>195 of the 484 "coachable gap" accounts (40%)</b>, or <b>$22.5M of the $60.0M</b> aggregate gap. Those accounts show a scope warning on their scorecard, and a seller should confirm what the organization runs elsewhere before treating any shortfall as real. It also makes "run another campaign type" a partly circular recommendation: it may be advising an organization to move a programme it deliberately runs elsewhere.</div>
 
   <h2>What to trust, and what not to</h2>
   <div class="grid2">
@@ -161,10 +161,11 @@
   <div class="card reveal"><div class="bars" id="f-paths" style="--lw:196px"></div></div>
   <div class="note good"><b>The most useful single finding here.</b> Volume-led outnumbers gift-led <b>13 to 1</b>. Growing the number of donors — especially recurring ones — is how nearly every top performer got there, and it matches what the model finds independently: recurring donors is the most robust lever of the five. When in doubt, that is the advice.</div>
 
-  <h2><span style="color:var(--ink-3);font-weight:600">03</span> &nbsp;One channel carries the platform</h2>
-  <p class="sub">Lifetime dollars raised by channel, all accounts.</p>
+  <h2><span style="color:var(--ink-3);font-weight:600">03</span> &nbsp;Direct giving is three quarters of everything</h2>
+  <p class="sub">Lifetime dollars by campaign type, with the underlying report columns shown beneath each. <b>Donation Page and Campaign Studio are not two channels</b> — a donation page is where direct-giving traffic lands, and Campaign Studio is one way to build one. The reporting splits a dollar by which surface it came through, so counting columns overstates how many genuinely different things an organization runs.</p>
   <div class="card reveal"><div class="bars" id="f-chan" style="--lw:150px"></div></div>
-  <div class="note"><b>Note the mismatch.</b> Campaign Studio is live on the most accounts (3,639) but raises a fifth of what donation pages do. Registration is barely used at all — 233 accounts, $9M. Adoption breadth and dollar contribution are not the same thing, and a "more channels" recommendation should be read with that in mind.</div>
+  <div class="note"><b>Why this correction mattered.</b> 60% of accounts show dollars in both Donation Page and Campaign Studio, with Studio a median 13% of their direct-giving total — the signature of a builder, not a separate channel. Rolling the seven columns into three campaign types <b>improved the model</b> (cross-validated R² 0.7325 → 0.7365), and with both breadth measures in, campaign-type breadth dominates (+0.28, p≈3e-26) while channel breadth collapses (+0.06). The "diversify" lever now means <i>run a campaign type you do not run with us</i> rather than <i>use a second page builder</i>.</div>
+  <div class="note warn"><b>The type mapping is inferred, not documented.</b> Direct giving = Donation Page + Campaign Studio + Crowdfunding; peer-to-peer = Peer to Peer + Registration&nbsp;with&nbsp;Fundraising; hosted event = Ticketed + Registration. That comes from the column names and the stated product taxonomy, not from product documentation — <code>CAMPAIGN_TYPES</code> in the engine is one dict, so a correction is a one-line change. Worth confirming, particularly RwF and Crowdfunding.</div>
 
   <h2><span style="color:var(--ink-3);font-weight:600">04</span> &nbsp;Matched peers still differ enormously</h2>
   <p class="sub">Within the largest peer groups — already matched on both cause and size — the 10th to 90th percentile range of trailing-year raised.</p>
