@@ -8,7 +8,6 @@
     "h1": "Internship Portfolio",
     "lede": "Everything built this summer, in one place. Six workstreams, from a peer benchmarking engine sellers can screen-share to the instrumentation and UTM plumbing underneath it. Each one keeps its own page with the same five headings: the problem, what was done, what came out of it, what it does not cover, and what the next person should pick up."
   },
-
   "_comment": [
     "One node per page. `parent` nests it; `order` sorts within a parent.",
     "status:  live      — real content, written and reviewed",
@@ -20,15 +19,28 @@
     "`body` names a file in projects/ to inline as the page content. Omit it and",
     "build.py renders the standard skeleton from `sections`."
   ],
-
   "sections": [
-    ["The problem", "Who was stuck, on what, and why it mattered."],
-    ["What was done", "The actual work, in order, including what was tried and dropped."],
-    ["What came out of it", "Findings, decisions, shipped artifacts, numbers where there are numbers."],
-    ["What it does not cover", "Scope held back deliberately, and the known soft spots."],
-    ["Pick this up next", "The first thing the next person should do."]
+    [
+      "The problem",
+      "Who was stuck, on what, and why it mattered."
+    ],
+    [
+      "What was done",
+      "The actual work, in order, including what was tried and dropped."
+    ],
+    [
+      "What came out of it",
+      "Findings, decisions, shipped artifacts, numbers where there are numbers."
+    ],
+    [
+      "What it does not cover",
+      "Scope held back deliberately, and the known soft spots."
+    ],
+    [
+      "Pick this up next",
+      "The first thing the next person should do."
+    ]
   ],
-
   "nodes": [
     {
       "id": "hackathon",
@@ -40,15 +52,16 @@
       "h1": "Which sixteen hackathon projects deserve a roadmap slot?",
       "lede": "A hackathon produces enthusiasm, not a roadmap. This scores all sixteen projects on GDV impact, churn prevention and feasibility, merges the duplicates, collects an estimate from each owner, and sorts them into four to build now, five to validate in Q3, and five to park with a named unlock."
     },
-
     {
       "id": "ci",
       "title": "Customer Intelligence",
       "short": "Customer Intelligence",
       "order": 20,
       "kind": "group",
-      "status": "drafting",
-      "blurb": "Three strands of the same question: how do we tell a customer something true about their own fundraising that they could not work out alone?"
+      "status": "live",
+      "blurb": "Three strands of the same question: how do we tell a customer something true about their own fundraising that they could not work out alone? Two ran independently and converged on the same gap.",
+      "h1": "Customer Intelligence",
+      "lede": "What customers said they need, what the market already claims to offer, and a working answer to the gap both pointed at."
     },
     {
       "id": "benchmarking",
@@ -68,8 +81,10 @@
       "title": "Competitive Intelligence",
       "short": "Competitive intelligence",
       "order": 20,
-      "status": "awaiting",
-      "needs": "Which competitors were in scope, where the data came from, and what the comparison was actually used for — pricing, positioning, or product gaps."
+      "status": "live",
+      "blurb": "Nine vendors, eight AI launches in twelve months, every claim graded on its evidence. Trust language has converged across the whole market; verifiability is unclaimed by all nine.",
+      "h1": "What nine competitors ship, claim, and never mention",
+      "lede": "Every vendor in the category now says \"we have AI\", which makes the marketing useless as a signal. This separates what has shipped from what is merely announced, dates the whole landscape onto one timeline, and marks the evidence strength on every cell."
     },
     {
       "id": "interviews",
@@ -77,10 +92,11 @@
       "title": "Customer Interview Synthesis",
       "short": "Interview synthesis",
       "order": 30,
-      "status": "awaiting",
-      "needs": "How many interviews, how they were recruited, the coding scheme or themes you landed on, and the quotes you are willing to publish."
+      "status": "live",
+      "blurb": "39 admin interviews across 33 organizations. The unmet need is not more AI — it is AI that is controllable, explainable and measurable. Reporting turned out to be the largest pain cluster in the dataset.",
+      "h1": "What 39 admins said about AI, reporting and insights",
+      "lede": "Everyone agrees customers want AI. Nobody could say which AI, or why the AI already shipped was not being adopted. This synthesizes 39 interviews across 33 organizations, nine workflow personas and all five segments — and the headline is not what anyone expected."
     },
-
     {
       "id": "instrumentation",
       "title": "Instrumentation",
@@ -97,7 +113,6 @@
       "status": "awaiting",
       "needs": "The tagging convention, what it replaced, who has to follow it, and how non-compliant links get caught."
     },
-
     {
       "id": "guides",
       "title": "Guides",
@@ -125,7 +140,6 @@
       "status": "awaiting",
       "needs": "Which repo, how it is laid out, the path a change takes from branch to production, and the parts that bite newcomers."
     },
-
     {
       "id": "strategy",
       "title": "Corporate Strategy",

@@ -194,6 +194,71 @@ a.btn{text-decoration:none}
 .gdv.gdvwarn b{color:var(--warn-ink)}
 .tsub{font-size:.75rem;color:var(--ink-3)}
 
+/* Cross-project links inside callouts. The router picks these up via
+   data-jump, so they behave as in-page navigation, not external links. */
+.note a{color:var(--brand-strong);font-weight:650;text-decoration:none;
+  border-bottom:1px solid color-mix(in srgb,var(--brand) 45%,transparent)}
+.note a:hover{border-bottom-color:var(--brand)}
+.note a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+/* evidence tiles — a number and who said it */
+.evid{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px}
+.evid>*{min-width:0}
+.ev{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);
+  padding:18px 19px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:9px}
+.evn{font-size:1.5rem;font-weight:700;letter-spacing:-.03em;line-height:1.1;color:var(--crit);
+  font-variant-numeric:tabular-nums}
+.evn span{font-size:.86rem;font-weight:600;color:var(--ink-3);letter-spacing:0;margin:0 3px}
+.evn.evtxt{font-size:1.14rem;color:var(--warn-ink);letter-spacing:-.02em}
+.ev p{margin:0;font-size:.87rem;color:var(--ink-2);line-height:1.5;flex:1}
+.evwho{font-size:.73rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3)}
+
+/* attribution callout */
+.attrib .attribnum{display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:center;
+  padding-bottom:16px;margin-bottom:4px;border-bottom:1px solid var(--line-2)}
+.attrib .an{font-size:2.6rem;font-weight:700;letter-spacing:-.035em;line-height:1;color:var(--crit);
+  grid-row:span 2}
+.attrib .al{font-size:.94rem;color:var(--ink-2);line-height:1.5;align-self:end}
+.attrib .aq{font-size:.87rem;color:var(--ink-3);font-style:italic;align-self:start}
+@media (max-width:620px){
+  .attrib .attribnum{grid-template-columns:1fr}
+  .attrib .an{grid-row:auto}
+}
+
+/* dated timeline */
+.tl{display:flex;flex-direction:column}
+.tli{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid var(--line-2);position:relative}
+.tli:last-child{border-bottom:none}
+.tli>*{min-width:0}
+.tld{font-size:.77rem;font-weight:700;color:var(--ink-3);letter-spacing:.03em;
+  text-transform:uppercase;white-space:nowrap}
+.tlt{font-size:.92rem;color:var(--ink-2);line-height:1.5}
+.tlt b{color:var(--ink);font-weight:700}
+.tli.tlhot{background:color-mix(in srgb,var(--warn) 7%,transparent);
+  border-radius:var(--r-sm);padding-left:12px;padding-right:12px;margin:0 -12px}
+.tli.tlhot .tld{color:var(--warn-ink)}
+@media (max-width:560px){
+  .tli{grid-template-columns:1fr;gap:3px}
+}
+
+/* autonomy ladder */
+.ladder{display:flex;flex-direction:column;gap:2px}
+.rung{display:grid;grid-template-columns:172px 1fr;gap:16px;align-items:center;
+  padding:12px 14px;border-radius:var(--r-sm);background:var(--surface-2);
+  border:1px solid var(--hair)}
+.rung>*{min-width:0}
+.rl{font-size:.85rem;font-weight:680;color:var(--ink)}
+.rv{font-size:.87rem;color:var(--ink-2);line-height:1.5}
+.rung.rungempty{background:repeating-linear-gradient(135deg,transparent,transparent 7px,
+  color-mix(in srgb,var(--warn) 9%,transparent) 7px,color-mix(in srgb,var(--warn) 9%,transparent) 14px);
+  border-color:color-mix(in srgb,var(--warn) 40%,var(--line))}
+.rung.rungempty .rv{color:var(--warn-ink);font-weight:600}
+@media (max-width:620px){
+  .rung{grid-template-columns:1fr;gap:4px}
+}
+
 /* ---------- mobile drawer ---------- */
 .railtoggle{
   display:none;position:fixed;top:12px;left:12px;z-index:60;
