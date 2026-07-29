@@ -458,6 +458,28 @@ MINIMAL_ADOPTION_RATIO = 0.10
 # have breakaway leaders, and that difference is the interesting signal.
 EXCEPTIONAL_MULTIPLE = 5.0
 
+# --- Platform footprint -----------------------------------------------------
+# The outcome is money raised THROUGH THIS PLATFORM, not the organization's total
+# fundraising. An organization that runs only its peer-to-peer with us and its
+# direct giving elsewhere shows a small number here and is not underperforming --
+# we simply cannot see most of its programme.
+#
+# There is no wallet-share field in the export, so this cannot be corrected. It
+# can be flagged. An account is treated as having a narrow footprint when it uses
+# at most `NARROW_FOOTPRINT_CHANNELS` of the seven channels, or concentrates at
+# least `NARROW_FOOTPRINT_CONCENTRATION` of its lifetime dollars in one.
+#
+# How much this matters, measured: narrow-footprint accounts raise about a tenth
+# of what broad-footprint accounts do in total (2.39 log points). Decomposing that
+# gap, 49% comes from the channel COUNT -- mechanically, fewer channels means
+# fewer dollars we ever record -- and 51% from dollars per channel, a genuine
+# activity difference. So roughly half the apparent shortfall of a narrow-footprint
+# account is a measurement artifact. It flags 1,004 of 3,161 accounts (32%),
+# including 218 of the 484 "coachable gap" accounts (45%, $25.2M of the $60.0M
+# aggregate gap).
+NARROW_FOOTPRINT_CHANNELS = 2
+NARROW_FOOTPRINT_CONCENTRATION = 0.90
+
 # Largest percentile jump a single recommendation may propose. Advice to move a
 # lever from the 5th to the 75th percentile in one step is not actionable and
 # sits outside the range of comparable peers; recommendations are capped to an
@@ -553,6 +575,16 @@ def benchmark(df: pd.DataFrame) -> pd.DataFrame:
     out["is_exceptional"] = (
         (cohort_ratio >= EXCEPTIONAL_MULTIPLE) & out["status"].ne("Not benchmarkable")
     ).astype(int)
+
+    # Narrow platform footprint: how much of this organization's fundraising we
+    # can actually see. Not a performance judgement -- a scope warning on the
+    # measurement itself.
+    out["platform_footprint"] = np.where(
+        (out["channel_breadth"] <= NARROW_FOOTPRINT_CHANNELS)
+        | (out["top_channel_share"] >= NARROW_FOOTPRINT_CONCENTRATION),
+        "narrow", "broad",
+    )
+    out["narrow_footprint"] = (out["platform_footprint"] == "narrow").astype(int)
 
     # Separate "barely on the platform" from "using the platform and trailing".
     # Both land in the bottom quartile, but they call for opposite conversations:
@@ -1160,6 +1192,23 @@ def seller_verdict(
             for r in recs[:2]
         ]
 
+    # A narrow-footprint account's shortfall is partly unmeasured, so the verdict
+    # says so before anyone reads a gap figure out loud.
+    footprint = account_row.get("platform_footprint")
+    channels = account_row.get("channel_breadth")
+    scope = None
+    if footprint == "narrow":
+        scope = (
+            f"Scope warning: this organization runs "
+            f"{int(channels) if pd.notna(channels) else 'few'} of seven campaign "
+            "types through the platform, so these figures cover only the part of "
+            "its fundraising we can see. It may raise substantially more "
+            "elsewhere. Roughly half the measured gap for accounts with this "
+            "footprint is the channels we never record rather than weaker "
+            "fundraising — confirm what they run elsewhere before treating any "
+            "shortfall as real."
+        )
+
     confidence = (
         f"Benchmarks come from {peers + 1} comparable organizations. Modelled "
         f"effects carry about ±{np.exp(CV_MAE_LOG_POINTS):.1f}× uncertainty per "
@@ -1171,6 +1220,8 @@ def seller_verdict(
     return {
         "case": case,
         "account": account_row["Account Name"],
+        "scope": scope,
+        "platform_footprint": footprint,
         "peer_group": peer_group,
         "headline": headline,
         "reading": reading,
@@ -1182,7 +1233,10 @@ def seller_verdict(
 
 def render_verdict(verdict: dict) -> str:
     """Plain-text rendering of `seller_verdict`, for the CLI."""
-    lines = [
+    lines = []
+    if verdict.get("scope"):
+        lines += ["SCOPE", f"  {verdict['scope']}", ""]
+    lines += [
         f"PEER GROUP     {verdict['peer_group']}",
         "",
         f"WHERE THEY STAND",
@@ -1212,6 +1266,7 @@ def scorecard(account_row: pd.Series) -> dict:
         "status": account_row["status"],
         "diagnosis": account_row["diagnosis"],
         "cohort_ratio": account_row.get("cohort_ratio"),
+        "platform_footprint": account_row.get("platform_footprint"),
         "is_exceptional": bool(account_row.get("is_exceptional", 0)),
         "raised_365": account_row["raised_365"],
         "cohort_median_raised": account_row["cohort_median_raised_365"],

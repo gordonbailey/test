@@ -175,12 +175,52 @@ def main() -> None:
          "vif": float(vifs[t]), "role": roles.get(t, "")} for t in terms
     ]
 
+    # Footprint gap decomposition. log(total) = log(channels) + log(per channel),
+    # so the narrow-vs-broad gap splits cleanly into a measurement component and
+    # an activity component.
+    fp = bm[(bm["raised_lifetime"] > 0) & (bm["channel_breadth"] > 0)].copy()
+    fp["per_ch"] = fp["raised_lifetime"] / fp["channel_breadth"]
+    nar = fp[fp["channel_breadth"] <= 2]
+    bro = fp[fp["channel_breadth"] >= 4]
+    lg = lambda s: np.log(s[s > 0])
+    gap_total = float(lg(bro["raised_lifetime"]).mean() - lg(nar["raised_lifetime"]).mean())
+    gap_ch = float(np.log(bro["channel_breadth"]).mean() - np.log(nar["channel_breadth"]).mean())
+    extra["footprint"] = {
+        "gap_total": gap_total,
+        "gap_channels": gap_ch,
+        "gap_per_channel": float(gap_total - gap_ch),
+        "narrow_n": int((bm["narrow_footprint"] == 1).sum()),
+        "narrow_share": float((bm["narrow_footprint"] == 1).mean()),
+        "opt_narrow_n": int(
+            bm.loc[bm["diagnosis"].str.startswith("Underperforming at scale"),
+                   "narrow_footprint"].sum()
+        ),
+        "opt_narrow_gap": float(
+            bm.loc[(bm["diagnosis"].str.startswith("Underperforming at scale"))
+                   & (bm["narrow_footprint"] == 1), "gap_to_cohort_median"].sum()
+        ),
+        "by_diagnosis": {
+            k: float(v) for k, v in
+            bm.groupby("diagnosis")["narrow_footprint"].mean().items()
+        },
+        "channel_breadth_hist": {
+            str(int(k)): int(v) for k, v in
+            bm["channel_breadth"].value_counts().sort_index().items()
+        },
+    }
+
     with open("findings_extra.json", "w") as fh:
         json.dump(extra, fh, indent=1, default=str)
 
     print("wrote report_data_compact.json and findings_extra.json")
     print(f"  paths: {extra['paths']}")
     print(f"  concentration top1%: {extra['concentration'][0]['share']:.1%}")
+    f = extra["footprint"]
+    print(f"  footprint gap {f['gap_total']:.3f} = channels {f['gap_channels']:.3f} "
+          f"({f['gap_channels']/f['gap_total']:.0%}) + per-channel "
+          f"{f['gap_per_channel']:.3f} ({f['gap_per_channel']/f['gap_total']:.0%})")
+    print(f"  narrow footprint: {f['narrow_n']} accounts ({f['narrow_share']:.0%}), "
+          f"{f['opt_narrow_n']} in the coachable group (${f['opt_narrow_gap']:,.0f} of gap)")
 
 
 if __name__ == "__main__":

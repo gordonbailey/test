@@ -159,6 +159,9 @@ def main() -> None:
                 "st": row["status"],
                 "dg": row["diagnosis"],
                 "cr": r(row.get("cohort_ratio"), 3),
+                "fp": 1 if row.get("platform_footprint") == "narrow" else 0,
+                "ch": r(row.get("channel_breadth")),
+                "tcs": r(row.get("top_channel_share"), 3),
                 "x": int(row.get("is_exceptional", 0)),
                 "gap": r(row["gap_to_cohort_median"]),
                 "m": metrics,
@@ -188,6 +191,9 @@ def main() -> None:
         "maxStepPctl": ce.MAX_LEVER_STEP_PCTL,
         "minAdoption": ce.MINIMAL_ADOPTION_RATIO,
         "exceptionalMultiple": ce.EXCEPTIONAL_MULTIPLE,
+        "narrowChannels": ce.NARROW_FOOTPRINT_CHANNELS,
+        "narrowConcentration": ce.NARROW_FOOTPRINT_CONCENTRATION,
+        "nChannels": len(ce.CHANNEL_COLUMNS),
         "cvMultiplier": r(ce.validate_model(model_df)["cv_mae_as_multiplier"], 2),
     }
 

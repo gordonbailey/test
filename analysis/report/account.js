@@ -152,6 +152,24 @@ function select(i){
   if (REDUCED) dial.style.strokeDashoffset = dial.dataset.off;
   else requestAnimationFrame(() => requestAnimationFrame(() => { dial.style.strokeDashoffset = dial.dataset.off; }));
 
+  // Scope warning before any comparison is read. A narrow-footprint account's
+  // shortfall is partly money we never see, and a seller needs that on screen
+  // before quoting a gap -- including in front of the customer.
+  const scopeEl = document.getElementById('a-scope');
+  if (a.fp){
+    const nCh = L.nChannels || 7;
+    scopeEl.hidden = false;
+    scopeEl.innerHTML = `<b>Scope: we only see part of this organization's fundraising.</b>
+      It runs <b>${a.ch} of ${nCh}</b> campaign types through the platform${
+        a.tcs >= (L.narrowConcentration||0.9) ? `, with ${Math.round(a.tcs*100)}% of its dollars in one` : ''
+      }. If it runs direct giving or peer-to-peer elsewhere, that money is invisible here.
+      Across accounts with this footprint, about <b>half</b> the measured gap is channels we never
+      record rather than weaker fundraising — confirm what they run elsewhere before treating any
+      shortfall as real.`;
+  } else {
+    scopeEl.hidden = true;
+  }
+
   // metric scorecard
   scaleNoteEl.innerHTML = `Each bar places this organization within its peer group. The middle mark is the typical peer; further right is better.`;
   metricsEl.innerHTML = L.metricOrder.map((k,mi) => {
@@ -206,6 +224,13 @@ function buildVerdict(a){
   const acts = recs.map(r => `${r.act} — ${leverUnit(r.l)==='boolean'
     ? 'connect one (this account has no CRM integrated today)'
     : `move ${r.l.toLowerCase()} from ${leverVal(r.l,r.cv)} toward ${leverVal(r.l,r.tv)} (${ordinal(r.tp)} percentile of peers)`}. Modelled effect: roughly +${moneyFull(r.lift)} a year.`);
+  const scope = a.fp
+    ? `Scope warning: this organization runs ${a.ch} of ${L.nChannels||7} campaign types through `
+      + 'the platform, so these figures cover only the part of its fundraising we can see. It may '
+      + 'raise substantially more elsewhere. Roughly half the measured gap for accounts with this '
+      + 'footprint is the channels we never record rather than weaker fundraising — confirm what '
+      + 'they run elsewhere before treating any shortfall as real.'
+    : null;
   let headline, reading, actions;
   if (a.dg.startsWith(ACT_PREFIX)){
     headline = `Compared with ${peerGroup}, ${a.n} raised ${money(raised)} in the last 12 months against a peer median of ${money(median)} — under a tenth of it.`;
@@ -231,11 +256,12 @@ function buildVerdict(a){
     actions = acts.slice(0,2);
   }
   const confidence = `Benchmarks come from ${C.n} comparable organizations. Modelled effects carry about ±${(L.cvMultiplier||1.9).toFixed(1)}× uncertainty per organization and are associations, not proven cause and effect — use the ordering of the actions to decide where to start, and do not present the dollar figures as targets.`;
-  return {peerGroup, headline, reading, actions, confidence};
+  return {peerGroup, headline, reading, actions, confidence, scope};
 }
 function renderTalkTrack(a, C, recs){
   const v = buildVerdict(a);
   ttEl.innerHTML = `
+    ${v.scope ? `<div class="ttb"><div class="k">Scope</div><div class="ttconf" style="border-left-color:var(--warn)">${esc(v.scope)}</div></div>` : ''}
     <div class="ttb"><div class="k">Peer group</div><div class="t">${esc(v.peerGroup)}</div></div>
     <div class="ttb"><div class="k">Where they stand</div><div class="t">${esc(v.headline)}</div></div>
     <div class="ttb"><div class="k">What it means</div><div class="t">${esc(v.reading)}</div></div>
@@ -247,7 +273,7 @@ function renderTalkTrack(a, C, recs){
 document.getElementById('copy-tt').addEventListener('click', async e => {
   if (sel === null) return;
   const v = buildVerdict(L.accounts[sel]);
-  const txt = [`PEER GROUP\n${v.peerGroup}`, `WHERE THEY STAND\n${v.headline}`,
+  const txt = [...(v.scope ? [`SCOPE\n${v.scope}`] : []), `PEER GROUP\n${v.peerGroup}`, `WHERE THEY STAND\n${v.headline}`,
     `WHAT IT MEANS\n${v.reading}`,
     'RECOMMENDED ACTIONS\n' + (v.actions.length ? v.actions.map((a,i) => `${i+1}. ${a}`).join('\n') : 'None.'),
     `CONFIDENCE\n${v.confidence}`].join('\n\n');
@@ -347,7 +373,7 @@ function drawPNG(){
       ? 16 + 34 + recs.reduce((t,r) =>
           t + 34 + lineBreak(g, r.act, RIGHT_-SPLIT_-70, fontProbe(650,14.5)).length*19 + 22 + 10, 0)
       : 6*22);
-  const H = Math.max(leftH, rightH) + 96;
+  const H = Math.max(leftH, rightH) + (a.fp ? 112 : 96);
 
   cv.width = W*S; cv.height = H*S;
   g.scale(S,S);
@@ -470,7 +496,13 @@ function drawPNG(){
   // footer
   g.strokeStyle = LINE; g.beginPath(); g.moveTo(LEFT,H-72); g.lineTo(RIGHT,H-72); g.stroke();
   g.fillStyle = INK3; g.font = font(500,11.5);
-  wrap(g, 'Peer benchmarks are drawn from organizations of comparable cause area and annual revenue. Projected effects are modelled estimates, not guarantees, and are best used to decide which action to try first. Prepared by GoFundMe Pro.', LEFT, H-58, RIGHT-LEFT, 16, font(500,11.5));
+  const foot = (a.fp
+      ? `These figures cover the ${a.ch} of ${L.nChannels||7} campaign types this organization runs on GoFundMe Pro, so fundraising run elsewhere is not included. `
+      : '')
+    + 'Peer benchmarks are drawn from organizations of comparable cause area and annual revenue. '
+    + 'Projected effects are modelled estimates, not guarantees, and are best used to decide which '
+    + 'action to try first. Prepared by GoFundMe Pro.';
+  wrap(g, foot, LEFT, H-58, RIGHT-LEFT, 16, font(500,11.5));
 
   cv.toBlob(blob => {
     const url = URL.createObjectURL(blob);

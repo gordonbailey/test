@@ -163,6 +163,58 @@ is exceptional-by-multiple and "On track" by percentile. The two measures
 answer different questions on purpose, and the test suite asserts high overlap
 rather than containment.
 
+## Scope: what is measured and what is not
+
+The outcome is dollars raised **through this platform**, not the organization's
+total fundraising. An organization running only its peer-to-peer with GoFundMe
+Pro and its direct giving elsewhere shows a small number here and is *not*
+underperforming — most of its programme is invisible. There is no wallet-share
+field in the export, so this cannot be corrected, only flagged.
+
+**Measured, not assumed.** Narrow-footprint accounts (≤2 of 7 channels) raise
+2.390 log points less in lifetime dollars than broad-footprint accounts (≥4).
+Because `log(total) = log(channels) + log(dollars per channel)`, that splits
+exactly:
+
+| Component | Log points | Share | Reading |
+|---|---|---|---|
+| Channel count | 1.169 | **49%** | Measurement artifact — mean 1.62 vs 5.04 channels |
+| Dollars per channel | 1.221 | **51%** | Genuine — narrow accounts are smaller per channel too |
+
+So roughly half the apparent shortfall of a narrow-footprint account is an
+artifact. Per-channel like-for-like comparisons within size band corroborate it:
+donation pages 0.27–0.53× (p 6.6e-14), peer-to-peer 0.19–0.72× (p 3.9e-06),
+ticketed 0.16–1.53× (p 3.1e-10) — but Campaign Studio is **not significant**
+(p 0.063) and reverses in three bands. The per-channel component is real but
+uneven, so no per-account correction is defensible.
+
+`NARROW_FOOTPRINT_CHANNELS = 2` and `NARROW_FOOTPRINT_CONCENTRATION = 0.90` flag
+**1,004 of 3,161 accounts (32%)**, including **218 of the 484 coachable-gap
+accounts (45%, $25.2M of the $60.0M aggregate gap)**. Every narrow-footprint
+verdict carries a scope warning ahead of any gap figure, asserted in the tests,
+and it appears on the account scorecard, in the talk track and in the client PNG
+footer.
+
+Deliberately **not** a model term: adding it would let the regression absorb a
+measurement problem as if it were behavioural, and `channel_breadth` is already a
+lever — which makes "add a channel" advice for a broad-footprint account and
+possibly a request to move an existing programme for a narrow one. Closing this
+needs a wallet-share input (self-reported total fundraising, or 990 contributions
+revenue), which would let the benchmark run on platform *share* rather than
+platform *dollars*.
+
+### Also out of scope
+
+| Not accounted for | Would need |
+|---|---|
+| Individual campaigns | Per-campaign records |
+| Momentum (week-over-week vs cohort) | A weekly time series |
+| Donation growth/decay curves | A weekly time series |
+| Marketing spend, staff quality, donor demographics | Fields absent from the export |
+| Offline and cheque giving | The channel columns are online only |
+| Cause and effect | A holdout experiment on one lever |
+| Change over time | A second snapshot |
+
 ## Stage 5 — Lever model
 
 ```

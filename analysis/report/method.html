@@ -8,6 +8,7 @@
     <li><a href="#m5" style="color:var(--brand-strong)">Model specification &amp; diagnostics</a></li>
     <li><a href="#m6" style="color:var(--brand-strong)">Fit ladder &amp; what was rejected</a></li>
     <li><a href="#m7" style="color:var(--brand-strong)">Recommendation mechanics</a></li>
+    <li><a href="#m7b" style="color:var(--brand-strong)">Scope: partial platform use</a></li>
     <li><a href="#m8" style="color:var(--brand-strong)">Done well</a></li>
     <li><a href="#m9" style="color:var(--brand-strong)">Done poorly, or not at all</a></li>
     <li><a href="#m10" style="color:var(--brand-strong)">Reproduction</a></li>
@@ -112,6 +113,35 @@
 </div>
 <div class="note"><b>642 accounts (20%) get a scorecard but no ranked advice</b> — both tails, by design. The model carries cohort fixed effects but no lever × position interaction, so it applies one elasticity to a cohort's median member and to an outlier three orders of magnitude above it alike. Suppression is the honest response to that limitation; interactions would be the fix, and they are not shipped.</div>
 
+<h2 id="m7b">7b · Scope of measurement: partial platform use</h2>
+<p class="sub">The outcome is dollars raised <b>through this platform</b>, not the organization's total fundraising. Nothing in the export identifies wallet share, so an organization that runs only its peer-to-peer with GoFundMe Pro is indistinguishable from one that runs everything and raises less.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:34%">Measurement</th><th class="n">Value</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td>Accounts on ≤2 of 7 channels</td><td class="n">767 (24.3%)</td><td>Nearly a quarter of the eligible book has a narrow recorded footprint.</td></tr>
+      <tr><td>Accounts with ≥90% of dollars in one channel</td><td class="n">694 (22.0%)</td><td>310 accounts (9.8%) are single-channel outright.</td></tr>
+      <tr><td>Narrow-footprint flag (either condition)</td><td class="n">1,004 (31.8%)</td><td><code>NARROW_FOOTPRINT_CHANNELS = 2</code>, <code>NARROW_FOOTPRINT_CONCENTRATION = 0.90</code>.</td></tr>
+      <tr><td>Mean channels by diagnosis</td><td class="n">2.46 → 4.60</td><td>Activation 2.46 · coachable 3.11 · on track 3.89 · overperforming 4.60. Monotonic — footprint tracks the diagnosis.</td></tr>
+      <tr><td>Narrow flag within the coachable group</td><td class="n">218 / 484 (45%)</td><td>$25.2M of the $60.0M aggregate gap sits with accounts whose footprint is narrow.</td></tr>
+      <tr><td>Median platform share of IRS revenue</td><td class="n">4.8%</td><td>Crude proxy — IRS revenue includes programme and grant income — but directionally the platform sees a slice.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<h3>Decomposing the gap</h3>
+<p class="sub">Narrow-footprint accounts (≤2 channels) raise <b>2.390 log points</b> less in lifetime dollars than broad-footprint accounts (≥4). Because <code>log(total) = log(channels) + log(dollars per channel)</code>, that splits exactly:</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th>Component</th><th class="n">Log points</th><th class="n">Share</th><th>Interpretation</th></tr></thead>
+    <tbody>
+      <tr><td>Channel count</td><td class="n">1.169</td><td class="n">49%</td><td><b>Measurement artifact.</b> Mean 1.62 vs 5.04 channels — fewer channels mechanically means fewer dollars ever recorded.</td></tr>
+      <tr><td>Dollars per channel</td><td class="n">1.221</td><td class="n">51%</td><td><b>Genuine.</b> Narrow accounts are also smaller on the channels they do use.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<p class="sub" style="margin-top:14px">Per-channel like-for-like comparisons within size band corroborate the split: on donation pages narrow accounts run 0.27–0.53× of broad accounts (p 6.6e-14), on peer-to-peer 0.19–0.72× (p 3.9e-06), on ticketed 0.16–1.53× (p 3.1e-10) — but on Campaign Studio the difference is <b>not significant</b> (p 0.063) and reverses in three bands. So the per-channel component is real but uneven, and no single-account correction is defensible.</p>
+<div class="note bad"><b>What was done about it, and what was not.</b> Flagged, not corrected — <code>platform_footprint</code> is emitted per account and every narrow-footprint verdict carries a scope warning ahead of any gap figure, asserted in the test suite. It is <b>not</b> a model term, because adding it would let the regression absorb a measurement problem as if it were a behavioural one, and <code>channel_breadth</code> is already a lever, which makes it doubly ambiguous: for a broad-footprint account "add a channel" is advice, and for a narrow-footprint one it may be asking the organization to move a programme it deliberately runs elsewhere. Closing this properly needs a wallet-share input — self-reported total fundraising, or contributions revenue off the 990 — at which point <code>raised_365 ÷ total contributions</code> becomes a real denominator and the benchmark can be run on platform share rather than platform dollars.</div>
+
 <h2 id="m8">8 · Done well</h2>
 <div class="card reveal">
   <ul class="sub" style="margin:0;padding-left:20px">
@@ -136,7 +166,8 @@
     <li><b>Ordinal buckets are mapped to midpoints.</b> <code>Paid Fundraising Staff</code> and <code>#&nbsp;Individual&nbsp;Donors</code> arrive as ranges and become single numbers, with the open-ended top bucket ($&gt;25,000$ donors → 30,000) essentially guessed. An ordered-categorical treatment would be more honest.</li>
     <li><b>The exceptional threshold (5×) is a judgment call, not a derived cut.</b> It behaves sensibly and its rationale is documented, but no sensitivity analysis over 3× / 5× / 10× was run to show how much the 374-account population moves.</li>
     <li><b>Wording is duplicated between Python and JavaScript.</b> The verdict templates exist in both so the CLI and the page can render them; the structural inputs are computed once in Python, but the sentences are mirrored by hand and can drift.</li>
-    <li><b>No campaign-level analysis, which is what was originally asked for.</b> The data does not support it. This benchmarks organizations and channel mix, not campaigns.</li>
+    <li><b>Partial platform use is flagged but not corrected, and it is the largest measurement threat.</b> See §7b. 32% of accounts have a narrow recorded footprint and about half their apparent shortfall is channels we never see. A benchmark on platform <i>share</i> rather than platform <i>dollars</i> would fix it and needs one field the export does not have.</li>
+    <li><b>No campaign-level analysis, which is what was originally asked for.</b> The data has no campaign records and no weekly series, so per-campaign realistic potential, momentum against cohort week-over-week, and donation growth/decay curves are all out of reach. This benchmarks organizations and channel mix.</li>
   </ul>
 </div>
 

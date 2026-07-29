@@ -229,6 +229,43 @@ def main(path: str) -> int:
     check(overlap > 0.95, "exceptional accounts are almost all overperformers",
           f"overlap {overlap:.3f}")
 
+    print("\nPlatform footprint (scope, not performance)")
+    narrow = bm["narrow_footprint"] == 1
+    check(
+        set(bm["platform_footprint"].unique()) <= {"narrow", "broad"},
+        "footprint is classified for every account",
+    )
+    check(
+        (
+            (bm.loc[narrow, "channel_breadth"] <= ce.NARROW_FOOTPRINT_CHANNELS)
+            | (bm.loc[narrow, "top_channel_share"] >= ce.NARROW_FOOTPRINT_CONCENTRATION)
+        ).all(),
+        "narrow footprint agrees with its own definition",
+    )
+    check(narrow.sum() > 0 and (~narrow).sum() > 0, "both footprints occur")
+    # The flag exists because footprint tracks the diagnosis; if it did not, the
+    # confound would not be worth warning about.
+    by_diag = bm.groupby("diagnosis")["narrow_footprint"].mean()
+    check(
+        by_diag.max() - by_diag.min() > 0.15,
+        "footprint varies materially across diagnoses (so the warning is warranted)",
+        f"range {by_diag.min():.2f}-{by_diag.max():.2f}",
+    )
+    # Every narrow-footprint verdict must carry the scope warning before anyone
+    # reads a shortfall figure to a customer.
+    missing_scope = 0
+    for _, row in bm[narrow].head(200).iterrows():
+        if not ce.seller_verdict(row, pd.DataFrame()).get("scope"):
+            missing_scope += 1
+    check(missing_scope == 0, "narrow-footprint verdicts all carry a scope warning",
+          f"{missing_scope} missing")
+    broad_scope = sum(
+        1 for _, row in bm[~narrow].head(200).iterrows()
+        if ce.seller_verdict(row, pd.DataFrame()).get("scope")
+    )
+    check(broad_scope == 0, "broad-footprint verdicts carry no scope warning",
+          f"{broad_scope} unexpected")
+
     print("\nActivation / optimization split")
     activation = bm["diagnosis"].str.startswith("Minimal platform adoption")
     check(

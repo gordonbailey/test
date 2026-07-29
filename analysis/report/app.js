@@ -144,6 +144,45 @@ document.getElementById('g-levers').innerHTML = LEV_PLAIN.map(([l,s],i) => `
     <div class="v" style="font-variant-numeric:normal;font-weight:600;color:var(--ink-2)">${s}</div>
   </div>`).join('');
 
+/* Scope table: what the analysis covers, what it does not, and what data would
+   close each gap. Kept as data rather than prose so nothing silently drops. */
+const SCOPE = [
+  ['Cause area and organization size', 'in', 'Cohorts are matched on both. IRS-filed revenue, IRS cause code.'],
+  ['Money raised through this platform', 'in', 'Trailing 12 months, all seven campaign types combined.'],
+  ['Prior fundraising history', 'in', 'Years before the outcome window, spread over contract tenure.'],
+  ['Donor base and gift size', 'in', 'Recurring donors, lifetime gift count, average gift.'],
+  ['Channel mix and campaign volume', 'in', 'How many of the seven channels are live, how concentrated, how many campaigns.'],
+  ['CRM integration and platform admins', 'in', 'Carried as operating-capability controls.'],
+  ['Fundraising the organization does elsewhere', 'out',
+   'THE BIG ONE. No wallet-share field exists. An organization running only its P2P with us looks small here. Flagged per account, not corrected. Would need self-reported total fundraising, or 990 contributions revenue.'],
+  ['Individual campaigns', 'out',
+   'The export has counts and channel totals, no campaign records. So no per-campaign success, no campaign-type comparison.'],
+  ['Momentum and donation curves', 'out',
+   'No weekly or monthly series — annual and lifetime totals only. Week-over-week versus cohort, and growth/decay curves, both need a time series.'],
+  ['Marketing spend, staff quality, donor demographics', 'out',
+   'Not in the data at all. Part of why a percentile band beats a goal-completion figure: these are exactly the things that make raw comparison unfair.'],
+  ['Offline and cheque giving', 'out',
+   'The reconciled channel columns are online only. Any offline programme is invisible.'],
+  ['Cause and effect', 'out',
+   'Everything here is measured across organizations at one point in time. A holdout test on one lever is the only way to turn these associations into effects.'],
+  ['Change over time', 'out',
+   'A single snapshot. No test of whether moving a lever in one year is followed by more raised the next.'],
+];
+document.getElementById('scope-table').innerHTML = SCOPE.map(([d,st,txt]) => `
+  <tr><td><b>${d}</b></td>
+    <td><span class="pill ${st==='in'?'good':'bad'}">${st==='in'?'Accounted for':'Not accounted for'}</span></td>
+    <td style="color:var(--ink-2)">${txt}</td></tr>`).join('');
+
+// Footprint gap decomposition, from build_report_data.py.
+document.getElementById('g-footprint').innerHTML = barRows([
+  {label:'Total gap, narrow vs broad footprint', sub:'lifetime dollars, log points',
+   value:X.footprint.gap_total, vtext:'×' + Math.exp(X.footprint.gap_total).toFixed(1), color:'var(--ink-3)'},
+  {label:'…from channels we never see', sub:'measurement artifact',
+   value:X.footprint.gap_channels, vtext:(X.footprint.gap_channels/X.footprint.gap_total*100).toFixed(0)+'%', color:'var(--s3)'},
+  {label:'…from lower activity per channel', sub:'genuine difference',
+   value:X.footprint.gap_per_channel, vtext:(X.footprint.gap_per_channel/X.footprint.gap_total*100).toFixed(0)+'%', color:'var(--s2)'},
+], {max:X.footprint.gap_total});
+
 /* ==========================================================================
    Findings tab charts
    ========================================================================== */

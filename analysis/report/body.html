@@ -14,6 +14,7 @@
 <div class="tabs" role="tablist" aria-label="Sections">
   <button class="tab" id="tab-guide" role="tab" aria-selected="true" aria-controls="panel-guide">How it works</button>
   <button class="tab" id="tab-find" role="tab" aria-selected="false" aria-controls="panel-find">Findings</button>
+  <button class="tab" id="tab-cohorts" role="tab" aria-selected="false" aria-controls="panel-cohorts">Cohorts</button>
   <button class="tab" id="tab-acct" role="tab" aria-selected="false" aria-controls="panel-acct">Account</button>
   <button class="tab" id="tab-method" role="tab" aria-selected="false" aria-controls="panel-method">Methodology</button>
 </div>
@@ -79,6 +80,38 @@
   <p class="sub">A model compares organizations <i>within</i> each peer group and asks which operating differences go with raising more. Five things an organization can actually change came out significant.</p>
   <div class="card reveal"><div class="bars" id="g-levers" style="--lw:214px;--vw:88px"></div></div>
   <p class="sub tight">For one account, each lever is nudged from where it sits toward where its peers sit, and the model converts that into an expected change. Moves are capped at a realistic step — an early version advised jumping from the 5th to the 75th percentile in one go and projected "+2,560%".</p>
+
+  <h2>Realistic potential</h2>
+  <p class="sub">The idea underneath all of this. Rather than judging an organization against its own goal or a conversion rate — both of which move with donor base, marketing spend, staff and luck — <b>realistic potential normalizes performance against a peer cohort to define a lower and an upper bound</b>. Success is then how close an organization gets to that band.</p>
+  <div class="card reveal">
+    <div class="tw"><table>
+      <thead><tr><th style="width:22%">Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td><b>Realistic potential</b></td><td>The performance band a peer cohort actually achieves — not a target, a range. Here, the 25th to 75th percentile of the cohort, with the median as the reference point.</td></tr>
+        <tr><td><b>Success</b></td><td>How close an organization gets to its realistic potential. Expressed as a percentile inside its cohort rather than as percentage-to-goal.</td></tr>
+        <tr><td><b>Peer cohort</b></td><td>The comparison set that makes the bounds meaningful: cause area × revenue size, minimum 30 organizations.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="note good"><b>Why not "did they hit their goal?"</b> Goals are set by the organization, so completion-to-goal measures ambition as much as performance — a cautious goal makes a weak year look excellent. Conversion rate has the same problem from the other direction: it moves with donor mix, marketing spend and staff capability, none of which are comparable across organizations. Normalizing to a peer cohort is what makes a bound defensible, and it is why the cohort definition gets as much attention here as the model does.</div>
+  <div class="note warn"><b>What this build implements, and what it does not.</b> The bounds above are computed <b>per organization, per year</b> — 25th/75th percentile of annual dollars raised within the cohort. The fuller definition of realistic potential is <b>per campaign, per campaign type</b>, with success also read from <i>momentum</i> (week-over-week donations against cohort week-over-week) and the <i>donation curve</i> (growth and decay against cohort curves). None of that is possible from this export: it has no campaign records and no weekly time series, only annual and lifetime totals. The cohort machinery is the same either way — campaign-level data would drop into it without redesign.</div>
+
+  <h2>What is and is not accounted for</h2>
+  <p class="sub">Being explicit matters more than looking complete, so here is the boundary in full.</p>
+  <div class="card reveal">
+    <div class="tw"><table>
+      <thead><tr><th style="width:30%">Dimension</th><th style="width:14%">Status</th><th>Detail</th></tr></thead>
+      <tbody id="scope-table"></tbody>
+    </table></div>
+  </div>
+  <div class="note bad"><b>The most important gap: we only see the campaigns an organization runs with us.</b> An organization that runs its peer-to-peer with GoFundMe Pro and its direct giving somewhere else shows a small number here and is <i>not</i> underperforming — most of its programme is invisible to this analysis. There is no wallet-share field in the data, so this cannot be corrected, only flagged.</div>
+  <div class="card reveal">
+    <h3 style="margin-top:0">How big is that effect? Measured, not assumed.</h3>
+    <p class="sub tight">Accounts using one or two of the seven campaign types raise about a tenth of what accounts using four or more raise. Splitting that gap:</p>
+    <div class="bars" id="g-footprint" style="--lw:250px"></div>
+    <p class="sub" style="margin-top:14px;margin-bottom:0"><b>So roughly half of the apparent shortfall of a narrow-footprint organization is a measurement artifact</b> — channels we never record — and roughly half is genuinely lower activity on the channels we do see. That is why the flag is a scope warning rather than a correction: the honest statement is "part of this gap is not real, and we cannot tell you which part for any single organization."</p>
+  </div>
+  <div class="note warn"><b>Who this affects.</b> <b>1,004 of 3,161 accounts (32%)</b> carry a narrow footprint, including <b>218 of the 484 "coachable gap" accounts (45%)</b> — <b>$25.2M of the $60.0M</b> aggregate gap. Those accounts show a scope warning on their scorecard, and a seller should confirm what the organization runs elsewhere before treating any shortfall as real. It also makes "add a fundraising channel" a partly circular recommendation: it may be advising an organization to move a programme it deliberately runs elsewhere.</div>
 
   <h2>What to trust, and what not to</h2>
   <div class="grid2">
@@ -151,8 +184,13 @@
   <div class="card reveal"><div class="bars" id="f-levers" style="--lw:196px;--vw:96px"></div></div>
   <div class="note"><b>Association, not proof.</b> These come from comparing organizations, not from running an experiment. Organizations that already fundraise well are likelier to have installed a CRM in the first place, so each number blends "this helps" with "the kind of organization that does this was already ahead."</div>
 
-  <h2>Explore the peer groups</h2>
-  <p class="sub">All 38 groups. Filter, re-sort, switch the metric, and select any group to see its distribution, benchmarks and members.</p>
+</div>
+
+<!-- ══════════════════════════ COHORTS ══════════════════════════ -->
+<div class="panel" id="panel-cohorts" role="tabpanel" aria-labelledby="tab-cohorts" hidden>
+  <p class="eyebrow">Cohorts</p>
+  <h2 style="margin-top:0">The 38 peer groups</h2>
+  <p class="sub">A cohort is a cause area crossed with a revenue size band — the set an organization is actually measured against. Filter, re-sort, switch the metric, and select any group to see its distribution, benchmarks and members.</p>
   <div class="card reveal">
     <div class="controls" style="margin-bottom:14px">
       <div class="fld"><label for="c-sector">Sector</label><select id="c-sector"></select></div>
@@ -178,6 +216,8 @@
     <div id="cohorts"></div>
   </div>
   <div id="c-detail" style="margin-top:18px"></div>
+</div>
+
 </div>
 
 <!-- ══════════════════════════ ACCOUNT ══════════════════════════ -->
@@ -228,6 +268,8 @@
         </button>
       </div>
     </div>
+
+    <div class="note warn" id="a-scope" hidden style="margin-top:18px"></div>
 
     <h3 style="margin-top:30px">How it compares</h3>
     <p class="sub tight" id="a-scale-note" style="font-size:.85rem"></p>
