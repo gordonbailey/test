@@ -1,0 +1,193 @@
+<!-- Non-functional field guide. The interesting thing about this one is who it
+     is for: it is not an SRE document, it is a translation layer that lets a PM
+     hold a competent conversation about reliability. The page is organised
+     around that. -->
+
+<div class="card reveal deckcard">
+  <div>
+    <p class="eyebrow" style="margin-bottom:4px">The guide</p>
+    <div class="dt">Non-Functional Field Guide</div>
+    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">A self-contained interactive HTML tool. Five sections: Product Dev, Architecture, Requirements, Quiz, Resources.</p>
+  </div>
+  <div class="dl">
+    <span class="pill warn">Not yet hosted</span>
+    <span class="lm" style="max-width:38ch">A standalone file, so it has no URL to link to — same handover risk as the repo guide.</span>
+  </div>
+</div>
+
+<div class="stats reveal" style="margin-top:26px">
+  <div class="stat"><div class="k">Requirements defined</div><div class="v" data-count="24">24</div><div class="d">across 8 categories</div></div>
+  <div class="stat accent"><div class="k">Marked core</div><div class="v" data-count="6">6</div><div class="d">learn these first</div></div>
+  <div class="stat"><div class="k">Checklist items</div><div class="v" data-count="53">53</div><div class="d">across 3 release phases</div></div>
+  <div class="stat"><div class="k">Curated resources</div><div class="v" data-count="12">12</div><div class="d">5 flagged "start here"</div></div>
+</div>
+
+<h2>The problem</h2>
+<p class="sub">A working feature answers "what does it do?" Everything that decides whether it survives contact with production — speed, reliability, safety, and the cost of changing it later — sits in a vocabulary most product managers were never taught. So the conversation goes one of two ways. The PM nods along and finds out what "no kill switch" meant during an incident, or the PM avoids the topic entirely and the engineer becomes the only person who can assess release risk.</p>
+<p class="sub">Neither is a knowledge problem exactly. It is a <b>translation</b> problem: the concepts are well documented in SRE literature written for engineers, and almost nowhere in a form a PM can act on.</p>
+<div class="note"><b>So the guide is built as a translation layer, not a reference.</b> Every one of the 24 requirements gets the same four things: a plain definition, <b>what good looks like</b>, <b>the questions to ask engineering</b>, and <b>the spec language</b> to put in a PRD — plus the tradeoff to reason about. The unit of value is not "now you know what latency is", it is "now you can ask a question that changes the design."</p></div>
+
+<h2>What was done</h2>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:20%">Section</th><th style="width:28%">What it does</th><th>Why it is there</th></tr></thead>
+    <tbody>
+      <tr><td><b>Product Dev</b></td><td>The path from a customer problem to a sub-task — inputs, discovery, PRD, solution design, prototyping, optional spike, then epic / story / task / bug.</td><td>Grounds the vocabulary in the process the reader already lives in, so the NFRs attach to a real moment rather than floating.</td></tr>
+      <tr><td><b>Architecture</b></td><td>A single request traced end to end, a cascade failure drawn with and without a circuit breaker, the five-stage progressive rollout, and the three pillars of observability.</td><td><b>The best idea in the guide.</b> Rather than 24 definitions in isolation, it follows one request and shows where each requirement actually lives.</td></tr>
+      <tr><td><b>Requirements</b></td><td>All 24, filterable, six marked core. Each with definition, what-good-looks-like, questions to ask, PRD language, tradeoffs, and where relevant an incident note.</td><td>The reference layer. Designed to be dipped into at spec-writing time, not read front to back.</td></tr>
+      <tr><td><b>Quiz</b></td><td>Flashcards to drill the vocabulary, then a quiz to check it stuck. Nothing saved — refresh for a clean run.</td><td>Recognising a term in a doc and being able to use it in a meeting are different skills. This tests the second.</td></tr>
+      <tr><td><b>Resources</b></td><td>Twelve curated books, articles, frameworks and newsletters, five flagged <b>★ start here</b>.</td><td>Deliberately a short list rather than a bibliography.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<h3>The one-request walkthrough</h3>
+<p class="sub tight">Each hop is a place a non-functional requirement lives — which is the point.</p>
+<div class="card reveal">
+  <div class="tl tlwide">
+    <div class="tli"><span class="tld">Client</span><span class="tlt">web / mobile / SDK — where client error tracking and compatibility land</span></div>
+    <div class="tli"><span class="tld">CDN / Edge</span><span class="tlt">CDN, WAF, 400s</span></div>
+    <div class="tli"><span class="tld">Load balancer</span><span class="tlt">routes traffic</span></div>
+    <div class="tli tlhot"><span class="tld">Service / API</span><span class="tlt"><b>feature flag · kill switch · timeouts · circuit breaker</b> — four requirements in one hop</span></div>
+    <div class="tli"><span class="tld">Cache · DB · Queue</span><span class="tlt">fast reads · source of truth · async work (FIFO)</span></div>
+    <div class="tli"><span class="tld">Consumer → DLQ</span><span class="tlt">workers, and where failed messages accumulate if nobody is alerting on depth</span></div>
+  </div>
+  <p class="sub" style="margin:16px 0 0;font-size:.88rem">Mapped onto that chain: <b>latency</b> at every hop · <b>throughput</b> at queue rate limits · <b>fault tolerance</b> at cache fallback · <b>rollouts</b> via flag and kill switch · <b>data integrity</b> via idempotent writes · <b>alerts</b> on DLQ depth.</p>
+</div>
+
+<h3>The cascade, drawn twice</h3>
+<div class="grid2 reveal">
+  <div class="card">
+    <span class="pill bad">Without a circuit breaker</span>
+    <div class="tl tlnum" style="margin-top:12px">
+      <div class="tli"><span class="tld">1</span><span class="tlt">Cache miss spikes</span></div>
+      <div class="tli"><span class="tld">2</span><span class="tlt">All reads hit the DB</span></div>
+      <div class="tli"><span class="tld">3</span><span class="tlt">DB saturates under load</span></div>
+      <div class="tli"><span class="tld">4</span><span class="tlt"><b>Whole platform cascades</b></span></div>
+    </div>
+  </div>
+  <div class="card">
+    <span class="pill good">With a circuit breaker</span>
+    <div class="tl tlnum" style="margin-top:12px">
+      <div class="tli"><span class="tld">1</span><span class="tlt">Cache miss spikes</span></div>
+      <div class="tli"><span class="tld">2</span><span class="tlt">Breaker opens after N failures</span></div>
+      <div class="tli"><span class="tld">3</span><span class="tlt">Fallback / cached default served</span></div>
+      <div class="tli"><span class="tld">4</span><span class="tlt"><b>Failure contained, DB protected</b></span></div>
+    </div>
+  </div>
+</div>
+<div class="note"><b>Progressive rollout, for comparison:</b> deploy dark with the flag off in prod → 1% canary → 10% watching error rate → 50% watching conversion → 100%. A health gate at each stage, a kill switch that reverts in under 30 seconds with no redeploy, and the error budget governing the pace. Stating the <i>metric being watched</i> at each stage is what makes this actionable rather than decorative.</div>
+
+<h2>What came out of it</h2>
+
+<h3>The six that come first</h3>
+<p class="sub tight">Half of them are operational — which is itself the argument. The requirements most likely to cause an outage are the ones least likely to appear in a PRD.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:16%">Requirement</th><th style="width:13%">Category</th><th>In one line</th></tr></thead>
+    <tbody>
+      <tr><td><b>Latency</b></td><td><span class="pill info">Performance</span></td><td>How long the user waits between an action and a useful response — <b>felt, not averaged</b>. Targets as percentiles for specific actions, measured end to end including network.</td></tr>
+      <tr><td><b>Observability</b></td><td><span class="pill warn">Ops</span></td><td>Whether you can understand what the system is doing, and why, from the outside without guessing. The test: <b>can you answer questions you didn't anticipate?</b></td></tr>
+      <tr><td><b>Alerts</b></td><td><span class="pill warn">Ops</span></td><td>Signals that tell a human something needs attention before users notice. Fire on <b>user-impacting symptoms</b>, not every internal twitch. Each one actionable, owned, and linked to a runbook.</td></tr>
+      <tr><td><b>Rollouts</b></td><td><span class="pill warn">Ops</span></td><td>How a change reaches users — all at once, or gradually with the ability to stop and reverse. <b>Releasing decoupled from deploying.</b></td></tr>
+      <tr><td><b>Test Coverage</b></td><td><span class="pill good">Quality</span></td><td>How much behaviour is verified automatically — and more importantly <b>which</b> behaviour. Critical paths tested at the right level, and the suite is trusted.</td></tr>
+      <tr><td><b>Simplicity</b></td><td><span class="pill good">Quality</span></td><td>Solving the problem with the least complexity that works. <b>No speculative machinery for requirements that may never come.</b></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<h3>All 24, by category</h3>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:18%">Category</th><th>Requirements — ★ marks the core six</th></tr></thead>
+    <tbody>
+      <tr><td><b>Reliability</b></td><td>Availability &amp; SLOs · Fault Tolerance &amp; Graceful Degradation · Disaster Recovery &amp; Backups</td></tr>
+      <tr><td><b>Performance</b></td><td><b>Latency ★</b> · Throughput · Scalability · Load &amp; Capacity Planning</td></tr>
+      <tr><td><b>Ops</b></td><td><b>Observability ★</b> · <b>Alerts ★</b> · <b>Rollouts ★</b> · Incident Response &amp; On-Call</td></tr>
+      <tr><td><b>Quality</b></td><td><b>Test Coverage ★</b> · <b>Simplicity ★</b> · Maintainability &amp; Technical Debt · Documentation</td></tr>
+      <tr><td><b>Security</b></td><td>Security · Privacy &amp; Data Protection · Compliance &amp; Auditability</td></tr>
+      <tr><td><b>Data</b></td><td>Data Integrity &amp; Consistency · Data Quality &amp; Retention</td></tr>
+      <tr><td><b>Experience</b></td><td>Accessibility · Internationalization &amp; Localization · Compatibility &amp; Responsiveness</td></tr>
+      <tr><td><b>Cost</b></td><td>Cost &amp; Resource Efficiency</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<h3>The release-readiness process — 53 items, three phases</h3>
+<p class="sub tight">The part with teeth. A checklist is only useful if it fires at the right moment, so each phase has a stated time and purpose.</p>
+<div class="grid3 reveal">
+  <div class="card flat">
+    <span class="pill info">Build · 27 items</span>
+    <h3 style="margin-top:11px">At design / kickoff</h3>
+    <p class="sub" style="margin:0 0 10px;font-size:.86rem">Attached to the epic when work begins. Nine groups:</p>
+    <ul class="tierlist">
+      <li>Architecture &amp; Dependencies</li>
+      <li>Database Changes</li>
+      <li>API Design</li>
+      <li>New Queues / Async Pipelines</li>
+      <li>Tests</li>
+      <li>Feature Flags</li>
+      <li>Observability</li>
+      <li>Timeouts &amp; Resilience</li>
+      <li>Broad Infra / Platform-Wide</li>
+    </ul>
+  </div>
+  <div class="card flat">
+    <span class="pill warn">Pre-Release · 13 items</span>
+    <h3 style="margin-top:11px">Hours before deploy</h3>
+    <p class="tiernote" style="margin-top:10px">Explicitly framed as <b>"a quick confirm, not a discovery"</b> — which is the whole reason the Build checklist exists earlier. Finding a missing dependency at this point is already a failure.</p>
+  </div>
+  <div class="card flat">
+    <span class="pill good">Post-Release · 13 items</span>
+    <h3 style="margin-top:11px">First 30–60 minutes</h3>
+    <p class="tiernote" style="margin-top:10px">Ten verification items, plus three that only apply <b>if a rollback is triggered</b> — so the rollback path is pre-written rather than improvised under pressure.</p>
+  </div>
+</div>
+
+<h3>The Release Lead</h3>
+<div class="card reveal">
+  <p class="sub tight">A rotating role, aimed squarely at a named class of failure: <b>incomplete blast-radius assessments, missing alerting on new workflows, config that only breaks in prod, and broad changes with no kill switch.</b> The Release Lead may delegate the checks but owns the release end to end.</p>
+  <ul class="blist" style="margin-top:14px">
+    <li>Runs all three checklists and ensures every item is signed off.</li>
+    <li>Pulls in affected teams early — does not wait until pre-release to discover dependencies.</li>
+    <li>Owns the <b>go / no-go</b> decision at release time.</li>
+    <li>Owns the <b>rollback</b> decision if things go wrong.</li>
+    <li>Available for the first hour post-release, monitoring key signals.</li>
+    <li>Writes a one-paragraph release summary if anything goes sideways.</li>
+    <li><b>Documents gaps so the checklist improves over time.</b></li>
+  </ul>
+</div>
+<div class="note good"><b>The last duty is the one that makes this a living process.</b> A checklist that never changes is a checklist that stops matching reality. And several items read as though they were written straight out of a postmortem — "worker count × polling loops ≤ queue rate limit at restart (e.g. 160 loops vs a ~300 req/s cap)" is not a generic best practice, it is a specific incident someone lived through. So is "alerts that were never actually wired up are their own kind of outage."</div>
+
+<h3>The process it sits inside</h3>
+<div class="card reveal">
+  <p class="sub tight">Product Dev traces the cycle — inputs (sales, customers, competitors, user research, product analytics) → discovery, iterating with the PRD → solution design and prototyping → an optional spike → then epic / story / task / bug and sub-tasks. Four principles sit underneath:</p>
+  <div class="tw" style="margin-top:14px"><table>
+    <tbody>
+      <tr><td style="width:32%"><b>Problems before solutions</b></td><td>Start with customers, then the business, and only then solutions. Weigh desirability, feasibility and viability.</td></tr>
+      <tr><td><b>The triad steers each squad</b></td><td>Product Manager, Engineering Manager and Designer share the wheel.</td></tr>
+      <tr><td><b>Planning is bottoms-up and tops-down</b></td><td>Context → Plans → Integration → Buy-in. Leadership sets direction, teams shape the work, they meet in the middle.</td></tr>
+      <tr><td><b>Balance the portfolio</b></td><td>Healthy roadmaps mix stability, improvements, growth and bets. Every quarter: do we like the mix, and are we still on the right things?</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin:16px 0 0;font-size:.87rem">The PDLC framing is honest about itself: stages overlap, research runs throughout, and "complete" means <b>"complete enough to move on."</b></p>
+</div>
+
+<h2>What it does not cover</h2>
+<div class="card reveal">
+  <div class="sk"><h3>It is a vocabulary and a process, not GoFundMe's actual numbers</h3><p>The guide teaches you to ask "what is our p95 target for this action?" It does not say what GoFundMe's latency targets, SLOs, error budgets or availability commitments actually are. That is the correct scope for a field guide, but it means a PM finishes it able to ask the question and still unable to answer it. The org-specific numbers are the obvious sequel.</p></div>
+  <div class="sk"><h3>Nothing here is enforced</h3><p>53 checklist items and a Release Lead role are a proposal until they are attached to something — a Jira template, a definition of done, a required epic field. As written it depends entirely on someone choosing to open the file, which is the failure mode every checklist in every org dies of.</p></div>
+  <div class="sk"><h3>The 24 are not weighted for this product</h3><p>Six are marked core, which is a real editorial call. But a donation platform has an unusual risk profile — payments correctness, PCI scope, giving-season load spikes, and the fact that a failed donation is not a retryable inconvenience. Categories like Data Integrity and Compliance arguably rank higher here than the generic ordering suggests, and the guide does not make that case.</p></div>
+  <div class="sk"><h3>No accessibility depth, despite the audience</h3><p>Accessibility appears as one of 24 requirements alongside internationalization and compatibility. For a public donation product it is both a legal exposure and a conversion issue, and it would justify more than parity with cost efficiency.</p></div>
+  <div class="sk"><h3>The quiz measures recall, and nothing measures use</h3><p>Flashcards and a quiz test whether the vocabulary stuck. Whether a PM who took it writes better PRDs is unmeasured — and since nothing is saved between sessions, there is no way to tell who has been through it or where people consistently get it wrong.</p></div>
+  <div class="sk"><h3>Same hosting problem as the repo guide</h3><p>A single self-contained HTML file with no home. Both guides share this, and for a handover artifact it is the difference between existing and not.</p></div>
+</div>
+
+<h2>Pick this up next</h2>
+<div class="acts reveal">
+  <div class="act"><span class="num">1</span><div><div class="t">Host both guides, then link them from where work starts</div><div class="m">A URL in the Jira epic template or the PRD template is worth more than any amount of additional content. Unhosted, this is a file on a laptop.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Attach the Build checklist to the epic template</div><div class="m">It is already written for that moment — "attach to the epic when work begins." Making it a template field is the single change that turns 53 good items into a process.</div></div></div>
+  <div class="act"><span class="num">3</span><div><div class="t">Fill in GoFundMe's real numbers</div><div class="m">Actual p95 targets, SLOs and error budgets for the surfaces PMs work on. The <a href="#/instrumentation" data-jump="instrumentation">instrumentation framework</a> already proposes p50/p90 load-time metrics for reports and campaign insights — that is the same conversation from the other end, and the two should share numbers.</div></div></div>
+  <div class="act"><span class="num">4</span><div><div class="t">Pilot the Release Lead role on one offcycle release</div><div class="m">Rotating roles either get adopted in the first month or never. One real release, with the gaps documented afterwards as the role's last duty requires.</div></div></div>
+  <div class="act"><span class="num">5</span><div><div class="t">Re-rank the 24 for a donation platform</div><div class="m">Make the case for where payments correctness, data integrity and compliance sit relative to the generic core six. The current ordering is sensible for software in general and probably wrong here.</div></div></div>
+</div>

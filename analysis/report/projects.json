@@ -124,7 +124,7 @@
       "order": 50,
       "kind": "group",
       "status": "live",
-      "blurb": "Two attempts to make something reusable by someone who was not here. An analysis ages into a record; a guide either stays useful or it does not.",
+      "blurb": "Two attempts to make something reusable by someone who was not here — one mapping 1,202 repositories, one translating 24 non-functional requirements into questions a PM can ask.",
       "h1": "Guides",
       "lede": "Written so the next person does not have to reconstruct any of this from scratch — and honest enough about their own limits to be safe to trust."
     },
@@ -134,8 +134,10 @@
       "title": "Non-Functional Guide",
       "short": "Non-functional guide",
       "order": 10,
-      "status": "awaiting",
-      "needs": "The guide itself, plus who the reader is — the requirements it covers, and the failure it is meant to prevent."
+      "status": "live",
+      "blurb": "The 24 requirements that decide whether a release survives production, each with the questions to ask engineering and the spec language to write down — plus a 53-item release-readiness process and a rotating Release Lead role.",
+      "h1": "The qualities that decide whether a release survives production",
+      "lede": "A working feature answers \"what does it do?\" Everything that decides whether it holds up — speed, reliability, safety, and the cost of changing it later — sits in a vocabulary most product managers were never taught. This is a translation layer: 24 requirements, each turned into a plain definition, the questions to ask engineering, and the language to put in a PRD."
     },
     {
       "id": "guide-dataarch",
