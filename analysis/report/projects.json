@@ -123,8 +123,10 @@
       "short": "Guides",
       "order": 50,
       "kind": "group",
-      "status": "drafting",
-      "blurb": "Written so the next person does not have to reconstruct any of this from scratch."
+      "status": "live",
+      "blurb": "Two attempts to make something reusable by someone who was not here. An analysis ages into a record; a guide either stays useful or it does not.",
+      "h1": "Guides",
+      "lede": "Written so the next person does not have to reconstruct any of this from scratch — and honest enough about their own limits to be safe to trust."
     },
     {
       "id": "guide-nonfunc",
@@ -141,8 +143,10 @@
       "title": "Data Architecture Repo Guide",
       "short": "Data arch repo guide",
       "order": 20,
-      "status": "awaiting",
-      "needs": "Which repo, how it is laid out, the path a change takes from branch to production, and the parts that bite newcomers."
+      "status": "live",
+      "blurb": "1,202 repositories mapped into ten clusters, four journeys traced end to end, a decision tree for “where do I look?” and a triage tool for “what broke?” — with ownership labelled documented, inferred or contested.",
+      "h1": "Where do I look, in 1,202 repositories?",
+      "lede": "A product manager gets told something is broken and faces the whole GitHub org with no map. The honest answer today is “ask an engineer” — which works, costs that engineer twenty minutes, and teaches the asker nothing reusable. This is an orientation map built from repository metadata, explicit on every screen about being exactly that."
     },
     {
       "id": "strategy",

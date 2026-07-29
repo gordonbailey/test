@@ -1,0 +1,155 @@
+<!-- Data architecture repo guide. The guide is itself an interactive HTML tool;
+     this page describes what it does, what it is built from, and the two things
+     that would stop it being useful — its metadata-only basis and the fact that
+     it currently has nowhere durable to live. -->
+
+<div class="card reveal deckcard">
+  <div>
+    <p class="eyebrow" style="margin-bottom:4px">The guide</p>
+    <div class="dt">GoFundMe · Repo Data Architecture</div>
+    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">A self-contained interactive HTML tool. Inventory snapshot 2026-06-30 PT; ownership as of 2026-07-02. Model by Codex, experience rebuilt with Claude.</p>
+  </div>
+  <div class="dl">
+    <span class="pill warn">Not yet hosted</span>
+    <span class="lm" style="max-width:38ch">A standalone file, so it has no URL to link to. See the handover note at the bottom of this page.</span>
+  </div>
+</div>
+
+<div class="stats reveal" style="margin-top:26px">
+  <div class="stat"><div class="k">Repositories mapped</div><div class="v" data-count="1202">1,202</div><div class="d">the whole GitHub org</div></div>
+  <div class="stat accent"><div class="k">Clusters</div><div class="v" data-count="9">9</div><div class="d">plus archived and unclassified</div></div>
+  <div class="stat"><div class="k">Active in 90 days</div><div class="v" data-count="453">453</div><div class="d">of 916 non-archived</div></div>
+  <div class="stat"><div class="k">Teams identified</div><div class="v" data-count="30">30</div><div class="d">across 9 tribes</div></div>
+</div>
+
+<h2>The problem</h2>
+<p class="sub">A product manager gets told a feature is broken, or wants to know where something lives, and faces 1,202 repositories with no map. The honest answer today is "ask an engineer" — which works, costs that engineer twenty minutes, and teaches the asker nothing they can reuse. Multiply that by every new PM, every incident, every "which team owns this?" and it is a standing tax on the people who can least afford to pay it.</p>
+<p class="sub">The failure mode to avoid is a diagram that looks authoritative and is quietly wrong. An architecture map built from guesses gets trusted, then sends someone to the wrong repo during an incident. So the design constraint was: <b>be useful without pretending to be the source of truth</b>, and say which it is on every screen.</p>
+
+<h2>What was done</h2>
+<p class="sub">Five tools over one inventory, each answering a different question a newcomer actually asks — in the order they ask them.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:22%">Tool</th><th style="width:30%">The question it answers</th><th>How it works</th></tr></thead>
+    <tbody>
+      <tr><td><b>System map</b></td><td>"How does data move through GoFundMe?"</td><td>Ten repo clusters wired the way data actually flows — donor screens and native apps, through services and event streams, into the warehouse and back out as insight. Clusters open; edges explain what travels along them; four journeys trace end-to-end.</td></tr>
+      <tr><td><b>Analytics</b></td><td>"What shape is this org in?"</td><td>Cluster sizes, where the active work is, which languages dominate each layer, and how fresh the codebase really is — all computed from the inventory rather than asserted.</td></tr>
+      <tr><td><b>Wayfinder</b></td><td>"Where do I look?"</td><td>A decision tree. Answer two questions, get a short curated list of starting repos — the path a patient senior engineer would walk you down.</td></tr>
+      <tr><td><b>Triage</b></td><td>"What broke?"</td><td>Describe it the way you would in Slack — paste the URL, name the button, mention the feature — and get the most likely repos, why each matched, and the team to ping. Rule-based pattern matching over URLs and feature language, with weighted scores.</td></tr>
+      <tr><td><b>Explorer</b></td><td>"Show me everything."</td><td>All 1,202 repos, searchable by name and description, filterable by cluster, language and status. Each row opens details, the GitHub link, and where known the owning team with a Slack ask-channel and Jira board.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<h3>The ten clusters</h3>
+<p class="sub tight">Solid bars are repos pushed to in the last 90 days; the number after is the cluster total. Ordered by size.</p>
+<div class="card reveal">
+  <div class="bars" style="--lw:168px;--vw:104px;--lwm:112px;--vwm:82px">
+    <div class="bar"><div class="l">Infra &amp; platform<small>HCL, Python, Go</small></div><div class="trk"><div class="fil" data-w="36" style="background:#57718c"></div></div><div class="v">148<small>53 active</small></div></div>
+    <div class="bar"><div class="l">Tools &amp; automation<small>TypeScript, JavaScript</small></div><div class="trk"><div class="fil" data-w="62" style="background:#b8434e"></div></div><div class="v">148<small>92 active</small></div></div>
+    <div class="bar"><div class="l">Data &amp; analytics<small>Python, notebooks, LookML</small></div><div class="trk"><div class="fil" data-w="39" style="background:#cf3e88"></div></div><div class="v">106<small>58 active</small></div></div>
+    <div class="bar"><div class="l">Backend &amp; APIs<small>TypeScript, Python, PHP</small></div><div class="trk"><div class="fil" data-w="29" style="background:#e8702a"></div></div><div class="v">65<small>43 active</small></div></div>
+    <div class="bar"><div class="l">Data movement<small>TypeScript, Python</small></div><div class="trk"><div class="fil" data-w="21" style="background:#0e9f9f"></div></div><div class="v">52<small>31 active</small></div></div>
+    <div class="bar"><div class="l">Docs &amp; knowledge<small>read-first territory</small></div><div class="trk"><div class="fil" data-w="19" style="background:#c08a0a"></div></div><div class="v">48<small>28 active</small></div></div>
+    <div class="bar"><div class="l">Frontend &amp; UI<small>TypeScript</small></div><div class="trk"><div class="fil" data-w="16" style="background:#5b5bd6"></div></div><div class="v">36<small>24 active</small></div></div>
+    <div class="bar"><div class="l">SDKs &amp; libraries<small>TypeScript</small></div><div class="trk"><div class="fil" data-w="9" style="background:#8f4fd1"></div></div><div class="v">27<small>14 active</small></div></div>
+    <div class="bar"><div class="l">Mobile apps<small>Kotlin, Swift</small></div><div class="trk"><div class="fil" data-w="6" style="background:#1e9de3"></div></div><div class="v">15<small>9 active</small></div></div>
+    <div class="bar"><div class="l">Archived<small>frozen history</small></div><div class="trk"><div class="fil" data-w="0" style="background:#a19c90"></div></div><div class="v">286<small>0 active</small></div></div>
+    <div class="bar"><div class="l">Unclassified<small>metadata said too little</small></div><div class="trk"><div class="fil" data-w="68" style="background:#8e97a1"></div></div><div class="v">271<small>101 active</small></div></div>
+  </div>
+</div>
+<div class="note"><b>Two numbers to sit with.</b> <b>271 repos could not be classified</b> from metadata at all, and 101 of them are actively being pushed to — that is a bigger pile of active-but-unplaceable code than the frontend, mobile, SDK and docs clusters combined. And <b>286 are archived</b>: excellent for "why did we stop doing X?", never current truth. The guide labels both categories honestly rather than forcing them into a cluster to make the picture look tidier.</div>
+
+<h3>Four journeys, traced end to end</h3>
+<p class="sub tight">The most useful thing on the system map: a named path through named repos, so a newcomer can see the whole chain rather than a cloud of boxes.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:24%">Journey</th><th>The chain</th></tr></thead>
+    <tbody>
+      <tr><td><b>Donation / checkout</b><br><span class="tsub">10 steps</span></td><td><code>ssr-frontend</code> → <code>payment-elements</code> → <code>cart-api</code> → <code>orders-api</code> → <code>classypay</code> → <code>payments-platform</code> → <code>avro-schemas</code> → <code>stream-data-consumer</code> → <code>dbt_analytics</code> → <code>looker_gofundme_v2</code></td></tr>
+      <tr><td><b>Pro campaign / message</b><br><span class="tsub">10 steps</span></td><td><code>classy-application-shell</code> → <code>campaign-studio-shell</code> → <code>message-studio</code> → <code>message-templates</code> → <code>classyql</code> → <code>apiv2</code> → <code>trident</code> → <code>integrations-events</code> → <code>c4sf-inbound-webhook</code> → <code>salesforce-connector</code></td></tr>
+      <tr><td><b>Operations / quality loop</b><br><span class="tsub">8 steps</span></td><td><code>operations-center-frontend</code> → <code>react-internal</code> → <code>quality-dashboard</code> → <code>checkly-cli</code> → <code>pro-observability-agent</code> → <code>terraform-coralogix</code> → <code>sre-knowledge</code> → <code>runbooks</code></td></tr>
+      <tr><td><b>Data platform / analytics</b><br><span class="tsub">7 steps</span></td><td><code>stream-data-consumer</code> → <code>dbt_udp</code> → <code>dbt_udp_analytics</code> → <code>terraform-snowflake</code> → <code>looker_gofundme_v2</code> → <code>decision_science</code> → <code>people_science</code></td></tr>
+    </tbody>
+  </table></div>
+</div>
+<div class="note good"><b>The Pro campaign journey is the one the UTM work runs along.</b> <code>classy-checkout</code>, <code>classy-embedded-sdk</code> and <code>apiv2</code> all appear as cluster exemplars, and the guide's own source list cites the PRO-5398 Confluence page — see <a href="#/utm" data-jump="utm">UTM</a>, where that same chain is described hop by hop.</div>
+
+<h2>What came out of it</h2>
+
+<h3>The org, by the numbers</h3>
+<div class="grid2 reveal">
+  <div class="card">
+    <h3 style="margin-top:0">Freshness of the 916 non-archived repos</h3>
+    <div class="bars" style="--lw:136px;--vw:76px;--lwm:104px;--vwm:64px">
+      <div class="bar"><div class="l">Last 30 days</div><div class="trk"><div class="fil" data-w="100" style="background:var(--brand)"></div></div><div class="v">332<small>36%</small></div></div>
+      <div class="bar"><div class="l">30–90 days</div><div class="trk"><div class="fil" data-w="36" style="background:var(--s2)"></div></div><div class="v">121<small>13%</small></div></div>
+      <div class="bar"><div class="l">90 days – 1 year</div><div class="trk"><div class="fil" data-w="45" style="background:var(--s3)"></div></div><div class="v">151<small>16%</small></div></div>
+      <div class="bar"><div class="l">Over a year</div><div class="trk"><div class="fil" data-w="94" style="background:var(--ink-3)"></div></div><div class="v">312<small>34%</small></div></div>
+    </div>
+    <p class="sub" style="margin:14px 0 0;font-size:.85rem">A third of the non-archived estate has not been touched in a year. Not archived, not current — the category that quietly misleads newcomers, which is why the guide surfaces it.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Language landscape</h3>
+    <div class="bars" style="--lw:118px;--vw:60px;--lwm:92px;--vwm:52px">
+      <div class="bar"><div class="l">Python</div><div class="trk"><div class="fil" data-w="100" style="background:var(--brand)"></div></div><div class="v">200</div></div>
+      <div class="bar"><div class="l">TypeScript</div><div class="trk"><div class="fil" data-w="66" style="background:var(--s2)"></div></div><div class="v">132</div></div>
+      <div class="bar"><div class="l">HCL</div><div class="trk"><div class="fil" data-w="52" style="background:var(--s3)"></div></div><div class="v">103</div></div>
+      <div class="bar"><div class="l">JavaScript</div><div class="trk"><div class="fil" data-w="32" style="background:var(--s4)"></div></div><div class="v">63</div></div>
+      <div class="bar"><div class="l">Shell</div><div class="trk"><div class="fil" data-w="21" style="background:var(--ink-3)"></div></div><div class="v">42</div></div>
+      <div class="bar"><div class="l">Jinja</div><div class="trk"><div class="fil" data-w="18" style="background:var(--ink-3)"></div></div><div class="v">35</div></div>
+      <div class="bar"><div class="l">HTML</div><div class="trk"><div class="fil" data-w="16" style="background:var(--ink-3)"></div></div><div class="v">32</div></div>
+      <div class="bar"><div class="l">Go</div><div class="trk"><div class="fil" data-w="16" style="background:var(--ink-3)"></div></div><div class="v">31</div></div>
+      <div class="bar"><div class="l">PHP</div><div class="trk"><div class="fil" data-w="15" style="background:var(--ink-3)"></div></div><div class="v">29</div></div>
+      <div class="bar"><div class="l">Kotlin</div><div class="trk"><div class="fil" data-w="10" style="background:var(--ink-3)"></div></div><div class="v">19</div></div>
+    </div>
+    <p class="sub" style="margin:14px 0 0;font-size:.85rem">44 languages in total. HCL at number three is the tell: infrastructure-as-code is a first-class part of this estate, not a footnote.</p>
+  </div>
+</div>
+
+<h3>Ownership — and how confident each answer is</h3>
+<p class="sub tight">The hardest and most valuable part. 114 of the 1,202 repos have an owning team attached, with the confidence stated rather than implied.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:20%">Confidence</th><th style="width:12%" class="n">Repos</th><th>What it means for the reader</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill good">Documented</span></td><td class="n"><b>40</b></td><td>Traced to a written source — the service catalog, Confluence, or a Slack ownership thread. Usable as-is.</td></tr>
+      <tr><td><span class="pill warn">Inferred</span></td><td class="n"><b>73</b></td><td>Deduced from naming and cluster. The guide asks you to verify via CODEOWNERS before acting on it.</td></tr>
+      <tr><td><span class="pill bad">Contested</span></td><td class="n"><b>1</b></td><td>Sources disagreed. Flagged rather than resolved by picking a winner.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin:16px 0 0;font-size:.88rem">Where ownership is known, the Explorer gives the team's Slack ask-channel and Jira board — so the output of "what broke?" is a place to ask, not just a repo name. 30 teams across 9 tribes: Consumer Experience, Incubation, Platforms, Payments, NPO Experience, P2P &amp; Events, Data, SRE and Design Systems.</p>
+</div>
+
+<h3>Where the ownership data came from</h3>
+<p class="sub tight">Cited on the page itself, which is what makes the confidence levels checkable rather than decorative.</p>
+<div class="card reveal">
+  <div class="lnks">
+    <div class="lnk"><span class="lk">Sheet</span><div><a href="https://docs.google.com/spreadsheets/d/1yHCe4ki6211KZloTx2PMchGxQBEnCUKrmlmvwYHZsqw/edit" target="_blank" rel="noopener">"All our services and who owns them" — GFM service catalog</a><span class="lm">The single richest source behind the documented mappings</span></div></div>
+    <div class="lnk"><span class="lk">Confluence</span><div><a href="https://gofundme.atlassian.net/wiki/spaces/PMO/pages/4792713345/Teams+Team+Spaces" target="_blank" rel="noopener">Teams &amp; Team Spaces (PMO)</a><span class="lm">Team, tribe, Slack channel and Jira board for the 30 teams</span></div></div>
+    <div class="lnk"><span class="lk">Confluence</span><div><a href="https://gofundme.atlassian.net/wiki/spaces/gppt/pages/4792911002/github.com+gfm-npo+-+gofundme+early+adopter+task" target="_blank" rel="noopener">GitHub org migration guide (gppt)</a><span class="lm">Why some repos live where they do — the gfm-npo → gofundme move</span></div></div>
+    <div class="lnk"><span class="lk">Confluence</span><div><a href="https://gofundme.atlassian.net/wiki/spaces/PMO/pages/4776263718/Weekly+GFM+Pro+Domain+Migration+Meetings" target="_blank" rel="noopener">GFM Pro Domain Migration notes (PMO)</a><span class="lm">Ongoing domain moves that keep changing the answer</span></div></div>
+    <div class="lnk"><span class="lk">Confluence</span><div><a href="https://gofundme.atlassian.net/wiki/spaces/gpnct/pages/6330122270" target="_blank" rel="noopener">UTM Attribution — Checkout Stack (PRO-5398)</a><span class="lm">Cited for the checkout-stack repo wiring. Same page the <a href="#/utm" data-jump="utm">UTM project</a> produced</span></div></div>
+    <div class="lnk"><span class="lk">Slack</span><div><a href="https://gofundme.enterprise.slack.com/archives/C085K0LQ69Y/p1769020544815889" target="_blank" rel="noopener">#team-admin — Admin &amp; Onboarding service ownership</a><span class="lm">Jan 21 2026 thread</span></div></div>
+    <div class="lnk"><span class="lk">Slack</span><div><a href="https://gofundme.enterprise.slack.com/archives/C0AP3KYB60Y/p1779205916220829" target="_blank" rel="noopener">APIv2 ownership thread</a><span class="lm">May 19 2026 thread</span></div></div>
+  </div>
+</div>
+
+<h2>What it does not cover</h2>
+<div class="card reveal">
+  <div class="sk"><h3>It is inferred from GitHub metadata, and says so on every screen</h3><p>Names, descriptions, primary languages and timestamps — nothing else. No import graphs, no service-mesh traces, no runtime call data. The guide describes itself as "an orientation map for PMs, not a confirmed architecture diagram" and tells the reader to confirm wiring with the owning team. That framing is the most important thing on it, and it should survive any future edit.</p></div>
+  <div class="sk"><h3>The edges are plausible, not measured</h3><p>Every connection on the system map carries a confidence marker, and the honest reading of "high" is <i>obviously true from the names involved</i> rather than <i>verified</i>. Frontend calling backend APIs is safe. Which specific services a given repo talks to is not something metadata can answer.</p></div>
+  <div class="sk"><h3>271 repos are unplaceable, and 101 of them are live</h3><p>Not a gap in the tool so much as a finding about the estate: a fifth of the org's repositories do not describe themselves well enough to be categorised. The guide surfaces this as "a good list to ask an engineer about", which is the right move, but nobody has worked through it.</p></div>
+  <div class="sk"><h3>Ownership covers 114 of 1,202 repos, and only 40 are documented</h3><p>That is 3% of the estate with a citable owner. For the rest the guide points at each repo's CODEOWNERS and <code>terraform-github</code>'s <code>repos.json</code> — the actual permission source of truth — which is the correct answer but not a fast one.</p></div>
+  <div class="sk"><h3>It is a snapshot with no refresh mechanism</h3><p>Inventory as of 2026-06-30, ownership as of 2026-07-02. Nothing recomputes it. Given a third of the active estate moves within 30 days, the cluster counts and freshness figures decay quickly, and the ownership data decays faster because migrations are ongoing — two of the guide's own sources are migration notes.</p></div>
+  <div class="sk"><h3>The triage tool has never been tested against real incidents</h3><p>The rules match URL patterns and feature language onto weighted repo lists. Whether the top suggestion is right when someone pastes a genuine Slack complaint is unmeasured — and that, not the map, is the feature people will judge it on.</p></div>
+</div>
+
+<h2>Pick this up next</h2>
+<div class="acts reveal">
+  <div class="act"><span class="num">1</span><div><div class="t">Give it a URL</div><div class="m">It is a single self-contained HTML file, which is why it works offline and why it will vanish at handover. Publish it somewhere durable — Confluence attachment, an internal static host, or a repo with Pages — before anything else. An unhosted guide helps nobody.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Make the inventory regenerable</div><div class="m">A script against the GitHub API that rebuilds the repo list, clusters and freshness figures turns a decaying snapshot into something that stays true. The cluster rules already exist in the file; they just need to run on a schedule rather than once.</div></div></div>
+  <div class="act"><span class="num">3</span><div><div class="t">Convert inferred ownership to documented</div><div class="m">73 inferred and 1 contested. Reading CODEOWNERS and <code>terraform-github/repos.json</code> for the repos that appear in the four journeys would upgrade the ones people actually hit, without doing all 1,202.</div></div></div>
+  <div class="act"><span class="num">4</span><div><div class="t">Test the triage tool on real complaints</div><div class="m">Take twenty genuine bug reports from Slack, run each through it, and record whether the right repo appeared in the top three. That is a morning's work and it is the difference between a demo and a tool.</div></div></div>
+  <div class="act"><span class="num">5</span><div><div class="t">Triage the 271 unclassified</div><div class="m">Start with the 101 that are actively being pushed to. Anything actively maintained but undescribable is also the thing nobody can hand over.</div></div></div>
+</div>
