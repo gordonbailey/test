@@ -23,7 +23,7 @@
       <tr><th>Outcome</th><td><code>raised_365</code> = <code>Txn - Last 365</code>, trailing-twelve-month dollars raised. Modelled as <code>log(raised_365)</code>.</td></tr>
       <tr><th>Estimator</th><td>OLS with cohort fixed effects (37 dummies, one dropped), HC3 heteroskedasticity-robust covariance.</td></tr>
       <tr><th>Sample</th><td>n = 3,161 of 6,759 (46.8%), complete-case on four required fields plus two activity floors.</td></tr>
-      <tr><th>Fit</th><td>In-sample R² 0.744 · 5-fold CV R² 0.7325 (σ 0.0085) · CV MAE 0.649 log points (≈ ×1.91).</td></tr>
+      <tr><th>Fit</th><td id="m-fit"></td></tr>
       <tr><th>Reference date</th><td><code>AS_OF_DATE = 2026-07-28</code>, passed explicitly rather than read from the clock so re-runs are deterministic.</td></tr>
     </tbody>
   </table></div>

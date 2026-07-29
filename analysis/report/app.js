@@ -268,11 +268,18 @@ document.getElementById('m-terms').innerHTML = X.terms.map(t => `
   <td class="n">${t.p < 1e-4 ? t.p.toExponential(0) : t.p.toFixed(3)}</td>
   <td class="n">${t.vif.toFixed(1)}</td><td>${t.role}</td></tr>`).join('');
 
+// Fit figures come from the payload so they cannot drift from the model.
+const MV = D.model;
+document.getElementById('m-fit').innerHTML =
+  `In-sample R² ${MV.in_sample_r2.toFixed(4)} · 5-fold CV R² ${MV.cv_r2_mean.toFixed(4)} `
+  + `(σ ${MV.cv_r2_std.toFixed(4)}) · CV MAE ${MV.cv_mae_log_points.toFixed(3)} log points `
+  + `(≈ ×${MV.cv_mae_as_multiplier.toFixed(2)}).`;
+
 const LADDER = [
   ['Levers + org scale only', 0.645, 'baseline'],
   ['+ prior-period run rate', 0.712, '+0.067'],
   ['+ contract tenure', 0.730, '+0.018'],
-  ['+ channel concentration, donor base', 0.7325, 'shipped'],
+  ['+ channel concentration, donor base', MV.cv_r2_mean, 'shipped'],
   ['Gradient boosting, same features', 0.786, 'ceiling'],
 ];
 document.getElementById('m-ladder').innerHTML = LADDER.map(([l,v,s],i) => `

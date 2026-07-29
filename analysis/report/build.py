@@ -39,6 +39,22 @@ app = (app.replace('__RD__', rd)
 safe = lookup.replace('<', '\\u003c').replace('\u2028','\\u2028').replace('\u2029','\\u2029')
 assert '</script>' not in safe
 
+# A stray </div> once closed .wrap early and pushed two whole tabs outside the
+# centered container. Nothing overflowed, so a scrollWidth check could not see it;
+# only the nesting was wrong. Fail the build instead.
+import re as _re
+_depth = 0
+for _i, _line in enumerate(body.split('\n'), 1):
+    _depth += len(_re.findall(r'<div\b', _line)) - len(_re.findall(r'</div>', _line))
+    if _depth < 0:
+        sys.exit(f'body.html: unbalanced </div> at line {_i} — content would escape .wrap')
+if _depth != 0:
+    sys.exit(f'body.html: {_depth} unclosed <div> — check panel nesting')
+_wrap_at = body.index('<div class="wrap">')
+for _m in _re.finditer(r'<div class="panel" id="(panel-[\w-]+)"', body):
+    if _m.start() < _wrap_at:
+        sys.exit(f'body.html: {_m.group(1)} sits before .wrap opens')
+
 out = (head + acss + body
        + '<script type="application/json" id="lookup-data">' + safe + '</script>\n'
        + '<script>\n' + app + '\n' + acct + '\n</script>\n')
