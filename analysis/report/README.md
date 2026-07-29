@@ -55,3 +55,14 @@ has no network access, so an external screenshot library is not an option — an
 hand-drawing guarantees no peer name can leak into a file a seller emails to a
 client. Canvas height is measured from content; a fixed height either left a
 third of the image empty or clipped a long name.
+
+**The PNG hands off through a modal, not `a.download`.** A published artifact
+runs inside a sandboxed iframe, and when that sandbox omits `allow-downloads` a
+programmatic `a.download` click is dropped with no error and no download — the
+seller sees a button that does nothing. `canvas.toBlob` compounds it: the
+callback fires after the click's user-activation window has closed, so even a
+permissive sandbox may refuse the download. Both are avoided by generating the
+image synchronously with `toDataURL` and showing it in a modal that offers three
+independent paths — Save PNG (works when downloads are allowed), Copy image
+(clipboard, works when they are not), and right-click / long-press on the
+rendered `<img>` (always works). Verified in a sandbox with downloads denied.

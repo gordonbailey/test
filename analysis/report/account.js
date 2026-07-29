@@ -14,7 +14,10 @@ const qEl = document.getElementById('q'), sgEl = document.getElementById('sugges
       ttEl = document.getElementById('a-tt'), peersEl = document.getElementById('a-peers'),
       peersNoteEl = document.getElementById('a-peers-note'), peersCountEl = document.getElementById('a-peers-count'),
       rMetEl = document.getElementById('r-metric'), rOnlyEl = document.getElementById('r-only'),
-      presentEl = document.getElementById('present-toggle');
+      presentEl = document.getElementById('present-toggle'),
+      ownerEl = document.getElementById('owner'), bookEl = document.getElementById('book'),
+      bookStatsEl = document.getElementById('book-stats'), bookListEl = document.getElementById('book-list'),
+      bookHEl = document.getElementById('book-h');
 let sel = null, sgRows = [], sgCursor = -1;
 
 rMetEl.innerHTML = L.metricOrder.map((k,i) => `<option value="${i}">${esc(L.metricLabels[i])}</option>`).join('');
@@ -83,6 +86,57 @@ document.addEventListener('click', e => {
   if (!e.target.closest('.searchwrap')){ sgEl.hidden = true; qEl.setAttribute('aria-expanded','false'); }
 });
 function pick(i){ sgEl.hidden = true; qEl.setAttribute('aria-expanded','false'); qEl.value = L.accounts[i].n; renderSuggest(); select(i); }
+
+/* ---- seller book -------------------------------------------------------- */
+const ownerCounts = new Map();
+L.accounts.forEach(x => ownerCounts.set(x.o, (ownerCounts.get(x.o) || 0) + 1));
+ownerEl.innerHTML = '<option value="">All accounts</option>' +
+  [...ownerCounts.entries()].sort((p,q) => q[1]-p[1])
+    .map(([o,n]) => `<option value="${esc(o)}">${esc(o)} (${n})</option>`).join('');
+
+function renderBook(){
+  const owner = ownerEl.value;
+  if (!owner){ bookEl.hidden = true; if (sel === null) emptyEl.hidden = false; return; }
+  const rows = L.accounts.map((x,i) => ({a:x,i})).filter(({a:x}) => x.o === owner);
+  const opt = rows.filter(({a:x}) => x.dg.startsWith(OPT_PREFIX));
+  const act = rows.filter(({a:x}) => x.dg.startsWith(ACT_PREFIX));
+  const exc = rows.filter(({a:x}) => x.x);
+  const gap = opt.reduce((s,r) => s + Math.max(r.a.gap,0), 0);
+  const raised = rows.reduce((s,r) => s + r.a.m[0][0], 0);
+
+  bookEl.hidden = false; emptyEl.hidden = true;
+  bookStatsEl.innerHTML = [
+    ['Accounts', num(rows.length), 'benchmarkable'],
+    ['Raised, last 12 months', money(raised), 'combined'],
+    ['Coachable gap', money(gap), `${opt.length} account${opt.length===1?'':'s'}`],
+    ['Needs onboarding', num(act.length), 'activation cases'],
+    ['Standouts', num(exc.length), '≥5× peer median'],
+  ].map(([k,v,d],i) => `<div class="stat${i===2?' accent':''}"><div class="k">${k}</div>
+      <div class="v">${v}</div><div class="d">${d}</div></div>`).join('');
+
+  // Coachable gap first — that is the list a seller acts on — then the rest.
+  const order = {[OPT_PREFIX]:0, [ACT_PREFIX]:1};
+  rows.sort((p,q) => {
+    const rank = x => x.a.dg.startsWith(OPT_PREFIX) ? 0 : x.a.dg.startsWith(ACT_PREFIX) ? 1 : 2;
+    return rank(p) - rank(q) || q.a.gap - p.a.gap;
+  });
+  bookHEl.textContent = `${esc(owner)} — ${rows.length} account${rows.length===1?'':'s'}`;
+  bookListEl.innerHTML = rows.map(({a:x,i}) => {
+    const label = x.dg.startsWith(ACT_PREFIX) ? 'Getting started'
+      : x.dg.startsWith(OPT_PREFIX) ? 'Room to grow' : x.x ? 'Standout' : 'On track';
+    const tone = x.dg.startsWith(ACT_PREFIX) ? 'warn'
+      : x.dg.startsWith(OPT_PREFIX) ? 'warn' : x.x ? 'good' : 'info';
+    return `<button class="pr" data-i="${i}" style="grid-template-columns:1fr 118px 96px 84px">
+      <div><div class="n2">${esc(x.n)}</div><div class="s2">${esc(x.s)} · ${esc(x.b)}</div></div>
+      <div class="v2"><span class="pill ${tone}" style="font-size:.7rem">${label}</span></div>
+      <div class="v2">${money(x.m[0][0])}<small>raised</small></div>
+      <div class="v2">${x.gap > 0 ? `<span style="color:var(--warn-ink)">−${money(x.gap)}</span>` : '—'}<small>vs median</small></div>
+    </button>`;
+  }).join('');
+  bookListEl.querySelectorAll('.pr').forEach(el =>
+    el.addEventListener('click', () => pick(+el.dataset.i)));
+}
+ownerEl.addEventListener('change', renderBook);
 
 /* Example chips: one of each case, so the three different conversations are
    discoverable without knowing an account name to type. */
@@ -504,15 +558,54 @@ function drawPNG(){
     + 'action to try first. Prepared by GoFundMe Pro.';
   wrap(g, foot, LEFT, H-58, RIGHT-LEFT, 16, font(500,11.5));
 
-  cv.toBlob(blob => {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = a.n.replace(/[^\w\s-]/g,'').replace(/\s+/g,'-').slice(0,60) + '-benchmark.png';
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
-  }, 'image/png');
+  // Everything below is synchronous. `toBlob` is async, and its callback runs
+  // after the click's user activation has expired, which is one of two ways the
+  // download silently fails; the other is an iframe sandbox without
+  // allow-downloads, which we cannot control. So: produce a data URL inline,
+  // then hand the user an image plus three independent ways to keep it.
+  const dataUrl = cv.toDataURL('image/png');
+  const fname = a.n.replace(/[^\w\s-]/g,'').replace(/\s+/g,'-').slice(0,60) + '-benchmark.png';
+  showPNG(dataUrl, fname);
 }
+
+const pngModal = document.getElementById('png-modal'),
+      pngImg = document.getElementById('png-img'),
+      pngSave = document.getElementById('png-save'),
+      pngCopy = document.getElementById('png-copy');
+let lastPngUrl = null;
+
+function showPNG(dataUrl, filename){
+  lastPngUrl = dataUrl;
+  pngImg.src = dataUrl;
+  pngSave.href = dataUrl;
+  pngSave.download = filename;
+  pngCopy.textContent = 'Copy image';
+  pngModal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  pngSave.focus();
+}
+function hidePNG(){
+  pngModal.hidden = true;
+  document.body.style.overflow = '';
+  document.getElementById('dl-png').focus();
+}
+document.getElementById('png-close').addEventListener('click', hidePNG);
+pngModal.addEventListener('click', e => { if (e.target === pngModal) hidePNG(); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !pngModal.hidden) hidePNG(); });
+
+// Clipboard is often the most useful route anyway — it pastes straight into a
+// deck — and it works in sandboxes that block downloads.
+pngCopy.addEventListener('click', async () => {
+  if (!lastPngUrl) return;
+  try {
+    const blob = await (await fetch(lastPngUrl)).blob();
+    await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+    pngCopy.textContent = 'Copied — paste into your deck';
+  } catch {
+    pngCopy.textContent = 'Copy blocked — right-click the image instead';
+  }
+  setTimeout(() => { pngCopy.textContent = 'Copy image'; }, 2600);
+});
 function roundRect(g,x,y,w,h,r){
   g.beginPath();
   g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r);
