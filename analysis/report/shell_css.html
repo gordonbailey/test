@@ -134,11 +134,8 @@
 .pcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);
   border-color:color-mix(in srgb,var(--brand) 30%,transparent)}
 .pcard:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
-/* The pill is nowrap, so at the width where three cards just fit it pushed
-   itself past the card edge. Wrapping drops it onto its own line instead. */
-.pcard .top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.pcard .nm{font-size:1.02rem;font-weight:680;letter-spacing:-.016em;line-height:1.25;
-  flex:1 1 auto;min-width:0}
+.pcard>.sp{align-self:flex-start;margin-bottom:1px}
+.pcard .nm{font-size:1.02rem;font-weight:680;letter-spacing:-.016em;line-height:1.25}
 .pcard .bl{font-size:.87rem;color:var(--ink-2);line-height:1.5;flex:1}
 .pcard .bl.need{color:var(--ink-3)}
 .pcard .bl.need b{color:var(--ink-2);font-weight:600}

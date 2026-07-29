@@ -61,6 +61,10 @@ if orphans:
 
 STATUS_LABEL = {'live': 'Live', 'drafting': 'In progress', 'awaiting': 'Awaiting content'}
 
+# One byline, used on the home hero, in the rail and in the footer, so a change
+# of name or term is a single edit in projects.json.
+BYLINE = ' · '.join(x for x in (SITE.get('owner'), SITE['term']) if x)
+
 CARET = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" '
          'stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>')
 ARROW = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" '
@@ -131,7 +135,7 @@ def render_rail():
     <span class="mark" aria-hidden="true">{HEART}</span>
     <span class="wm">{esc(SITE["wordmark"])}<span>{esc(SITE["wordmarkSub"])}</span></span>
   </a>
-  <div class="railterm"><div class="t">{esc(SITE["term"])}</div></div>
+  <div class="railterm"><div class="t">{esc(BYLINE)}</div></div>
   <nav class="railnav">{''.join(rail_rows(None, 0))}</nav>
   <div class="railfoot">
     <span class="cnt">{live} of {total} pages written</span>
@@ -154,9 +158,13 @@ def card(n):
                      for k in kids) + '</div>') if kids else ''
     # The card uses the short label: several titles are full questions, and a
     # three-line title beside a status pill reads as a cramped mess.
+    #
+    # The pill sits above the title rather than opposite it. Beside the title it
+    # wrapped onto its own line for the longer names and stayed inline for the
+    # short ones, so a row of cards disagreed with itself about its own layout.
     return (f'<a class="pcard" href="#/{n["id"]}" data-jump="{n["id"]}">'
-            f'<div class="top"><div class="nm">{esc(n.get("short", n["title"]))}</div>'
-            f'<span class="sp {st}"><i aria-hidden="true"></i>{STATUS_LABEL[st]}</span></div>'
+            f'<span class="sp {st}"><i aria-hidden="true"></i>{STATUS_LABEL[st]}</span>'
+            f'<div class="nm">{esc(n.get("short", n["title"]))}</div>'
             f'{blurb}{chips}'
             f'<div class="go">Open{ARROW}</div></a>')
 
@@ -167,7 +175,7 @@ def render_home():
     return f'''
 <div class="view" data-view="home">
   <div class="hometop">
-    <p class="eyebrow-lg">{esc(SITE["term"])} · Customer Intelligence</p>
+    <p class="eyebrow-lg">{esc(BYLINE)}</p>
     <h1 class="homeh1">{esc(SITE["h1"])}</h1>
     <p class="homelede">{esc(SITE["lede"])}</p>
   </div>
@@ -255,7 +263,7 @@ def render_view(n):
 
 footer = f'''
 <footer>
-  {esc(SITE["term"])} internship work · {esc(SITE["wordmark"])}.
+  {esc(SITE["term"])} internship work by {esc(SITE["owner"])} · {esc(SITE["wordmark"])}.
   Benchmarking figures come from the book-of-business export snapshot of 2026-07-28
   (6,759 rows, 57 fields; 3,161 accounts eligible after screening).
   Engine, tests, methodology and this page: <code>analysis/</code> on

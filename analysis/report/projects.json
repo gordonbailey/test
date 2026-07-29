@@ -1,12 +1,12 @@
 {
   "site": {
-    "title": "Customer Intelligence — Internship Portfolio",
+    "title": "Gordon Bailey — Internship Portfolio",
     "wordmark": "GoFundMe Pro",
     "wordmarkSub": "Internship Portfolio",
     "term": "Summer 2026",
-    "owner": "",
-    "h1": "Everything built this summer, in one place.",
-    "lede": "Six workstreams, from a peer benchmarking engine sellers can screen-share to the instrumentation and UTM plumbing underneath it. Each one keeps its own page with the same five headings: the problem, what was done, what came out of it, what it does not cover, and what the next person should pick up."
+    "owner": "Gordon Bailey",
+    "h1": "Internship Portfolio",
+    "lede": "Everything built this summer, in one place. Six workstreams, from a peer benchmarking engine sellers can screen-share to the instrumentation and UTM plumbing underneath it. Each one keeps its own page with the same five headings: the problem, what was done, what came out of it, what it does not cover, and what the next person should pick up."
   },
 
   "_comment": [
@@ -36,7 +36,7 @@
       "short": "Hackathon",
       "order": 10,
       "status": "live",
-      "blurb": "Sixteen hackathon projects, scored on one scale and tiered into build / validate / park — with an effort estimate from whoever wrote the code, and the two places the numbers still disagree.",
+      "blurb": "Sixteen hackathon projects, scored on one scale and tiered into build / validate / park — with an effort estimate from whoever wrote the code, and an honest read on which estimates do not exist yet.",
       "h1": "Which sixteen hackathon projects deserve a roadmap slot?",
       "lede": "A hackathon produces enthusiasm, not a roadmap. This scores all sixteen projects on GDV impact, churn prevention and feasibility, merges the duplicates, collects an estimate from each owner, and sorts them into four to build now, five to validate in Q3, and five to park with a named unlock."
     },
