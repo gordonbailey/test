@@ -1,3 +1,9 @@
+<!-- The artifact wrapper supplies its own <meta charset>, so published copies
+     have always rendered correctly. Declare it here too: without it, opening
+     report.html from disk or serving it without a charset header falls back to
+     windows-1252 and every ·, — and ’ in the page — including the two embedded
+     guides — arrives mojibaked. -->
+<meta charset="utf-8">
 <title>__TITLE__</title>
 <style>
 /* ==========================================================================

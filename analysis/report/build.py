@@ -12,6 +12,7 @@ markup is written by hand.
 Usage:  python report/build.py            # from anywhere
 Env:    ANALYSIS_DIR (default: parent of this file), OUT (default: report.html)
 """
+import base64
 import html
 import json
 import os
@@ -245,6 +246,33 @@ def render_skeleton(n):
     return ''.join(out)
 
 
+# Guides that are themselves standalone HTML apps get embedded rather than
+# linked. Each one is base64'd into its own <script> payload and hydrated into a
+# srcdoc iframe on first navigation (see shell.js). Two reasons for base64
+# rather than inlining the markup: the guides contain their own </script> tags,
+# which would terminate the payload early, and an iframe keeps their global CSS
+# and JS from colliding with the shell's. Verified that inline script inside a
+# srcdoc iframe still executes under the artifact's sandbox, which has
+# allow-scripts but not allow-same-origin.
+GUIDE_PAYLOADS = []
+
+
+def guide_payload(n):
+    f = n.get('embed')
+    if not f:
+        return
+    p = os.path.join(HERE, 'guides', f)
+    if not os.path.exists(p):
+        sys.exit(f'projects.json: node {n["id"]} names missing guide file guides/{f}')
+    raw = open(p, encoding='utf8').read()
+    if 'googleapis' in raw or 'gstatic' in raw:
+        sys.exit(f'guides/{f}: external font link would be blocked by the artifact CSP')
+    b64 = base64.b64encode(raw.encode('utf8')).decode('ascii')
+    GUIDE_PAYLOADS.append(
+        f'<script type="application/x-guide" id="gsrc-{n["id"]}">{b64}</script>')
+    return len(raw)
+
+
 def render_view(n):
     inner = n.get('body')
     if inner == '__BENCHMARKING__':
@@ -271,7 +299,18 @@ footer = f'''
 </footer>
 </div></main></div>'''
 
+_embedded = {n['id']: guide_payload(n) for n in NODES if n.get('embed')}
 markup = render_rail() + render_home() + ''.join(render_view(n) for n in NODES) + footer
+
+# Every declared embed needs its placeholder on the page, and every placeholder
+# needs a payload. Either half alone renders an empty panel.
+for _id in _embedded:
+    if f'data-guide="{_id}"' not in markup:
+        sys.exit(f'markup: node {_id} declares an embed but its page has no '
+                 f'<div class="gembed" data-guide="{_id}"> placeholder')
+for _m in re.finditer(r'data-guide="([\w-]+)"', markup):
+    if _m.group(1) not in _embedded:
+        sys.exit(f'markup: gembed placeholder {_m.group(1)} has no embed in projects.json')
 
 # Inject data. The methodology markup goes in as a JS string literal so it is
 # rendered by the same code path as the charts it contains.
@@ -318,6 +357,7 @@ head = head.replace('__TITLE__', esc(SITE['title']))
 
 out = (head + shcss + acss + markup
        + '<script type="application/json" id="lookup-data">' + safe + '</script>\n'
+       + '\n'.join(GUIDE_PAYLOADS) + '\n'
        + '<script>\n' + app + '\n' + acct + '\n' + shell + '\n</script>\n')
 out_path = os.environ.get('OUT', os.path.join(HERE, 'report.html'))
 open(out_path, 'w').write(out)
@@ -325,3 +365,5 @@ print('wrote', out_path)
 print('bytes:', len(out))
 print(f'views: {len(_views)}  live: {sum(1 for n in NODES if n.get("status") == "live")}'
       f'  awaiting: {sum(1 for n in NODES if n.get("status") == "awaiting")}')
+for _id, _n in _embedded.items():
+    print(f'embedded guide: {_id} ({_n:,} bytes of HTML)')

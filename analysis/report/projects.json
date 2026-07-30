@@ -17,7 +17,10 @@
     "doubles as the card text while status is `awaiting`, so a blank page never",
     "pretends to be a finished one.",
     "`body` names a file in projects/ to inline as the page content. Omit it and",
-    "build.py renders the standard skeleton from `sections`."
+    "build.py renders the standard skeleton from `sections`.",
+    "`embed` names a standalone HTML app in guides/ to inline as a",
+    "base64 payload and hydrate into a srcdoc iframe on first visit. The",
+    "page body must carry a matching <div class=\"gembed\" data-guide=\"ID\">."
   ],
   "sections": [
     [
@@ -137,7 +140,8 @@
       "status": "live",
       "blurb": "The 24 requirements that decide whether a release survives production, each with the questions to ask engineering and the spec language to write down, plus a 53-item release-readiness process and a rotating Release Lead role.",
       "h1": "The qualities that decide whether a release survives production",
-      "lede": "A working feature answers “what does it do?” Everything that decides whether it holds up — speed, reliability, safety, and the cost of changing it later — sits in a vocabulary most product managers were never taught. This is the translation layer."
+      "lede": "A working feature answers “what does it do?” Everything that decides whether it holds up — speed, reliability, safety, and the cost of changing it later — sits in a vocabulary most product managers were never taught. This is the translation layer.",
+      "embed": "NFR_Guide.html"
     },
     {
       "id": "guide-dataarch",
@@ -148,7 +152,8 @@
       "status": "live",
       "blurb": "1,202 repositories mapped into ten clusters, four journeys traced end to end, a decision tree for “where do I look?” and a triage tool for “what broke?”, with ownership labelled documented, inferred or contested.",
       "h1": "Where do I look, in 1,202 repositories?",
-      "lede": "A product manager gets told something is broken and faces the whole GitHub org with no map. This is an orientation map built from repository metadata, and it says so on every screen."
+      "lede": "A product manager gets told something is broken and faces the whole GitHub org with no map. This is an orientation map built from repository metadata, and it says so on every screen.",
+      "embed": "Data_Arch_Guide.html"
     },
     {
       "id": "strategy",

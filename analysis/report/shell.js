@@ -52,6 +52,31 @@ function setTwist(btn, open){
 
 function closeRail(){ document.body.classList.remove('railopen'); }
 
+/* Guide embeds -------------------------------------------------------------
+   The two guides are standalone HTML apps with their own global CSS and JS, so
+   they run in a srcdoc iframe rather than being merged into this document.
+   Hydrated on first view rather than at load: together they are ~370KB of
+   markup and parsing both up front delays first paint of the home page for
+   readers who never open a guide.
+
+   atob returns latin-1, so the UTF-8 payload has to be decoded through
+   TextDecoder or every non-ASCII character in the guides arrives mojibaked. */
+function hydrateGuides(view){
+  view.querySelectorAll('.gembed:not([data-loaded])').forEach(box => {
+    const payload = document.getElementById('gsrc-' + box.dataset.guide);
+    if (!payload) return;
+    box.dataset.loaded = '1';
+    const bytes = Uint8Array.from(atob(payload.textContent.trim()), c => c.charCodeAt(0));
+    const frame = document.createElement('iframe');
+    frame.className = 'gframe';
+    frame.title = box.dataset.title || 'Embedded guide';
+    frame.setAttribute('loading', 'lazy');
+    frame.srcdoc = new TextDecoder('utf-8').decode(bytes);
+    box.querySelector('.gload')?.remove();
+    box.appendChild(frame);
+  });
+}
+
 function go(id, sub, {push = true, scroll = true} = {}){
   if (!views[id]) id = 'home';
   Object.entries(views).forEach(([k, v]) => {
@@ -60,6 +85,7 @@ function go(id, sub, {push = true, scroll = true} = {}){
     if (on){
       v.style.animation = 'none'; void v.offsetWidth; v.style.animation = '';
       observeReveals(v);
+      hydrateGuides(v);
     }
   });
   syncRail(id);

@@ -352,6 +352,31 @@ body.railopen .scrim{display:block}
   .homeh1{font-size:1.72rem}
 }
 
+/* ---------- embedded guides ----------
+   Each guide is a full app with its own internal nav and scrolling, so the
+   frame gets a tall fixed viewport and scrolls internally rather than being
+   auto-sized to its content. 78vh leaves the shell's own chrome visible, so a
+   reader can still tell they are inside the portfolio and get back out. */
+.gembed{position:relative;border:1px solid var(--hair);border-radius:var(--r-lg);
+  overflow:hidden;background:var(--surface-2);box-shadow:var(--shadow);
+  height:78vh;min-height:520px}
+.gframe{width:100%;height:100%;border:0;display:block;background:#fff}
+.gload{position:absolute;inset:0;display:grid;place-items:center;gap:10px;
+  align-content:center;color:var(--ink-3);font-size:.88rem}
+.gload i{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);
+  border-top-color:var(--brand);animation:gspin .8s linear infinite}
+@keyframes gspin{to{transform:rotate(360deg)}}
+.gbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  margin:0 0 12px}
+.gbar .gnote{font-size:.82rem;color:var(--ink-3)}
+@media (max-width:820px){
+  /* A 1,202-row explorer inside a 400px-wide frame inside a phone is not worth
+     pretending about; give it more height and let the guide's own responsive
+     layout do the rest. */
+  .gembed{height:70vh;min-height:440px}
+}
+@media (prefers-reduced-motion:reduce){.gload i{animation:none}}
+
 /* Presentation mode hides every other customer's name — and the rail, which
    lists the internal project tree, has no place on a client's screen either. */
 body.present .rail,body.present .railtoggle,body.present .phead .crumb{display:none}

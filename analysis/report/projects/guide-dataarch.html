@@ -1,7 +1,8 @@
 <!-- Data architecture repo guide. The guide is itself an interactive HTML tool;
      this page describes what it does, what it is built from, and the two things
-     that would stop it being useful — its metadata-only basis and the fact that
-     it currently has nowhere durable to live. -->
+     that would stop it being useful — its metadata-only basis and the lack of an
+     internal URL an engineer can link to. The guide itself is embedded below via
+     the `embed` key in projects.json. -->
 
 <div class="card reveal deckcard">
   <div>
@@ -10,8 +11,8 @@
     <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">A self-contained interactive HTML tool. Inventory snapshot 2026-06-30 PT; ownership as of 2026-07-02. Model by Codex, experience rebuilt with Claude.</p>
   </div>
   <div class="dl">
-    <span class="pill warn">Not yet hosted</span>
-    <span class="lm" style="max-width:38ch">A standalone file, so it has no URL to link to. See the handover note at the bottom of this page.</span>
+    <span class="pill good">Embedded below</span>
+    <span class="lm" style="max-width:38ch">The full tool runs inside this page. The source file also lives at <code>analysis/report/guides/</code>.</span>
   </div>
 </div>
 
@@ -20,6 +21,14 @@
   <div class="stat accent"><div class="k">Clusters</div><div class="v" data-count="9">9</div><div class="d">plus archived and unclassified</div></div>
   <div class="stat"><div class="k">Active in 90 days</div><div class="v" data-count="453">453</div><div class="d">of 916 non-archived</div></div>
   <div class="stat"><div class="k">Teams identified</div><div class="v" data-count="30">30</div><div class="d">across 9 tribes</div></div>
+</div>
+
+<h2>The guide</h2>
+<div class="gbar">
+  <span class="gnote">Running live below: five tools over one inventory of 1,202 repositories. Scroll inside the frame; the guide has its own navigation.</span>
+</div>
+<div class="gembed reveal" data-guide="guide-dataarch" data-title="Repo Data Architecture guide">
+  <div class="gload"><i aria-hidden="true"></i>Loading the guide…</div>
 </div>
 
 <h2>The problem</h2>
@@ -147,7 +156,7 @@
 
 <h2>Pick this up next</h2>
 <div class="acts reveal">
-  <div class="act"><span class="num">1</span><div><div class="t">Give it a URL</div><div class="m">A single self-contained HTML file works offline and vanishes at handover. Publish it somewhere durable first: a Confluence attachment, an internal static host, or a repo with Pages.</div></div></div>
+  <div class="act"><span class="num">1</span><div><div class="t">Give it an internal URL</div><div class="m">It runs in this page and the source is in the repo, so it no longer depends on a file on a laptop. It still needs somewhere an engineer can link to during an incident: a Confluence attachment, an internal static host, or a repo with Pages.</div></div></div>
   <div class="act"><span class="num">2</span><div><div class="t">Make the inventory regenerable</div><div class="m">A script against the GitHub API that rebuilds the repo list, clusters and freshness figures turns a decaying snapshot into something that stays true. The cluster rules already exist in the file; they just need to run on a schedule rather than once.</div></div></div>
   <div class="act"><span class="num">3</span><div><div class="t">Convert inferred ownership to documented</div><div class="m">73 inferred and 1 contested. Reading CODEOWNERS and <code>terraform-github/repos.json</code> for the repos that appear in the four journeys would upgrade the ones people actually hit, without doing all 1,202.</div></div></div>
   <div class="act"><span class="num">4</span><div><div class="t">Test the triage tool on real complaints</div><div class="m">Take twenty genuine bug reports from Slack, run each through it, and record whether the right repo appeared in the top three. About a morning's work, and it is the only way to know if the tool works.</div></div></div>

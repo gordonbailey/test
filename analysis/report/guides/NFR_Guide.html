@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Non-Functional Field Guide</title>
+<style>
+  :root{
+    --green:#02A95C;--green-deep:#0A3F2E;--green-700:#067A45;
+    --tea:#C3F0B9;--tea-soft:#EAF8E4;--tea-softer:#F3FBEF;
+    --pueblo:#87290F;--pueblo-soft:#F8EBE5;--pueblo-line:#E8C9BD;
+    --ink:#16201C;--ink-2:#54605A;--ink-3:#8B958E;
+    --paper:#F5F7F2;--surface:#FFFFFF;--surface-2:#FAFBF7;
+    --line:#E3E7DE;--line-2:#EDF0E9;--btn-dark:#12211B;--warn:#B07A12;
+    --shadow-sm:0 1px 2px rgba(16,32,24,.04);
+    --shadow:0 1px 2px rgba(16,32,24,.04), 0 4px 12px rgba(16,32,24,.05), 0 20px 44px rgba(16,32,24,.07);
+    --ease:cubic-bezier(.22,.68,.2,1);
+    --r:18px;--r-sm:12px;
+    /* flow stage colors */
+    --in-bg:#F2F1EA;--in-tx:#3A3A33;--in-bd:#E2E0D3;
+    --dd-bg:#ECEBFB;--dd-tx:#4B3FBF;--dd-bd:#CFCBF4;
+    --ds-bg:#FBEAE4;--ds-tx:#9B3B22;--ds-bd:#F0CBBE;
+    --op-bg:#FBEFD9;--op-tx:#8A5E12;--op-bd:#E8C98A;
+    --bd-bg:#E3F5E0;--bd-tx:#0A6B43;--bd-bd:#BEE6C4;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:1260px;margin:0 auto;padding:0 30px;}
+
+  /* top nav + tabs */
+  .topnav{position:sticky;top:0;z-index:60;background:rgba(245,247,242,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+  .topnav-inner{display:flex;align-items:center;gap:18px;padding:12px 0;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:13px;}
+  .brand .bmark{width:24px;height:24px;flex:0 0 auto;}
+  .brand .name{font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--green-deep);}
+  .brand .sep{width:1px;height:20px;background:var(--line);}
+  .brand .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);}
+  .tabs{display:flex;gap:4px;margin-left:auto;overflow-x:auto;}
+  .tab{font-size:14px;font-weight:600;padding:8px 15px;border-radius:999px;border:1.5px solid transparent;
+    background:transparent;color:var(--ink-2);cursor:pointer;white-space:nowrap;transition:all .14s;font-family:inherit;}
+  .tab:hover{color:var(--green-deep);background:rgba(2,169,92,.10);}
+  .tab[aria-selected="true"]{background:var(--green-deep);color:#fff;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* page header (non-req views) */
+  .pagehead{padding:54px 0 8px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--green-700);font-weight:600;display:flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--green);border-radius:2px;}
+  .pagehead h2{font-weight:800;font-size:clamp(28px,3.8vw,42px);letter-spacing:-.025em;margin:14px 0 0;line-height:1.05;max-width:20ch;}
+  .pagehead p{font-size:17.5px;color:var(--ink-2);max-width:none;margin:15px 0 0;line-height:1.6;}
+
+  /* hero (req) */
+  .hero{background:radial-gradient(130% 100% at 92% -20%, rgba(2,169,92,.10), transparent 55%),linear-gradient(180deg,#FFFFFF,var(--paper));border-bottom:1px solid var(--line);}
+  .hero-inner{display:grid;grid-template-columns:1.55fr .9fr;gap:48px;align-items:center;padding:60px 0 56px;}
+  h1{font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:18px 0 0;max-width:18ch;}
+  h1 .hl{color:var(--green-700);}
+  .lede{font-size:17.5px;color:var(--ink-2);max-width:56ch;margin:20px 0 0;line-height:1.62;}
+  .lede b{color:var(--ink);font-weight:700;}
+  .hero-art{display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .ring-wrap{position:relative;width:230px;height:230px;}
+  .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .ring-center .big{font-weight:800;font-size:30px;color:var(--green-deep);letter-spacing:-.02em;}
+  .ring-center .sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:3px;}
+  .hero-note{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-3);text-align:center;}
+
+  /* toolbar + explorer */
+  .toolbar{position:sticky;top:57px;z-index:50;background:rgba(245,247,242,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .toolbar-inner{display:flex;gap:14px;align-items:center;padding:14px 0;flex-wrap:wrap;}
+  .search{position:relative;flex:1 1 280px;min-width:230px;}
+  .search input{width:100%;padding:12px 14px 12px 42px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);font-family:inherit;font-size:14.5px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;}
+  .search input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(2,169,92,.12);}
+  .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-3);}
+  .filters{display:flex;gap:7px;flex-wrap:wrap;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;padding:8px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink-2);cursor:pointer;white-space:nowrap;transition:all .14s;text-transform:uppercase;font-weight:500;}
+  .pill:hover{border-color:var(--green);color:var(--green-deep);}
+  .pill[aria-pressed="true"]{background:var(--green-deep);color:#fff;border-color:var(--green-deep);}
+  .count{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-3);white-space:nowrap;}
+  .explorer{display:grid;grid-template-columns:336px 1fr;gap:32px;padding:36px 0 72px;align-items:start;}
+  .rail{position:sticky;top:128px;max-height:calc(100vh - 148px);overflow-y:auto;padding-right:6px;}
+  .rail::-webkit-scrollbar{width:7px;}.rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+  .cat-group{margin-bottom:20px;}
+  .cat-head{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:0 0 8px;display:flex;align-items:center;gap:8px;}
+  .cat-head .dot{width:8px;height:8px;border-radius:3px;flex:0 0 auto;}
+  .nav-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border:none;background:transparent;border-radius:11px;cursor:pointer;color:var(--ink-2);font-family:inherit;font-size:14.5px;font-weight:500;transition:background .12s,color .12s;line-height:1.3;}
+  .nav-item:hover{background:var(--surface);color:var(--ink);}
+  .nav-item.active{background:var(--green-deep);color:#fff;box-shadow:var(--shadow-sm);}
+  .nav-item .idx{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);flex:0 0 auto;}
+  .nav-item.active .idx{color:rgba(255,255,255,.55);}
+  .nav-item .core{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;background:var(--tea-soft);color:var(--green-700);padding:2px 6px;border-radius:5px;margin-left:auto;flex:0 0 auto;}
+  .nav-item.active .core{background:rgba(255,255,255,.18);color:#fff;}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;}
+  .panel-top{padding:32px 38px 26px;border-bottom:1px solid var(--line-2);position:relative;}
+  .panel-cat{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;display:inline-flex;align-items:center;gap:8px;}
+  .panel-cat .dot{width:9px;height:9px;border-radius:3px;}
+  .panel h2{font-weight:800;font-size:31px;letter-spacing:-.022em;margin:12px 0 0;line-height:1.08;}
+  .panel .oneliner{font-size:17.5px;color:var(--ink-2);margin:11px 0 0;max-width:62ch;line-height:1.55;}
+  .core-badge{position:absolute;top:32px;right:38px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:var(--tea-soft);color:var(--green-700);padding:6px 11px;border-radius:7px;font-weight:600;}
+  .panel-body{padding:6px 38px 36px;}
+  .block{padding:22px 0;border-bottom:1px solid var(--line-2);}
+  .block:last-child{border-bottom:none;}
+  .block-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+  .block-label .gi{width:17px;height:17px;flex:0 0 auto;}
+  .block p{margin:0;font-size:15.5px;line-height:1.64;color:var(--ink);}
+  .block.why .block-label{color:var(--pueblo);}
+  .block.good .block-label{color:var(--green-700);}
+  .ask-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+  .ask-list li{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;line-height:1.55;background:var(--surface-2);border:1px solid var(--line-2);border-radius:11px;padding:12px 14px;}
+  .ask-list li::before{content:"?";font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--green-700);background:var(--tea-soft);border-radius:6px;width:22px;height:22px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:1px;}
+  .prd-box{background:var(--green-deep);color:#E9F3ED;border-radius:13px;padding:17px 19px;font-family:'IBM Plex Mono',monospace;font-size:13.5px;line-height:1.7;}
+  .prd-box .l0{color:#7FE3AE;}
+  .tradeoff{background:var(--tea-softer);border:1px solid var(--tea);border-radius:13px;padding:15px 17px;font-size:15px;line-height:1.62;color:#214A38;}
+  .tradeoff b{color:var(--green-deep);}
+  .incident{background:var(--pueblo-soft);border:1px solid var(--pueblo-line);border-radius:13px;padding:15px 17px;font-size:15px;line-height:1.62;color:#5C2412;}
+  .incident .ihead{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pueblo);font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+  .incident .ihead svg{width:14px;height:14px;}
+
+  /* release */
+  .release{background:var(--green-deep);color:#EAF3EE;margin-top:8px;}
+  .release-inner{padding:64px 0;}
+  .release .eyebrow{color:#8FE7B8;}.release .eyebrow::before{background:#8FE7B8;}
+  .release h3{font-weight:800;font-size:clamp(26px,3.4vw,38px);letter-spacing:-.02em;margin:14px 0 0;line-height:1.05;color:#fff;max-width:24ch;}
+  .release .intro{color:#B9D6C8;font-size:17px;margin:14px 0 0;max-width:60ch;}
+  .rel-grid{display:grid;grid-template-columns:340px 1fr;gap:30px;margin-top:38px;align-items:start;}
+  .role-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--r);padding:24px;}
+  .role-card h4{margin:0;font-weight:800;font-size:19px;color:#fff;letter-spacing:-.01em;}
+  .role-card .rb{color:#B9D6C8;font-size:14px;line-height:1.6;margin:10px 0 16px;}
+  .role-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+  .role-card li{display:flex;gap:10px;font-size:13.6px;line-height:1.5;color:#DCEAE3;}
+  .role-card li svg{width:15px;height:15px;flex:0 0 auto;margin-top:3px;color:#8FE7B8;}
+  .checklist-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;color:var(--ink);}
+  .cl-top{display:flex;align-items:center;gap:22px;padding:24px 26px;border-bottom:1px solid var(--line-2);flex-wrap:wrap;}
+  .cl-ring{width:108px;height:108px;flex:0 0 auto;position:relative;}
+  .cl-ring .rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .cl-ring .rc b{font-weight:800;font-size:23px;color:var(--green-deep);}
+  .cl-ring .rc span{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase;}
+  .cl-headings{flex:1;min-width:200px;}
+  .cl-tabs{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;}
+  .cl-tab{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.04em;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink-2);cursor:pointer;transition:all .14s;text-transform:uppercase;}
+  .cl-tab[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green);}
+  .cl-caption{font-size:13.5px;color:var(--ink-2);}
+  .cl-body{padding:20px 26px 26px;max-height:560px;overflow-y:auto;}
+  .cl-group{margin-bottom:20px;}.cl-group:last-child{margin-bottom:0;}
+  .cl-group .gname{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-700);font-weight:600;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--line-2);}
+  .cl-group.rollback .gname{color:var(--pueblo);}
+  .cl-item{display:flex;gap:12px;align-items:flex-start;padding:9px 4px;cursor:pointer;border-radius:9px;transition:background .12s;}
+  .cl-item:hover{background:var(--surface-2);}
+  .cl-box{width:20px;height:20px;border:1.8px solid var(--ink-3);border-radius:6px;flex:0 0 auto;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .14s;}
+  .cl-item.done .cl-box{background:var(--green);border-color:var(--green);}
+  .cl-box svg{opacity:0;transition:opacity .12s;}.cl-item.done .cl-box svg{opacity:1;}
+  .cl-item .ct{font-size:14px;line-height:1.5;}
+  .cl-item.done .ct{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--line);}
+
+  /* ---- flow diagrams (HTML/CSS) ---- */
+  .diagram{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:26px 28px;margin-top:22px;}
+  .diagram .dtitle{font-weight:800;font-size:19px;letter-spacing:-.01em;margin:0 0 4px;}
+  .diagram .dsub{font-size:14.5px;color:var(--ink-2);margin:0 0 20px;}
+  .flow-h{display:flex;align-items:center;gap:10px;overflow-x:auto;padding:4px 4px 14px;}
+  .fnode{border-radius:13px;padding:13px 15px;width:144px;flex:0 0 auto;border:1.5px solid var(--line);background:var(--surface-2);}
+  .fnode .ft{font-weight:700;font-size:14.5px;}
+  .fnode .fd{font-size:12.5px;color:var(--ink-2);margin-top:2px;line-height:1.4;}
+  .fnode.svc{background:var(--tea-softer);border-color:var(--tea);width:188px;}
+  .fnode.store{background:#EAF3FB;border-color:#CFE2F2;}
+  .fnode.queue{background:var(--op-bg);border-color:var(--op-bd);}
+  .fnode.danger{background:var(--pueblo-soft);border-color:var(--pueblo-line);}
+  .fconn{display:flex;align-items:center;color:var(--ink-3);font-size:20px;padding:0 2px;flex:0 0 auto;}
+  .fstack{display:flex;flex-direction:column;gap:12px;justify-content:center;}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+  .tag-chip{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;padding:5px 9px;border-radius:7px;background:var(--tea-soft);color:var(--green-700);font-weight:600;}
+  .tag-chip.alt{background:#EAF3FB;color:#2B6CB0;}
+  .tag-chip.warn{background:var(--op-bg);color:var(--op-tx);}
+  .tag-chip.dgr{background:var(--pueblo-soft);color:var(--pueblo);}
+  .obs-strip{margin-top:16px;border-top:1px dashed var(--line);padding-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+  .obs-strip .ol{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px;}
+  @media(max-width:760px){.twocol{grid-template-columns:1fr;}}
+
+  /* vertical product-dev flow */
+  .vflow{display:flex;flex-direction:column;align-items:center;gap:0;}
+  .vnode{border-radius:13px;padding:13px 18px;text-align:center;min-width:230px;max-width:300px;border:1.5px solid;}
+  .vnode .vt{font-weight:700;font-size:15px;}
+  .vnode .vd{font-size:12.5px;margin-top:2px;opacity:.85;}
+  .vnode.in{background:var(--in-bg);border-color:var(--in-bd);color:var(--in-tx);}
+  .vnode.dd{background:var(--dd-bg);border-color:var(--dd-bd);color:var(--dd-tx);}
+  .vnode.ds{background:var(--ds-bg);border-color:var(--ds-bd);color:var(--ds-tx);}
+  .vnode.op{background:var(--op-bg);border-color:var(--op-bd);color:var(--op-tx);border-style:dashed;}
+  .vnode.bd{background:var(--bd-bg);border-color:var(--bd-bd);color:var(--bd-tx);}
+  .vdown{width:2px;height:24px;background:var(--ink-3);opacity:.4;position:relative;}
+  .vdown::after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink-3);opacity:.7;}
+  .vlabel{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin:5px 0;}
+  .inputs-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:4px;}
+  .inputs-row .vnode{min-width:0;padding:9px 13px;}
+  .inputs-row .vt{font-size:13px;}
+  .branch3{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:18px;}
+  .legend span{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2);font-weight:600;}
+  .legend i{width:13px;height:13px;border-radius:4px;border:1.5px solid;display:inline-block;}
+
+  /* glossary grid */
+  .gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:13px;margin-top:22px;}
+  .gcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--shadow-sm);}
+  .gcard .gk{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:3px 8px;border-radius:6px;display:inline-block;margin-bottom:9px;}
+  .gcard h4{margin:0 0 5px;font-weight:800;font-size:16.5px;letter-spacing:-.01em;}
+  .gcard p{margin:0;font-size:13.8px;line-height:1.55;color:var(--ink-2);}
+  .k-dd{background:var(--dd-bg);color:var(--dd-tx);}.k-ds{background:var(--ds-bg);color:var(--ds-tx);}
+  .k-op{background:var(--op-bg);color:var(--op-tx);}.k-bd{background:var(--bd-bg);color:var(--bd-tx);}
+  .k-doc{background:var(--in-bg);color:var(--in-tx);}
+
+  /* principles cards */
+  .pcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:22px;}
+  .pcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow-sm);}
+  .pcard h4{margin:0 0 8px;font-weight:800;font-size:17px;}
+  .pcard p{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.6;}
+  .pcard .chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;}
+  .pcard .chips span{font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--tea-soft);color:var(--green-700);}
+
+  /* pdlc timeline */
+  .pdlc{margin-top:22px;display:flex;flex-direction:column;gap:8px;}
+  .pdlc-row{display:flex;align-items:center;gap:12px;}
+  .pdlc-row .lbl{flex:0 0 150px;font-size:13px;font-weight:600;color:var(--ink-2);text-align:right;}
+  .pdlc-row .bar{height:30px;border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap;}
+
+  /* quiz */
+  .quiz-modes{display:flex;gap:8px;margin-top:24px;}
+  .qmode{font-weight:700;font-size:14px;padding:9px 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink-2);cursor:pointer;font-family:inherit;transition:all .14s;}
+  .qmode[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green);}
+  .flashwrap{margin-top:24px;display:flex;flex-direction:column;align-items:center;gap:18px;}
+  .flashcard{width:100%;max-width:560px;height:260px;perspective:1400px;cursor:pointer;}
+  .flashinner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+  .flashcard.flipped .flashinner{transform:rotateY(180deg);}
+  .flashface{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px;text-align:center;box-shadow:var(--shadow);}
+  .flashfront{background:var(--green-deep);color:#fff;}
+  .flashfront .term{font-weight:800;font-size:27px;letter-spacing:-.01em;}
+  .flashfront .hint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8FE7B8;letter-spacing:.08em;text-transform:uppercase;margin-top:14px;}
+  .flashback{background:var(--surface);border:1px solid var(--line);color:var(--ink);transform:rotateY(180deg);}
+  .flashback p{margin:0;font-size:16.5px;line-height:1.55;}
+  .flashnav{display:flex;align-items:center;gap:16px;}
+  .fbtn{font-weight:700;font-size:14px;padding:10px 18px;border-radius:11px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-family:inherit;transition:all .14s;}
+  .fbtn:hover{border-color:var(--green);color:var(--green-deep);}
+  .fcount{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-3);min-width:64px;text-align:center;}
+  .quizwrap{margin-top:24px;max-width:680px;}
+  .qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:28px 30px;}
+  .qprog{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;}
+  .qq{font-weight:800;font-size:21px;letter-spacing:-.01em;margin:10px 0 20px;line-height:1.25;}
+  .qopts{display:flex;flex-direction:column;gap:10px;}
+  .qopt{text-align:left;padding:14px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);cursor:pointer;font-family:inherit;font-size:15px;font-weight:500;transition:all .12s;}
+  .qopt:hover:not(:disabled){border-color:var(--green);}
+  .qopt.correct{background:var(--tea-soft);border-color:var(--green);color:var(--green-deep);font-weight:700;}
+  .qopt.wrong{background:var(--pueblo-soft);border-color:var(--pueblo-line);color:var(--pueblo);}
+  .qopt:disabled{cursor:default;}
+  .qexpl{margin-top:18px;background:var(--tea-softer);border:1px solid var(--tea);border-radius:12px;padding:14px 16px;font-size:14.5px;line-height:1.55;color:#214A38;display:none;}
+  .qexpl.show{display:block;}
+  .qfoot{margin-top:20px;display:flex;justify-content:space-between;align-items:center;}
+  .qscore{font-weight:700;font-size:15px;color:var(--ink-2);}
+  .qresult{text-align:center;padding:20px;}
+  .qresult .rbig{font-weight:800;font-size:46px;color:var(--green-deep);}
+  .qresult .rsub{font-size:16px;color:var(--ink-2);margin-top:6px;}
+
+  /* resources */
+  .resgroup{margin-top:30px;}
+  .resgroup h3{font-weight:800;font-size:20px;letter-spacing:-.01em;margin:0 0 4px;display:flex;align-items:center;gap:10px;}
+  .resgroup .rgsub{font-size:14px;color:var(--ink-3);margin:0 0 16px;}
+  .reslist{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:13px;}
+  .rescard{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:17px 18px;box-shadow:var(--shadow-sm);transition:border-color .14s,transform .14s,box-shadow .14s;}
+  .rescard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:var(--shadow);}
+  .rescard .rtype{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green-700);font-weight:600;}
+  .rescard h4{margin:6px 0 2px;font-weight:800;font-size:16.5px;letter-spacing:-.01em;}
+  .rescard .rby{font-size:13px;color:var(--ink-3);}
+  .rescard .rnote{font-size:13.8px;color:var(--ink-2);margin-top:9px;line-height:1.5;}
+  .rescard .rpick{display:inline-block;margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:var(--tea-soft);color:var(--green-700);padding:3px 8px;border-radius:6px;font-weight:600;}
+  .rescard .rlink{display:inline-flex;align-items:center;gap:5px;margin-top:11px;font-size:13px;font-weight:700;color:var(--green-700);}
+
+  .site-footer{background:var(--green-deep);margin-top:64px;padding:46px 0;}
+  .foot-inner{display:flex;justify-content:center;align-items:center;}
+  footer .mono{color:var(--ink-2);} footer b{color:var(--ink-2);font-weight:600;}
+  .empty{padding:60px 38px;text-align:center;color:var(--ink-3);}
+
+  @media (max-width:980px){
+    .hero-inner{grid-template-columns:1fr;gap:30px;}
+    .hero-art{order:-1;align-items:flex-start;}
+    .explorer{grid-template-columns:1fr;gap:0;}
+    .rail{position:static;max-height:none;overflow:visible;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:18px;margin-bottom:18px;box-shadow:var(--shadow);}
+    .toolbar{top:0;} .rel-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 18px;}
+    .panel-top,.panel-body{padding-left:22px;padding-right:22px;}
+    .core-badge{position:static;display:inline-block;margin-top:12px;}
+    .brand .tag{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}.flashinner{transition:none!important;}.view.active,.panel-top,.panel-body{animation:none!important;}}
+  :focus-visible{outline:2.5px solid var(--green);outline-offset:2px;border-radius:5px;}
+
+  /* ---- enterprise polish: motion & micro-interactions ---- */
+  @keyframes viewIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .view.active{animation:viewIn .44s var(--ease);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+  .panel-top,.panel-body{animation:fadeUp .36s var(--ease);}
+  @keyframes riseIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  .pagehead{animation:riseIn .5s var(--ease);}
+
+  .topnav{transition:box-shadow .3s var(--ease),background .3s var(--ease);}
+  .topnav.scrolled{box-shadow:0 1px 0 rgba(16,32,24,.04),0 8px 26px rgba(16,32,24,.08);}
+
+  .tab{transition:background .22s var(--ease),color .22s var(--ease),transform .12s var(--ease),box-shadow .22s var(--ease);}
+  .tab:active{transform:scale(.96);}
+  .tab[aria-selected="true"]{box-shadow:none;}
+
+  .panel{transition:box-shadow .3s var(--ease);}
+  .diagram{transition:box-shadow .3s var(--ease),transform .26s var(--ease),border-color .22s var(--ease);}
+  .diagram:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--tea);}
+  .gcard,.pcard{transition:transform .22s var(--ease),box-shadow .22s var(--ease),border-color .22s var(--ease);}
+  .gcard:hover,.pcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--tea);}
+  .nav-item{transition:background .14s var(--ease),color .14s var(--ease),transform .16s var(--ease);}
+  .nav-item:hover{transform:translateX(3px);}
+  .flashcard{transition:transform .22s var(--ease);}
+  .flashcard:hover{transform:translateY(-3px);}
+  .fbtn,.qmode,.qopt,.pill,.cl-tab,.btn-jump{transition:all .16s var(--ease);}
+  .pill:active,.cl-tab:active,.qmode:active,.fbtn:active,.qopt:active{transform:scale(.97);}
+  .cl-box{transition:background .16s var(--ease),border-color .16s var(--ease),transform .16s var(--ease);}
+  .cl-item:active .cl-box{transform:scale(.88);}
+  .rescard .rlink{transition:gap .18s var(--ease);} .rescard:hover .rlink{gap:9px;}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="wrap topnav-inner">
+    <div class="brand">
+      <svg class="bmark" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#02A95C" stroke-width="4" stroke-dasharray="9.5 4.2" stroke-linecap="round"/></svg>
+      <span class="name">Non-Functional Field Guide</span>
+    </div>
+    <div class="tabs" id="tabs" role="tablist">
+      <button class="tab" role="tab" data-view="v-pd" aria-selected="true">Product Dev</button>
+      <button class="tab" role="tab" data-view="v-arch" aria-selected="false">Architecture</button>
+      <button class="tab" role="tab" data-view="v-req" aria-selected="false">Requirements</button>
+      <button class="tab" role="tab" data-view="v-quiz" aria-selected="false">Quiz</button>
+      <button class="tab" role="tab" data-view="v-res" aria-selected="false">Resources</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REQUIREMENTS ============ -->
+<section class="view" id="v-req">
+  <header class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <div class="eyebrow">Field Guide · Non-Functional Requirements</div>
+        <h1>The qualities that decide whether a release <span class="hl">survives production.</span></h1>
+        <p class="lede">A working feature answers <b>"what does it do?"</b> The non-functional requirements decide whether it holds up under real conditions — speed, reliability, safety, and the cost of changing it later. This guide turns each one into a plain definition, the questions to ask engineering, the spec language, and the tradeoffs a PM needs to reason about them.</p>
+      </div>
+      <div class="hero-art">
+        <div class="ring-wrap">
+          <svg id="heroRing" viewBox="0 0 230 230" width="230" height="230"></svg>
+          <div class="ring-center"><div class="big">24</div><div class="sub">requirements · 6 core</div></div>
+        </div>
+        <div class="hero-note">the progress circle, doing real work</div>
+      </div>
+    </div>
+  </header>
+  <div class="toolbar">
+    <div class="wrap toolbar-inner">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" type="text" placeholder="Search requirements, e.g. latency, kill switch, DLQ, on-call…" aria-label="Search requirements">
+      </div>
+      <div class="filters" id="filters"></div>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+  <main class="wrap explorer">
+    <nav class="rail" id="rail" aria-label="Requirements list"></nav>
+    <section class="panel" id="panel" aria-live="polite"></section>
+  </main>
+  <section class="release" id="release">
+    <div class="wrap release-inner">
+      <div class="eyebrow">A release-readiness process</div>
+      <h3 id="relTitle"></h3>
+      <p class="intro" id="relIntro"></p>
+      <div class="rel-grid">
+        <div class="role-card" id="roleCard"></div>
+        <div class="checklist-card">
+          <div class="cl-top">
+            <div class="cl-ring"><svg id="clRing" viewBox="0 0 108 108" width="108" height="108"></svg>
+              <div class="rc"><b id="clPct">0%</b><span id="clCount">0 / 0</span></div></div>
+            <div class="cl-headings"><div class="cl-tabs" id="clTabs"></div><div class="cl-caption" id="clCaption"></div></div>
+          </div>
+          <div class="cl-body" id="clBody"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section class="view" id="v-arch">
+  <div class="wrap">
+    <div class="pagehead">
+      <div class="eyebrow">Architecture · How the pieces connect</div>
+      <h2>The same request touches a dozen requirements.</h2>
+      <p>None of these requirements live in isolation. Follow one request through the system and you can see where latency, throughput, fault tolerance, observability, and rollouts each show up — and where things tend to go wrong.</p>
+    </div>
+
+    <div class="diagram">
+      <div class="dtitle">The request lifecycle</div>
+      <div class="dsub">A single request, end to end. Each hop is a place a non-functional requirement lives.</div>
+      <div class="flow-h">
+        <div class="fnode"><div class="ft">Client</div><div class="fd">web / mobile / SDK</div></div>
+        <div class="fconn">→</div>
+        <div class="fnode"><div class="ft">CDN / Edge</div><div class="fd">CDN · WAF · 400s</div></div>
+        <div class="fconn">→</div>
+        <div class="fnode"><div class="ft">Load balancer</div><div class="fd">routes traffic</div></div>
+        <div class="fconn">→</div>
+        <div class="fnode svc"><div class="ft">Service / API</div><div class="fd">feature flag · kill switch · timeouts · circuit breaker</div></div>
+        <div class="fconn">→</div>
+        <div class="fstack">
+          <div class="fnode store"><div class="ft">Cache (Redis)</div><div class="fd">fast reads</div></div>
+          <div class="fnode store"><div class="ft">Database</div><div class="fd">source of truth</div></div>
+          <div class="fnode queue"><div class="ft">Queue (FIFO)</div><div class="fd">async work</div></div>
+        </div>
+        <div class="fconn">→</div>
+        <div class="fstack">
+          <div class="fnode"><div class="ft">Consumer</div><div class="fd">workers</div></div>
+          <div class="fnode danger"><div class="ft">DLQ</div><div class="fd">failed messages</div></div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag-chip">latency · every hop</span>
+        <span class="tag-chip warn">throughput · queue rate limits</span>
+        <span class="tag-chip dgr">fault tolerance · cache fallback</span>
+        <span class="tag-chip">rollouts · flag + kill switch</span>
+        <span class="tag-chip alt">data integrity · idempotent writes</span>
+        <span class="tag-chip dgr">alerts · DLQ depth</span>
+      </div>
+      <div class="obs-strip">
+        <span class="ol">Watching all of it →</span>
+        <span class="tag-chip alt">Logs + metrics + traces</span>
+        <span class="tag-chip alt">Alerting</span>
+        <span class="tag-chip alt">Synthetic checks</span>
+        <span class="tag-chip alt">Client error tracking</span>
+      </div>
+    </div>
+
+    <div class="twocol">
+      <div class="diagram" style="margin-top:0;">
+        <div class="dtitle">Without a circuit breaker</div>
+        <div class="dsub">A cascade failure, in shape: one slow dependency takes everything with it.</div>
+        <div class="vflow">
+          <div class="vnode ds" style="background:var(--pueblo-soft);border-color:var(--pueblo-line);color:#5C2412;"><div class="vt">Cache miss spikes</div></div>
+          <div class="vdown"></div>
+          <div class="vnode ds" style="background:var(--pueblo-soft);border-color:var(--pueblo-line);color:#5C2412;"><div class="vt">All reads hit the DB</div></div>
+          <div class="vdown"></div>
+          <div class="vnode ds" style="background:var(--pueblo-soft);border-color:var(--pueblo-line);color:#5C2412;"><div class="vt">DB saturates under load</div></div>
+          <div class="vdown"></div>
+          <div class="vnode ds" style="background:var(--pueblo-soft);border-color:var(--pueblo-line);color:#5C2412;"><div class="vt">Whole platform cascades</div></div>
+        </div>
+      </div>
+      <div class="diagram" style="margin-top:0;">
+        <div class="dtitle">With a circuit breaker</div>
+        <div class="dsub">The fix: contain the blast radius.</div>
+        <div class="vflow">
+          <div class="vnode bd"><div class="vt">Cache miss spikes</div></div>
+          <div class="vdown"></div>
+          <div class="vnode bd"><div class="vt">Breaker opens after N failures</div></div>
+          <div class="vdown"></div>
+          <div class="vnode bd"><div class="vt">Fallback / cached default served</div></div>
+          <div class="vdown"></div>
+          <div class="vnode bd"><div class="vt">Failure contained, DB protected</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diagram">
+      <div class="dtitle">Progressive rollout</div>
+      <div class="dsub">How a change reaches users. Each stage is gated on health; the kill switch reverts in seconds, no redeploy.</div>
+      <div class="flow-h">
+        <div class="fnode"><div class="ft">Deploy (dark)</div><div class="fd">flag OFF in prod</div></div>
+        <div class="fconn">→</div>
+        <div class="fnode bd" style="border:1.5px solid var(--bd-bd);"><div class="ft">1%</div><div class="fd">canary</div></div>
+        <div class="fconn">→</div>
+        <div class="fnode bd" style="border:1.5px solid var(--bd-bd);"><div class="ft">10%</div><div class="fd">watch error rate</div></div>
+        <div class="fconn">→</div>
+        <div class="fnode bd" style="border:1.5px solid var(--bd-bd);"><div class="ft">50%</div><div class="fd">watch conversion</div></div>
+        <div class="fconn">→</div>
+        <div class="fnode bd" style="border:1.5px solid var(--bd-bd);"><div class="ft">100%</div><div class="fd">full release</div></div>
+      </div>
+      <div class="tags">
+        <span class="tag-chip">health gate at each stage</span>
+        <span class="tag-chip dgr">kill switch · &lt; 30s revert</span>
+        <span class="tag-chip warn">error budget governs the pace</span>
+      </div>
+    </div>
+
+    <div class="diagram">
+      <div class="dtitle">The three pillars of observability</div>
+      <div class="dsub">Different questions need different signals. Together they let you debug things you didn't anticipate.</div>
+      <div class="flow-h">
+        <div class="fnode store"><div class="ft">Logs</div><div class="fd">what happened (one event)</div></div>
+        <div class="fnode store"><div class="ft">Metrics</div><div class="fd">how much / how often</div></div>
+        <div class="fnode store"><div class="ft">Traces</div><div class="fd">the path of one request</div></div>
+        <div class="fconn">→</div>
+        <div class="fnode svc"><div class="ft">Dashboards + Alerts</div><div class="fd">humans notice before users do</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="view" id="v-quiz">
+  <div class="wrap">
+    <div class="pagehead">
+      <div class="eyebrow">Quiz · Test your fluency</div>
+      <h2>Flip the cards, then take the quiz.</h2>
+      <p>Flashcards drill the vocabulary; the quiz checks whether it stuck. Nothing is saved — refresh for a clean run.</p>
+    </div>
+    <div class="quiz-modes">
+      <button class="qmode" id="modeFlash" aria-pressed="true">Flashcards</button>
+      <button class="qmode" id="modeQuiz" aria-pressed="false">Quiz</button>
+    </div>
+    <div id="flashArea" class="flashwrap"></div>
+    <div id="quizArea" class="quizwrap" style="display:none;"></div>
+  </div>
+</section>
+
+<!-- ============ PRODUCT DEV ============ -->
+<section class="view active" id="v-pd">
+  <div class="wrap">
+    <div class="pagehead">
+      <div class="eyebrow">Product Development · How we build, end to end</div>
+      <h2>From a customer problem to a sub-task.</h2>
+      <p>The path an idea travels from problem to shipped work: validate the problem, design the solution, then break it into work the squad can ship. Here's the cycle, the vocabulary, and the lifecycle around it.</p>
+    </div>
+
+    <div class="diagram">
+      <div class="dtitle">The product development cycle</div>
+      <div class="dsub">Inputs feed discovery; discovery and the PRD iterate; design and prototyping make it real; then it becomes trackable work.</div>
+      <div class="legend">
+        <span><i style="background:var(--in-bg);border-color:var(--in-bd);"></i>Inputs</span>
+        <span><i style="background:var(--dd-bg);border-color:var(--dd-bd);"></i>Discover &amp; define</span>
+        <span><i style="background:var(--ds-bg);border-color:var(--ds-bd);"></i>Design</span>
+        <span><i style="background:var(--op-bg);border-color:var(--op-bd);"></i>Optional</span>
+        <span><i style="background:var(--bd-bg);border-color:var(--bd-bd);"></i>Build</span>
+      </div>
+      <div class="vflow">
+        <div class="inputs-row">
+          <div class="vnode in"><div class="vt">Sales</div></div>
+          <div class="vnode in"><div class="vt">Customers</div></div>
+          <div class="vnode in"><div class="vt">Competitors</div></div>
+          <div class="vnode in"><div class="vt">User research</div></div>
+          <div class="vnode in"><div class="vt">Product analytics</div></div>
+        </div>
+        <div class="vdown"></div>
+        <div class="vnode dd"><div class="vt">Discovery</div><div class="vd">validate the problem</div></div>
+        <div class="vlabel">↕ iterate</div>
+        <div class="vnode dd"><div class="vt">PRD</div><div class="vd">scope &amp; requirements</div></div>
+        <div class="vdown"></div>
+        <div class="vnode ds"><div class="vt">Solution design</div><div class="vd">end-to-end coverage</div></div>
+        <div class="vdown"></div>
+        <div class="vnode ds"><div class="vt">Prototyping</div><div class="vd">design tools (e.g. Figma)</div></div>
+        <div class="vdown"></div>
+        <div class="vnode op"><div class="vt">Spike (optional)</div><div class="vd">resolve unknowns</div></div>
+        <div class="vdown"></div>
+        <div class="vnode bd"><div class="vt">Needs an epic?</div><div class="vd">no → single work item (story / task / bug)</div></div>
+        <div class="vlabel">yes ↓</div>
+        <div class="vnode bd"><div class="vt">Epic</div><div class="vd">large body of work</div></div>
+        <div class="vdown"></div>
+        <div class="branch3">
+          <div class="vnode bd" style="min-width:150px;"><div class="vt">Story</div><div class="vd">user feature</div></div>
+          <div class="vnode bd" style="min-width:150px;"><div class="vt">Task</div><div class="vd">generic work</div></div>
+          <div class="vnode bd" style="min-width:150px;"><div class="vt">Bug</div><div class="vd">defect</div></div>
+        </div>
+        <div class="vdown"></div>
+        <div class="vnode bd"><div class="vt">Sub-tasks</div><div class="vd">steps within an item</div></div>
+      </div>
+    </div>
+
+    <h3 style="font-weight:800;font-size:22px;letter-spacing:-.015em;margin:38px 0 0;">The vocabulary</h3>
+    <div class="gloss" id="glossGrid"></div>
+
+    <div class="diagram">
+      <div class="dtitle">The Product Development Lifecycle (PDLC)</div>
+      <div class="dsub">Stages overlap — research runs throughout, and "complete" means "complete enough to move on." Build ships in release increments (R1, R2…) each followed by test.</div>
+      <div class="pdlc" id="pdlcRows"></div>
+    </div>
+
+    <h3 style="font-weight:800;font-size:22px;letter-spacing:-.015em;margin:38px 0 0;">Principles that sit underneath it</h3>
+    <div class="pcards" id="pcards"></div>
+  </div>
+</section>
+
+<!-- ============ RESOURCES ============ -->
+<section class="view" id="v-res">
+  <div class="wrap">
+    <div class="pagehead">
+      <div class="eyebrow">Resources · Go deeper</div>
+      <h2>The short list worth your time.</h2>
+      <p>A curated set, not an exhaustive one. Start with the picks marked <span class="mono" style="color:var(--green-700);">★ start here</span>; the rest reward a deeper dive. Links open in a new tab.</p>
+    </div>
+    <div id="resArea"></div>
+  </div>
+</section>
+
+<footer class="site-footer"></footer>
+
+<script>
+const DATA = {"cats":{"reliability":{"label":"Reliability & Resilience","color":"#02A95C"},"performance":{"label":"Performance & Scale","color":"#0A7C53"},"ops":{"label":"Observability & Operations","color":"#1B8A8F"},"quality":{"label":"Quality & Maintainability","color":"#C8881A"},"security":{"label":"Security & Compliance","color":"#87290F"},"data":{"label":"Data","color":"#3E7CB1"},"experience":{"label":"Experience Qualities","color":"#A24E7A"},"cost":{"label":"Cost & Efficiency","color":"#6B7A72"}},"topics":[{"cat":"reliability","title":"Availability & SLOs","one":"How often the system is up and working from the user's point of view — and the target you commit to.","why":"Availability is the foundation users feel first. Without an explicit target you can't say whether an outage was acceptable or a crisis, and teams over- or under-invest by guessing. “Always up” is not a target; it's a wish that justifies infinite spend.","good":"A stated SLO (e.g. 99.9% successful requests over 30 days), measured from the user's side, with an error budget that the team is allowed to spend on risk. “Four nines” ≈ 52 min/year of downtime; “three nines” ≈ 8.7 hours.","ask":["What availability target are we committing to, and who depends on it?","Is the SLO measured from the user's perspective or just server-side?","How much downtime does that target actually allow per month?","What happens when we burn through the error budget?"],"prd":["<span class='tag'>NFR · Availability</span>","Target: <span class='req'>99.9%</span> of checkout requests succeed, measured","at the client, rolling 30-day window.","Error budget breach pauses new feature rollout."],"trade":"Every extra nine costs disproportionately more in redundancy and engineering time. <b>The honest question is not “how much uptime do we want” but “how much downtime can this specific flow tolerate before it hurts the business.”</b>"},{"cat":"reliability","title":"Fault Tolerance & Graceful Degradation","one":"What the product does when a dependency fails — break loudly, or bend and keep serving a useful subset.","why":"In any real system, something downstream will be slow or down. If the design assumes everything always works, one flaky dependency takes the whole experience with it. Degradation decisions are product decisions, not just engineering ones.","good":"Clear, intentional fallbacks: a recommendations service that's down shows popular items instead of an error; a payment retry queues rather than dropping. Failures are contained to the smallest possible blast radius.","ask":["If dependency X is down, what should the user see instead of an error?","Which parts of this flow are essential vs. nice-to-have when things degrade?","Can one slow dependency take down the whole page, or is it isolated?","What's the worst-case blast radius if this fails?"],"prd":["<span class='tag'>NFR · Degradation</span>","If recommendations API fails, render <span class='req'>top-sellers</span>","fallback; never block the page.","Timeouts: 800ms, then fall back silently."],"trade":"Graceful degradation is more code paths to build and test. <b>Spend it where a failure is both likely and user-visible</b>; not every dependency deserves a hand-crafted fallback.","incident":"A classic outage pattern: a cache miss cascades under load with no fallback, taking the whole system down. Every cache or DB dependency should have a designed circuit breaker or fallback before go-live."},{"cat":"reliability","title":"Disaster Recovery & Backups","one":"How fast you can come back, and how much data you can afford to lose, after something goes seriously wrong.","why":"Backups that have never been restored are a guess, not a safety net. Without explicit recovery targets, “we have backups” can still mean a day of lost data and a multi-hour scramble that no one rehearsed.","good":"Defined RTO (how fast you recover) and RPO (how much data loss is acceptable), with restores actually tested on a schedule. The team has run the recovery, not just written it down.","ask":["If the database is lost, how much data can we afford to lose (RPO)?","How long can recovery take before it's unacceptable (RTO)?","When did we last test restoring from backup — not just taking one?","Which data is genuinely irreplaceable vs. regenerable?"],"prd":["<span class='tag'>NFR · Recovery</span>","RPO: <span class='req'>≤ 5 min</span> data loss · RTO: <span class='req'>≤ 1 hr</span>","for user records. Restore drill required","before launch sign-off."],"trade":"Tighter recovery targets mean more frequent replication and standby infrastructure, which costs money continuously to insure against a rare event. <b>Match the target to the true cost of losing that specific data.</b>","incident":"Ship every database migration with a written down-migration, and rehearse the rollback plan for broad or platform-wide changes in a lower environment — don't just document it."},{"cat":"performance","core":true,"title":"Latency","one":"How long the user waits between an action and a useful response — felt, not averaged.","why":"Latency is experienced one request at a time, so averages lie. A 200ms average can hide a slow tail where 1 in 20 users waits three seconds. People abandon slow flows, and the slow tail is usually where your most engaged or worst-connected users live.","good":"Targets stated as percentiles (p50, p95, p99) for specific user actions, measured end-to-end including network. e.g. “search results render in under 400ms at p95.” The budget is owned, not aspirational.","ask":["What's the latency target for this action, and at which percentile?","Are we measuring at the server or end-to-end from the user's device?","What does the p99 (slowest) experience look like, not just the average?","Which step in the chain dominates the time?"],"prd":["<span class='tag'>NFR · Latency</span>","Search results visible in <span class='req'>&lt; 400ms p95</span>,","<span class='req'>&lt; 1s p99</span>, measured end-to-end on 4G.","Regression budget: +50ms triggers review."],"trade":"Driving down the tail (p99) is far harder than the average and often means caching, precomputation, or architectural change. <b>Decide which actions deserve that investment</b> — a checkout button, yes; an admin export, probably not.","incident":"Unbounded waits are a common ingredient in cascading failures. Set explicit connection, read, and query timeouts for every new external dependency."},{"cat":"performance","title":"Throughput","one":"How much work the system can handle per unit of time — requests, transactions, or events per second.","why":"A system can be fast for one user and fall over under a thousand. Throughput is what a marketing spike, a viral moment, or a seasonal surge actually tests. Confusing “fast” with “handles load” is a common and expensive mistake.","good":"A known, tested ceiling: “we sustain 5,000 requests/sec before latency degrades.” Capacity is verified under realistic load, not extrapolated from a single-user benchmark.","ask":["What's the peak load we expect — and what's the worst plausible spike?","At what point does throughput start hurting latency?","Have we load-tested this, or is the number theoretical?","What's our headroom above expected peak?"],"prd":["<span class='tag'>NFR · Throughput</span>","Sustain <span class='req'>5,000 req/s</span> at target latency.","Validated via load test at <span class='req'>1.5×</span> projected peak","before a major launch."],"trade":"Building for a peak you rarely hit means paying for idle capacity. Autoscaling helps but isn't instant. <b>The tension is between a smooth spike and a lean steady state</b> — name the spike you're actually designing for.","incident":"A frequent self-inflicted outage: N workers each running M polling loops overwhelm a queue's rate limit — e.g. 40 workers × 4 loops = 160 concurrent against a ~300 req/sec cap. Verify worker count × loops stays under the limit before scaling up."},{"cat":"performance","title":"Scalability","one":"Whether the system keeps performing as load, data, or users grow — and how gracefully it does so.","why":"Something that works at today's scale can hit a wall at 10× in ways that aren't obvious until you're there. Scalability problems often surface at the worst time — during the growth you wanted. Designing for it later usually means a rewrite.","good":"Headroom is understood and the path to more is known: “we scale horizontally by adding instances” vs. “we're limited by a single database we'd have to re-architect.” Bottlenecks are identified before they bite.","ask":["What breaks first if usage grows 10×?","Can we scale by adding machines, or is there a hard single bottleneck?","Is there a known ceiling we'll hit, and roughly when?","Does cost scale linearly with usage, or worse?"],"prd":["<span class='tag'>NFR · Scalability</span>","Architecture supports <span class='req'>10×</span> current peak by","horizontal scaling, no schema change. Document","the next known bottleneck above that."],"trade":"Designing for scale you don't yet need adds complexity now for a maybe-later payoff. <b>Right-size to a realistic growth horizon</b> — but know where the cliff is so you're not surprised by it.","incident":"Before broad changes ship, document cache invalidation behavior — what happens on a cold start or a cache flush at scale."},{"cat":"performance","title":"Load & Capacity Planning","one":"Knowing in advance whether you can handle a known upcoming event, and provisioning for it.","why":"Predictable spikes — a product launch, a press hit, a seasonal peak — are the easiest outages to prevent and the most embarrassing to suffer. The work is to test before, not diagnose during.","good":"Load tests run at a multiple of projected peak ahead of the event, a provisioning plan in place, and a rollback or shed-load plan if reality exceeds the model.","ask":["What's the largest event coming, and what load does it imply?","Have we tested at that load plus a safety margin?","What's the plan if we exceed even our high estimate?","Who's watching the dashboards during the event?"],"prd":["<span class='tag'>NFR · Capacity</span>","Load test at <span class='req'>2×</span> forecast peak ≥ 2 weeks pre-launch.","Provision standby capacity; define load-shedding","order if exceeded."],"trade":"Over-provisioning for one event wastes money; under-provisioning risks the event itself. <b>The cost of an hour of idle servers is almost always less than the cost of the outage</b> for a high-stakes moment.","incident":"End-to-end load testing is non-negotiable for any cache-dependent or high-concurrency change, and a tested rollback plan is a must for platform-wide changes."},{"cat":"ops","core":true,"title":"Observability","one":"Whether you can understand what the system is doing — and why — from the outside, without guessing.","why":"When something's wrong at 2am, observability is the difference between a five-minute fix and a two-hour mystery. You can't debug, optimize, or even confirm a feature works in production if you can't see inside it. “It seems fine” is not a measurement.","good":"The three pillars in place: logs (what happened), metrics (how much/how often), and traces (the path a request took). Crucially, you can answer new questions you didn't anticipate, not just watch predefined charts.","ask":["When this breaks in production, how will we actually know what happened?","Can we trace a single user's request end-to-end?","What key metrics will this feature emit from day one?","If a user reports a bug we can't reproduce, what data do we have?"],"prd":["<span class='tag'>NFR · Observability</span>","Emit metrics: request rate, error rate, p95 latency.","Structured logs with <span class='req'>request_id</span> for tracing.","Dashboard live before launch."],"trade":"Instrumentation is real work that produces nothing the user sees, so it's easy to defer — and painful to retrofit. <b>Build it in with the feature</b>; observability added after an incident is observability you didn't have during it.","incident":"Monitors must be live and verified before launch — a silently broken integration (alerts that were never actually wired up) is its own kind of outage. New log lines and span attributes should carry no PII."},{"cat":"ops","core":true,"title":"Alerts","one":"Automated signals that tell a human something needs attention — ideally before users notice.","why":"Monitoring without alerting means you find out about problems from angry users. But over-alerting is just as dangerous: a team drowning in noisy pages stops trusting any of them, and the real one gets ignored. Alert fatigue is a leading cause of missed incidents.","good":"Alerts fire on user-impacting symptoms (error rate up, latency past SLO) rather than every internal twitch. Each alert is actionable, has a clear owner, and links to a runbook. Quiet most of the time, trustworthy when it fires.","ask":["What conditions should wake someone up vs. wait until morning?","Does each alert tell the responder what to actually do?","Are we alerting on symptoms users feel, or on noisy internal metrics?","How do we avoid alert fatigue burying the important ones?"],"prd":["<span class='tag'>NFR · Alerting</span>","Page on: error rate <span class='req'>&gt; 2%</span> for 5 min, or p95","latency past SLO. Each alert links a runbook.","Tune to <span class='req'>&lt; 1</span> false page / week."],"trade":"Tight alerts catch more but cry wolf; loose alerts stay quiet but miss things. <b>Bias toward alerting on what the user experiences</b>, and treat every false page as a bug to fix, not noise to tolerate.","incident":"Dead-letter-queue alerting should be designed and running before any new async pipeline ships; without it, failed messages pile up unseen until customers notice."},{"cat":"ops","core":true,"title":"Rollouts","one":"How a change reaches users — all at once, or gradually with the ability to stop and reverse.","why":"How you ship is a risk decision. Shipping to 100% at once means a bad change hits everyone before you can react. Gradual rollouts turn a potential outage into a contained, reversible experiment — and let you tie a release to real impact data.","good":"Changes go out behind feature flags and/or in stages (1% → 10% → 50% → 100%), with health watched at each step and an instant rollback (kill switch) that doesn't require a redeploy. Releasing is decoupled from deploying.","ask":["Can we turn this on for a small percentage first?","If it's bad, how fast can we turn it off — seconds, or a redeploy?","What metric tells us a stage is healthy enough to widen?","Is the rollout reversible without losing user data?"],"prd":["<span class='tag'>NFR · Rollout</span>","Ship behind flag <span class='req'>new_checkout</span>.","Stages: 1% → 10% → 50% → 100%, gated on error","rate &amp; conversion. Kill switch &lt; 30s."],"trade":"Flags and staged rollouts add coordination and leave flag debt to clean up. <b>Worth it for anything risky or hard to reverse</b>; overkill for a copy change. Match the ceremony to the blast radius.","incident":"A change shipped with no kill switch and no maintenance page is one you can't safely undo. Broad changes need a confirmed kill switch, a phased rollout (flag or percentage), and an available maintenance page."},{"cat":"ops","title":"Incident Response & On-Call","one":"The human process for detecting, responding to, and learning from things going wrong in production.","why":"Outages are inevitable; chaos during them is optional. Without a clear process, incidents take longer, burn people out, and repeat because nothing was learned. As a PM, you'll often be the one fielding stakeholder questions while engineers fix it — knowing the process keeps you useful, not in the way.","good":"A known on-call rotation, a clear incident commander role, runbooks for common failures, and blameless postmortems that produce real follow-up actions. The same incident doesn't happen twice.","ask":["Who's on call for this, and do they have the runbook to fix it?","What's our process when something goes wrong — who decides what?","Do we run blameless postmortems, and do the action items get done?","How do we keep on-call sustainable so people don't burn out?"],"prd":["<span class='tag'>NFR · Operability</span>","Runbook for top 3 failure modes before launch.","Owning team in on-call rotation. Postmortem","required for any user-facing incident."],"trade":"Process can curdle into bureaucracy. <b>Keep it light enough that people actually follow it under pressure</b> — a one-page runbook used beats a wiki nobody opens.","incident":"A strong pattern: a named Release Lead who owns the go/no-go and rollback calls, stays available for the first hour, watches key signals, and posts the release summary — with on-call coverage confirmed across all affected teams for the release window plus a buffer."},{"cat":"quality","core":true,"title":"Test Coverage","one":"How much of the system's behavior is verified automatically — and, more importantly, which behavior.","why":"Tests are what let a team change code quickly without fear. Low coverage means every change is a gamble and velocity quietly grinds to a halt as people get cautious. But the percentage is a vanity metric on its own — 90% coverage of trivial code while the payment path is untested is worse than it looks.","good":"The critical and risky paths are well tested at the right level (fast unit tests for logic, fewer integration/end-to-end tests for whole flows). Tests run automatically on every change and are trusted enough that a green build means “safe to ship.”","ask":["Are the riskiest, highest-impact paths covered — not just the easy ones?","Do tests run automatically before code merges?","Can the team change this confidently, or is it scary to touch?","Are tests reliable, or flaky enough that people ignore failures?"],"prd":["<span class='tag'>NFR · Testing</span>","Critical paths (auth, payment) covered by","automated tests. CI green required to merge.","No untested code on the checkout flow."],"trade":"Tests cost time to write and maintain, and chasing a coverage number rewards the wrong thing. <b>Aim coverage at risk and change-frequency, not at a percentage</b> — test what would hurt most if it broke.","incident":"Require unit and integration tests for every modified path, a bug bash with tickets resolved, and synthetic tests updated for any critical flow before release."},{"cat":"quality","core":true,"title":"Simplicity","one":"Solving the problem with the least complexity that works — so the system stays understandable and changeable.","why":"Complexity is the tax you pay on every future change. An over-engineered solution feels productive but slows every subsequent feature, onboarding, and bug fix. As a PM, scope creep and “while we're in here” additions are where accidental complexity is born — you have real leverage here.","good":"The solution matches the problem's actual size. New team members can understand it. There's no speculative machinery built for requirements that may never come. Boring, obvious code that does exactly what's needed.","ask":["Is this the simplest thing that solves the real problem?","Are we building for a requirement we actually have, or one we imagine?","Could a new engineer understand this in a week?","What complexity is this adding that we'll pay for on every future change?"],"prd":["<span class='tag'>NFR · Simplicity</span>","Scope: solve <span class='req'>today's</span> need, not a hypothetical","platform. Defer generalization until a second","real use case exists."],"trade":"Simple-now can mean rework later if real needs were foreseeable. <b>The skill is telling speculative flexibility from genuine known requirements</b> — build for what you know, leave clean seams for what you don't."},{"cat":"quality","title":"Maintainability & Technical Debt","one":"How easy the system is to change safely over time — and the accumulated cost of past shortcuts.","why":"Most of a system's life is spent being modified, not written. Tech debt isn't inherently bad — sometimes a shortcut is the right call to hit a date — but unmanaged, invisible debt compounds until simple features take weeks. PMs who pretend debt doesn't exist end up baffled by slowing velocity.","good":"Debt is tracked and deliberate: taken on knowingly, with a plan to pay it down, and weighed against features in planning rather than hidden. The codebase stays changeable; “this should be a small change” is usually true.","ask":["Is this a deliberate shortcut we'll revisit, or debt we're hiding from ourselves?","What's the interest — how much is this slowing us down each sprint?","Should we budget time to pay down debt before it blocks the roadmap?","Why is this 'simple' change estimated so high?"],"prd":["<span class='tag'>NFR · Maintainability</span>","Shortcut logged as tracked debt with payoff plan.","Reserve <span class='req'>~15%</span> of capacity per quarter for","debt paydown on the core service."],"trade":"Paying debt down isn't visible to users, so it competes with features. <b>Frame it as velocity insurance, not cleanup</b> — the question is when the interest payments exceed a feature you care about.","incident":"Treat the release checklist as a living document: every gap found in an incident gets added, and as alerting and blast-radius awareness mature, manual checks become automated or absorbed into normal workflow."},{"cat":"quality","title":"Documentation","one":"Whether the knowledge to operate, integrate with, or change the system exists outside people's heads.","why":"Undocumented systems create single points of human failure and slow everyone who isn't the original author. For anything other teams or external developers touch — APIs especially — missing docs turn into a steady drip of support questions and integration mistakes.","good":"The right docs for the audience: API references that are accurate and current, runbooks for operators, and a short “why” for non-obvious decisions. Docs live close to the code and stay true because they're maintained, not heroic one-time efforts.","ask":["Who needs to understand this besides the person building it?","If this is an API others use, are the docs accurate and current?","What happens to this knowledge if the author leaves?","Is there a runbook for whoever operates this at 2am?"],"prd":["<span class='tag'>NFR · Documentation</span>","Public API: reference docs + examples at launch.","Internal: runbook for ops. Decision record for","the auth approach."],"trade":"Docs go stale and maintaining them is ongoing work. <b>Document what's stable, external-facing, or non-obvious</b>; don't narrate code that changes weekly — there, clarity in the code itself beats prose about it."},{"cat":"security","title":"Security","one":"Protecting the system and its data from misuse, attack, and unauthorized access.","why":"A breach can be existential — lost trust, legal exposure, real harm to users. Security can't be bolted on at the end; choices made early (how auth works, where secrets live, what's exposed) determine the attack surface. PMs set risk appetite even when they don't write the defenses.","good":"Authentication and authorization are clearly designed (who can do what), sensitive data is encrypted in transit and at rest, inputs are validated, secrets aren't in code, and the team has thought about how someone would abuse this — not just how they'd use it.","ask":["Who should be able to access this, and how do we enforce that?","Is sensitive data encrypted in transit and at rest?","How would someone abuse this feature, and what stops them?","Has anything new here expanded our attack surface?"],"prd":["<span class='tag'>NFR · Security</span>","Role-based access: only <span class='req'>org admins</span> see user PII.","All PII encrypted at rest + TLS in transit.","Security review before launch."],"trade":"Security adds friction — for users and developers — and absolute security is impossible. <b>Match controls to the sensitivity of what's protected</b>; a public blog and a payment system don't need the same locks.","incident":"Before release, run a clean CVE scan on dependency upgrades, review infra config, env vars, and SSO/auth client IDs, and keep PII out of any new logs or span attributes."},{"cat":"security","title":"Privacy & Data Protection","one":"Collecting, using, and retaining personal data lawfully, minimally, and in line with what users expect.","why":"Beyond legal regimes like GDPR and CCPA, privacy is a trust contract. Collecting data you don't need is a liability, not an asset — it's risk you store. PMs usually own the decision of what to collect and why, which makes this squarely a product responsibility.","good":"Data minimization (collect only what's needed for a stated purpose), clear retention and deletion, user rights honored (access, delete), and consent that's real rather than buried. Privacy considered at design time, not patched after a complaint.","ask":["What personal data does this collect, and do we actually need all of it?","How long do we keep it, and when/how is it deleted?","Can a user see and delete their data if they ask?","Are there legal requirements (GDPR, CCPA) that apply here?"],"prd":["<span class='tag'>NFR · Privacy</span>","Collect only <span class='req'>email + amount</span> for receipts.","Retention: 7 yrs (tax), then auto-delete.","Honor deletion requests within 30 days."],"trade":"More data can mean better features and personalization, but each field is a liability. <b>Default to collecting less</b> — you can ask for more later, but you can't un-leak what you stored."},{"cat":"security","title":"Compliance & Auditability","one":"Meeting external rules (PCI, SOC 2, HIPAA…) and being able to prove you did.","why":"For regulated domains, compliance isn't optional and isn't only about features — it's about evidence. “We do it right” doesn't count if you can't show an auditor. Discovering a compliance requirement late can block a launch entirely, so it belongs in early scoping.","good":"Applicable standards identified up front, requirements translated into concrete controls, and audit trails that record who did what when. Compliance is designed in, with evidence captured as a byproduct of normal operation.","ask":["What regulations or standards apply to this (PCI, SOC 2, HIPAA, etc.)?","Can we prove compliance with an audit trail, not just claim it?","Does this change our compliance scope in a way legal should review?","Are we storing card data ourselves, or can we avoid that scope entirely?"],"prd":["<span class='tag'>NFR · Compliance</span>","Payments via PCI-compliant processor; <span class='req'>no raw</span>","<span class='req'>card data</span> on our servers. Audit log of all","admin actions, retained per policy."],"trade":"Compliance work is heavy and rarely user-visible. <b>The cheapest compliance is often scope you avoid</b> — e.g. never touching card numbers — so design to stay out of the strictest regimes where you can."},{"cat":"data","title":"Data Integrity & Consistency","one":"Whether the data is correct, and whether different parts of the system agree on it.","why":"Corrupted or inconsistent data erodes trust faster than downtime — a wrong balance or a double-charged customer is worse than a brief outage. In distributed systems, different services can temporarily disagree, and whether that's acceptable is a product call, not just an engineering detail.","good":"Invariants are protected (a balance can't go negative; a payment is recorded exactly once), and the consistency model is a deliberate choice — strong where it must be (money), eventually-consistent where a short lag is fine (a like count).","ask":["What must always be true about this data, no matter what?","Can this operation happen twice and cause a double charge or duplicate?","Is it OK for different screens to briefly show different values here?","How do we detect and fix data that's gone wrong?"],"prd":["<span class='tag'>NFR · Integrity</span>","Payments recorded <span class='req'>exactly once</span> (idempotent).","Strong consistency on balances; eventual OK for","activity feed. Reconciliation job nightly."],"trade":"Strong consistency everywhere is simpler to reason about but limits scalability and speed. <b>Reserve the strict guarantees for data where being wrong is unacceptable</b>, and relax them where a brief lag is invisible.","incident":"Cron jobs reading a table shouldn't run during an active schema migration, so check schedules for overlap, and review every migration for breaking vs. non-breaking impact."},{"cat":"data","title":"Data Quality & Retention","one":"Whether the data is accurate and usable over time — and how long you keep it before it's clutter or liability.","why":"Decisions, reports, and ML are only as good as the data underneath. Quietly bad data (missing fields, wrong formats, duplicates) produces confident-looking wrong answers. Meanwhile keeping everything forever raises cost and risk; keeping too little loses history you needed.","good":"Validation at the point of entry, monitoring for drift and anomalies, and an explicit retention policy that matches business and legal need. Someone owns each important dataset's quality.","ask":["How do we know this data is accurate and complete?","What's our retention policy — what gets kept, for how long, then deleted?","Who owns the quality of this dataset?","Will downstream reports or models silently break if this data is wrong?"],"prd":["<span class='tag'>NFR · Data Quality</span>","Validate required fields on ingest; reject","malformed records to a dead-letter queue.","Retain event data <span class='req'>13 months</span>, then aggregate."],"trade":"Strict validation can reject real-but-messy data; loose validation lets garbage in. <b>Decide per field whether to reject, clean, or flag</b> — and remember that retained data is both an asset and a stored liability."},{"cat":"experience","title":"Accessibility","one":"Whether people with disabilities can use the product — by keyboard, screen reader, low vision, and more.","why":"Accessibility is a sizable share of users, frequently a legal requirement, and a quality marker that benefits everyone (captions help in noisy rooms; keyboard nav helps power users). Retrofitting it is far more expensive than building it in, and it's almost always a product/design decision before it's an engineering one.","good":"Meets a recognized standard (e.g. WCAG 2.1 AA): works with keyboard alone, screen-reader friendly, sufficient color contrast, proper labels and focus order. Tested with real assistive tech, not just an automated scan.","ask":["Can someone complete this flow using only a keyboard?","Does it work with a screen reader, and is the order sensible?","Is color contrast sufficient, and do we rely on color alone for meaning?","What accessibility standard are we committing to?"],"prd":["<span class='tag'>NFR · Accessibility</span>","Checkout flow meets <span class='req'>WCAG 2.1 AA</span>.","Full keyboard operability; labeled form fields;","contrast ≥ 4.5:1. Screen-reader tested."],"trade":"Doing it well takes design and test effort. <b>It's far cheaper built-in than retrofitted</b>, and the baseline (keyboard, contrast, labels) is low-cost — the question is usually rigor, not whether to bother."},{"cat":"experience","title":"Internationalization & Localization","one":"Whether the product can adapt to other languages, currencies, formats, and cultural expectations.","why":"Hard-coding English strings, US date formats, or dollar signs creates a wall that's expensive to tear down later. If global reach is even plausibly on the roadmap, the cheap move is to not paint yourself into a single-locale corner now.","good":"Text is externalized (not baked into code), layouts tolerate longer translated strings, dates/numbers/currencies format per locale, and right-to-left languages are considered if relevant. “Internationalization-ready” even before any translation exists.","ask":["Is international expansion plausible, even later?","Are user-facing strings externalized or hard-coded?","Do dates, numbers, and currencies adapt to locale?","Will the layout survive German (long) or Arabic (right-to-left)?"],"prd":["<span class='tag'>NFR · i18n</span>","All UI strings externalized to resource files.","Currency &amp; date format by locale. Layout tested","with <span class='req'>+40%</span> string length."],"trade":"Full localization is real ongoing cost; building i18n-ready is cheap insurance. <b>Separate the two</b> — make it possible now, translate when the market is real."},{"cat":"experience","title":"Compatibility & Responsiveness","one":"Whether the product works across the devices, browsers, and screen sizes your users actually have.","why":"“Works on my machine” is not coverage. Your real users span old phones, varied browsers, slow networks, and small screens. Deciding what you support — and what you explicitly don't — is a product decision that should be made on data, not by accident.","good":"An explicit support matrix driven by real usage analytics, responsive layouts that work from phone to desktop, and graceful behavior on older or constrained environments. Tested on representative real devices, not just a desktop browser.","ask":["What devices, browsers, and screen sizes do our users actually use?","What are we explicitly choosing to support — and not support?","Does this work on a mid-range phone on a slow connection?","Are we testing on real devices or just resizing a desktop window?"],"prd":["<span class='tag'>NFR · Compatibility</span>","Support: last 2 versions of major browsers, iOS","&amp; Android. Responsive <span class='req'>320px–1440px</span>.","Usable on 3G. Per usage analytics."],"trade":"Supporting everything is enormous test surface; supporting too little excludes real users. <b>Let analytics draw the line</b> — support what your users use, and sunset the long tail deliberately, not silently.","incident":"Post-release, spot-check mobile app and embedded SDK flows, and both old and new paths on any migration — the places where prod-only differences hide."},{"cat":"cost","title":"Cost & Resource Efficiency","one":"What the system costs to run, and whether that cost scales sensibly with the value it delivers.","why":"Cloud bills can balloon quietly until someone asks why. An architecture that's cheap at small scale can become uneconomic at large scale, turning a successful feature into a margin problem. PMs increasingly own the unit economics, so “what does this cost to run” is a product question.","good":"Cost is understood per meaningful unit (per user, per transaction, per request), monitored, and scales reasonably with value. Obvious waste is caught, and there's awareness of how cost behaves as usage grows.","ask":["What does this cost to run, per user or per transaction?","Does cost scale linearly with usage, or worse?","Are we paying for idle capacity we could shed?","Is there a feature whose infra cost quietly exceeds its value?"],"prd":["<span class='tag'>NFR · Cost</span>","Track infra cost <span class='req'>per transaction processed</span>.","Alert if unit cost rises &gt; 20% MoM.","Right-size idle capacity off-peak."],"trade":"Aggressive cost optimization can hurt reliability or speed, and engineering time spent optimizing isn't free either. <b>Optimize where spend is large or growing fast</b>; don't spend a week saving pennies."}],"checklist":{"build":{"label":"Build","caption":"At design / kickoff. Attach to the epic when work begins.","groups":[{"name":"Architecture & Dependencies","items":["Downstream dependents identified — what breaks if this ships alone?","Coordinated or atomic deployment plan if multiple services are involved","Plan to keep app and SDK / shared-library versions in sync at go-live"]},{"name":"Database Changes","items":["Affected tables identified and flagged for review","Existing cron schedules checked for overlap with new table access","Rollback / down-migration script written alongside the up-migration"]},{"name":"API Design","items":["Breaking vs. non-breaking changes documented","Deployment ordering defined (consumer before producer, or vice versa)"]},{"name":"New Queues / Async Pipelines","items":["DLQ alerting designed and scheduled before go-live","Old publish paths removed if a queue is being deprecated","Worker count × polling loops ≤ queue rate limit at restart (e.g. 160 loops vs a ~300 req/s cap)"]},{"name":"Tests","items":["Unit and integration tests written or updated for modified paths","Bug bash done and tickets resolved"]},{"name":"Feature Flags","items":["New features gated behind a flag in all environments","Kill switch confirmed for any broad platform-impact change"]},{"name":"Observability","items":["Critical flows documented with the orgs they impact","Logging, alerting, and synthetic-check monitors designed and verified working","No PII (emails, names, tokens) in new log lines or span attributes","Synthetic tests written or updated for changed critical flows","Runbook(s) created or updated and linked to the ticket"]},{"name":"Timeouts & Resilience","items":["Connection, read, and query timeouts set for all new external deps","Circuit breaker or fallback for cache / DB dependencies (prevents cascades)","Messaging library confirmed to back off on throttle errors"]},{"name":"Broad Infra / Platform-Wide","items":["Blast radius documented — how many services and teams?","Phased rollout plan defined (flag, percentage, or staged deploy)","Affected teams identified upfront, not discovered at release time","Cache invalidation behavior documented for cold start / flush at scale"]}]},"pre":{"label":"Pre-Release","caption":"Hours before deploy. A quick confirm, not a discovery.","groups":[{"name":"","items":["Release Lead named and available for the window + 1 hour after deploy","All build-checklist items confirmed complete","All repos / services in scope listed; deployment order confirmed","Infra config reviewed: module versions, env vars, redirects, SSO/auth client IDs","Staging or lab accurately reflects prod-specific config","Dependency upgrades reviewed; CVE scan clean","Feature flags confirmed OFF in production","Worker count at restart won't exceed queue / API rate limits","End-to-end load test done for cache-dependent / high-concurrency changes","Rollback plan documented and tested in a lower environment","Maintenance page available for platform-wide changes","Affected teams notified; on-call confirmed for window + 48 hours","Any synthetic-test PRs ready to merge"]}]},"post":{"label":"Post-Release","caption":"First 30–60 minutes after deploy.","groups":[{"name":"Verify","items":["Smoke tests pass (synthetic checks green)","Critical flows spot-checked: checkout, payment, login, signup","Both old and new domain paths verified (if a migration is involved)","Mobile app and embedded SDK flows verified","Error rates normal in logging for all affected services","DLQ depths flat, no unexpected accumulation","Payment auth rates stable by processor and currency","No abnormal 400 patterns at the CDN / edge layer","Client error tracking checked, no new errors","Release Lead posts summary in the releases channel"]},{"name":"If rollback triggered","items":["Rollback executed and verified","Incident opened with root cause documented before any re-release","Release Lead posts summary in the incident channel"]}]}},"role":{"title":"Release Lead","blurb":"A rotating role that catches the class of problems that most often cause outages: incomplete blast-radius assessments, missing alerting on new workflows, config that only breaks in prod, and broad changes with no kill switch. The Release Lead may delegate the checks, but owns the whole release end to end — offcycle or regular sprint.","duties":["Runs all three checklists and ensures every item is signed off","Pulls in affected teams early, doesn't wait until pre-release to find dependencies","Owns the go / no-go decision at release time","Owns the rollback decision if things go wrong","Available for the first hour post-release, monitoring key signals","Writes a one-paragraph release summary if anything goes sideways","Documents gaps so the checklist improves over time"]}};
+const {cats:CATS, topics:TOPICS, checklist:CHECKLIST, role:ROLE} = DATA;
+
+/* ---------- progress circle ---------- */
+function polar(cx,cy,r,deg){const a=(deg-90)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+function arcPath(cx,cy,r,s,e){const [sx,sy]=polar(cx,cy,r,e),[ex,ey]=polar(cx,cy,r,s);const lg=e-s<=180?0:1;return `M ${sx} ${sy} A ${r} ${r} 0 ${lg} 0 ${ex} ${ey}`;}
+function renderRing(svg,total,filled,o={}){
+  const cx=o.cx??54,cy=o.cy??54,r=o.r??44,w=o.w??9,gap=o.gap??(total>18?2.4:4);
+  total=Math.max(total,1);const seg=360/total;let h="";
+  for(let i=0;i<total;i++){const s=i*seg+gap/2,e=(i+1)*seg-gap/2;
+    const col=i<filled?(o.fill||"#02A95C"):(o.empty||"#E3E7DE");
+    h+=`<path d="${arcPath(cx,cy,r,s,e)}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;}
+  svg.innerHTML=h;
+}
+renderRing(document.getElementById('heroRing'),24,17,{cx:115,cy:115,r:100,w:13,gap:2.2,fill:"#02A95C",empty:"#DCEFD3"});
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('#tabs .tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('#tabs .tab').forEach(x=>x.setAttribute('aria-selected',x===t));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===t.dataset.view));
+  window.scrollTo({top:0,behavior:'instant'in document.documentElement.style?'instant':'auto'});
+}));
+
+/* ---------- explorer ---------- */
+let activeCat="all",query="",selected=0;
+const filtersEl=document.getElementById('filters');
+const pillsArr=[["all","All"]].concat(Object.entries(CATS).map(([k,v])=>[k,v.label.split(" & ")[0]]));
+filtersEl.innerHTML=pillsArr.map(([k,l])=>`<button class="pill" data-cat="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('');
+filtersEl.querySelectorAll('.pill').forEach(p=>p.addEventListener('click',()=>{
+  activeCat=p.dataset.cat;
+  filtersEl.querySelectorAll('.pill').forEach(x=>x.setAttribute('aria-pressed',x.dataset.cat===activeCat));render();
+}));
+document.getElementById('search').addEventListener('input',e=>{query=e.target.value.toLowerCase().trim();render();});
+function matches(t){if(activeCat!=="all"&&t.cat!==activeCat)return false;if(!query)return true;
+  return (t.title+" "+t.one+" "+t.why+" "+(t.incident||"")+" "+CATS[t.cat].label).toLowerCase().includes(query);}
+function render(){
+  const vis=TOPICS.map((t,i)=>({t,i})).filter(({t})=>matches(t));
+  document.getElementById('count').textContent=`${vis.length} / ${TOPICS.length} shown`;
+  const rail=document.getElementById('rail');
+  if(!vis.length){rail.innerHTML=`<div class="empty"><div class="mono">no matches</div></div>`;
+    document.getElementById('panel').innerHTML=`<div class="empty"><div class="mono">no requirement selected</div></div>`;return;}
+  if(!vis.some(v=>v.i===selected))selected=vis[0].i;
+  let html="";
+  Object.entries(CATS).forEach(([ck,cv])=>{
+    const items=vis.filter(({t})=>t.cat===ck);if(!items.length)return;
+    html+=`<div class="cat-group"><div class="cat-head"><span class="dot" style="background:${cv.color}"></span>${cv.label}</div>`;
+    items.forEach(({t,i})=>{html+=`<button class="nav-item ${i===selected?'active':''}" data-i="${i}"><span class="idx">${String(i+1).padStart(2,'0')}</span><span>${t.title}</span>${t.core?'<span class="core">core</span>':''}</button>`;});
+    html+=`</div>`;
+  });
+  rail.innerHTML=html;
+  rail.querySelectorAll('.nav-item').forEach(b=>b.addEventListener('click',()=>{selected=+b.dataset.i;render();}));
+  renderPanel(TOPICS[selected]);
+}
+function richBold(s){return s;}
+function renderPanel(t){
+  const cv=CATS[t.cat];
+  const ask=t.ask.map(q=>`<li>${q}</li>`).join('');
+  const prd=t.prd.map((l,i)=>`<div class="${i===0?'l0':''}">${l.replace(/<span[^>]*>/g,'').replace(/<\/span>/g,'')}</div>`).join('');
+  const incident=t.incident?`<div class="block"><div class="incident"><div class="ihead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>Common failure mode</div>${t.incident}</div></div>`:'';
+  document.getElementById('panel').innerHTML=`
+    <div class="panel-top">${t.core?'<span class="core-badge">Core topic</span>':''}
+      <span class="panel-cat" style="color:${cv.color}"><span class="dot" style="background:${cv.color}"></span>${cv.label}</span>
+      <h2>${t.title}</h2><p class="oneliner">${t.one}</p></div>
+    <div class="panel-body">
+      <div class="block why"><div class="block-label"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>Why it matters</div><p>${t.why}</p></div>
+      <div class="block good"><div class="block-label"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>What good looks like</div><p>${t.good}</p></div>
+      <div class="block"><div class="block-label"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/></svg>Questions to ask engineering</div><ul class="ask-list">${ask}</ul></div>
+      <div class="block"><div class="block-label"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>How to write it in a PRD</div><div class="prd-box">${prd}</div></div>
+      ${incident}
+      <div class="block"><div class="block-label"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 7l9-4 9 4M5 9v8M19 9v8"/></svg>The tradeoff to watch</div><div class="tradeoff">${richBold(t.trade)}</div></div>
+    </div>`;
+}
+
+/* ---------- release ---------- */
+document.getElementById('relTitle').textContent="Every item maps to a way releases actually break.";
+document.getElementById('relIntro').textContent="A three-phase checklist plus a named owner for every release — a reusable template that catches the classes of problems that most often cause outages: blast-radius gaps, missing alerting on new workflows, config that only breaks in prod, and broad changes with no kill switch.";
+document.getElementById('roleCard').innerHTML=`<h4>${ROLE.title}</h4><p class="rb">${ROLE.blurb}</p><ul>${ROLE.duties.map(d=>`<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span>${d}</span></li>`).join('')}</ul>`;
+let phase="build";const stateDone={};
+function phaseItems(p){let n=0;CHECKLIST[p].groups.forEach(g=>n+=g.items.length);return n;}
+function phaseDone(p){let n=0;Object.keys(stateDone).forEach(k=>{if(k.startsWith(p+":")&&stateDone[k])n++;});return n;}
+const clTabs=document.getElementById('clTabs');
+clTabs.innerHTML=[["build",CHECKLIST.build],["pre",CHECKLIST.pre],["post",CHECKLIST.post]].map(([k,v])=>`<button class="cl-tab" data-p="${k}" aria-pressed="${k==='build'}">${v.label}</button>`).join('');
+clTabs.querySelectorAll('.cl-tab').forEach(b=>b.addEventListener('click',()=>{phase=b.dataset.p;
+  clTabs.querySelectorAll('.cl-tab').forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===phase));renderChecklist();}));
+function updateRing(){const total=phaseItems(phase),filled=phaseDone(phase);
+  renderRing(document.getElementById('clRing'),total,filled,{cx:54,cy:54,r:44,w:8,gap:total>18?2:3.4});
+  document.getElementById('clPct').textContent=Math.round(filled/Math.max(total,1)*100)+"%";
+  document.getElementById('clCount').textContent=`${filled} / ${total}`;}
+function renderChecklist(){
+  const ph=CHECKLIST[phase];document.getElementById('clCaption').textContent=ph.caption;let html="";
+  ph.groups.forEach((g,gi)=>{const rb=/rollback/i.test(g.name);html+=`<div class="cl-group ${rb?'rollback':''}">`;
+    if(g.name)html+=`<div class="gname">${g.name}</div>`;
+    g.items.forEach((it,ii)=>{const key=`${phase}:${gi}:${ii}`;
+      html+=`<div class="cl-item ${stateDone[key]?'done':''}" data-key="${key}" role="checkbox" aria-checked="${!!stateDone[key]}" tabindex="0"><span class="cl-box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M20 6 9 17l-5-5"/></svg></span><span class="ct">${it}</span></div>`;});
+    html+=`</div>`;});
+  const body=document.getElementById('clBody');body.innerHTML=html;
+  body.querySelectorAll('.cl-item').forEach(el=>{const tog=()=>{const k=el.dataset.key;stateDone[k]=!stateDone[k];
+    el.classList.toggle('done',stateDone[k]);el.setAttribute('aria-checked',!!stateDone[k]);updateRing();};
+    el.addEventListener('click',tog);el.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tog();}});});
+  updateRing();
+}
+
+/* ---------- quiz data ---------- */
+const FLASH=[
+  ["SLO","A Service Level Objective: the reliability target you commit to, e.g. 99.9% of requests succeed over 30 days, measured from the user's side."],
+  ["Error budget","The allowed amount of failure under your SLO (the other 0.1%). You spend it on risk; burn it and you freeze releases."],
+  ["p95 latency","The latency 95% of requests beat. Averages hide the slow tail; percentiles describe what users actually feel."],
+  ["Throughput","How much work the system handles per unit time (requests/sec). Being fast for one user is not the same as handling a thousand."],
+  ["Idempotency","An operation you can safely repeat without side effects, e.g. retrying a payment can't double-charge."],
+  ["Circuit breaker","A guard that stops calling a failing dependency and serves a fallback instead, containing a cascade — the classic fix for this failure mode."],
+  ["DLQ","Dead-letter queue: where messages land after repeated processing failures. Alert on its depth or failures pile up unseen."],
+  ["Feature flag","A switch that turns a feature on/off in production without a deploy — the basis for gradual rollout and instant rollback."],
+  ["Kill switch","A flag that disables a risky change in seconds, no redeploy. Skipping it is a common cause of drawn-out outages."],
+  ["Canary release","Rolling a change to a tiny slice (e.g. 1%) first, watching health, then widening: 1% → 10% → 50% → 100%."],
+  ["Blast radius","How many services, teams, and users a change can affect if it goes wrong. Documenting it is step one for broad changes."],
+  ["RTO / RPO","Recovery Time Objective (how fast you recover) and Recovery Point Objective (how much data loss is acceptable)."],
+  ["Observability","Being able to understand the system from the outside via logs, metrics, and traces — including questions you didn't anticipate."],
+  ["Spike","A timeboxed investigation to resolve unknowns or de-risk an approach before committing to build."],
+  ["Epic","A large body of work that delivers a meaningful outcome, broken down into stories, tasks, and bugs."],
+  ["PRD vs JPD","A PRD is the requirements doc for a committed solution (in Confluence); a JPD (Jira Product Discovery) is where early ideas and opportunities are captured and prioritized."]
+];
+const QUIZ=[
+  {q:"A feature averages 200ms but feels slow for some users. What's the most useful thing to ask engineering?",
+   opts:["Lower the average to 150ms","What does p95/p99 latency look like?","Add more servers","Cache everything"],a:1,
+   e:"Averages hide the slow tail. The p95/p99 is where the painful experiences live, so that's the number to target."},
+  {q:"What does an error budget let a team do?",
+   opts:["Guarantee 100% uptime","Spend a known amount of failure on risk, and freeze releases when it's gone","Avoid writing tests","Skip monitoring"],a:1,
+   e:"The budget is the allowed failure under the SLO. It turns reliability into an explicit tradeoff rather than a vague wish."},
+  {q:"A cache miss cascades under load and takes down the system. Which requirement most directly prevents that?",
+   opts:["Internationalization","A circuit breaker / fallback on the dependency","More documentation","A bigger marketing page"],a:1,
+   e:"A circuit breaker opens after repeated failures and serves a fallback, containing the blast radius instead of overwhelming the DB."},
+  {q:"Why alert on DLQ depth?",
+   opts:["It looks good on dashboards","Because failed messages otherwise pile up unnoticed until customers complain","To slow down deploys","It's required by law"],a:1,
+   e:"A growing dead-letter queue is a silent symptom of async failures. Without an alert, you learn about it from users."},
+  {q:"What's the point of shipping behind a feature flag?",
+   opts:["It makes code shorter","It decouples releasing from deploying, enabling gradual rollout and instant rollback","It removes the need for tests","It improves SEO"],a:1,
+   e:"Flags let you turn a change on for 1% first and kill it in seconds if it misbehaves — no redeploy."},
+  {q:"An outage came from 40 workers × 4 polling loops exceeding a ~300 req/s queue limit. This is a failure of…",
+   opts:["Accessibility","Throughput / rate-limit awareness","Privacy","Documentation"],a:1,
+   e:"160 concurrent loops blew past the queue's throughput ceiling. The checklist now verifies task count × loops stays under the limit."},
+  {q:"Which is the best PRD-ready latency requirement?",
+   opts:["The app should be fast","Search renders in < 400ms at p95, measured end-to-end on 4G","Make it faster than competitors","Latency should be low"],a:1,
+   e:"Good non-functional requirements are measurable: a percentile, a number, and where it's measured."},
+  {q:"What makes alerts trustworthy instead of noise?",
+   opts:["Alerting on every internal metric","Firing on user-impacting symptoms, each actionable with a runbook","Paging everyone for everything","Disabling them on weekends"],a:1,
+   e:"Alert fatigue buries the real page. Alert on what users feel, make each one actionable, and treat false pages as bugs."},
+  {q:"When does work need an Epic rather than a single work item?",
+   opts:["Always","When it's a large body of work spanning multiple stories/tasks/bugs","Never, just use sub-tasks","Only for bugs"],a:1,
+   e:"Small work can be a single story/task/bug. An epic groups a large outcome that breaks into several items."},
+  {q:"What is a Spike used for?",
+   opts:["Shipping to 100% at once","A timeboxed investigation to resolve unknowns before building","A type of alert","A rollback tool"],a:1,
+   e:"A spike de-risks an uncertain approach with a bounded investigation, so the build estimate isn't a guess."},
+  {q:"'Complete' in the PDLC means…",
+   opts:["100% finished and frozen","Complete enough to move to the next stage","Approved by legal","Released to all users"],a:1,
+   e:"The PDLC treats stages as overlapping; 'complete enough' lets the next stage start without waiting for perfection."},
+  {q:"Idempotent payment writes protect against…",
+   opts:["Slow networks","Double-charging when a request is retried","Bad fonts","Low test coverage"],a:1,
+   e:"If a retry can re-run the write, you risk duplicates. Idempotency makes repeats safe — critical for money."}
+];
+
+/* flashcards */
+let fi=0,flipped=false;
+function renderFlash(){
+  const [term]=FLASH[fi];
+  document.getElementById('flashArea').innerHTML=`
+    <div class="flashcard ${flipped?'flipped':''}" id="flashcard">
+      <div class="flashinner">
+        <div class="flashface flashfront"><div class="term">${FLASH[fi][0]}</div><div class="hint">tap to reveal</div></div>
+        <div class="flashface flashback"><p>${FLASH[fi][1]}</p></div>
+      </div>
+    </div>
+    <div class="flashnav">
+      <button class="fbtn" id="fprev">← Prev</button>
+      <span class="fcount">${fi+1} / ${FLASH.length}</span>
+      <button class="fbtn" id="fnext">Next →</button>
+      <button class="fbtn" id="fshuffle">Shuffle</button>
+    </div>`;
+  document.getElementById('flashcard').addEventListener('click',()=>{flipped=!flipped;document.getElementById('flashcard').classList.toggle('flipped',flipped);});
+  document.getElementById('fprev').addEventListener('click',()=>{fi=(fi-1+FLASH.length)%FLASH.length;flipped=false;renderFlash();});
+  document.getElementById('fnext').addEventListener('click',()=>{fi=(fi+1)%FLASH.length;flipped=false;renderFlash();});
+  document.getElementById('fshuffle').addEventListener('click',()=>{for(let i=FLASH.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[FLASH[i],FLASH[j]]=[FLASH[j],FLASH[i]];}fi=0;flipped=false;renderFlash();});
+}
+/* quiz */
+let qi=0,score=0,answered=false;
+function renderQuiz(){
+  const area=document.getElementById('quizArea');
+  if(qi>=QUIZ.length){
+    area.innerHTML=`<div class="qcard qresult"><div class="rbig">${score} / ${QUIZ.length}</div>
+      <div class="rsub">${score===QUIZ.length?"Flawless. You can review PRDs in your sleep.":score>=QUIZ.length*0.7?"Strong fluency — a few to brush up on.":"Good start — flip back through the flashcards and try again."}</div>
+      <div style="margin-top:20px;"><button class="fbtn" id="qrestart">Restart quiz</button></div></div>`;
+    document.getElementById('qrestart').addEventListener('click',()=>{qi=0;score=0;answered=false;renderQuiz();});return;
+  }
+  const item=QUIZ[qi];answered=false;
+  area.innerHTML=`<div class="qcard">
+    <div class="qprog">Question ${qi+1} of ${QUIZ.length}</div>
+    <div class="qq">${item.q}</div>
+    <div class="qopts">${item.opts.map((o,i)=>`<button class="qopt" data-i="${i}">${o}</button>`).join('')}</div>
+    <div class="qexpl" id="qexpl">${item.e}</div>
+    <div class="qfoot"><span class="qscore">Score: ${score}</span><button class="fbtn" id="qnext" style="visibility:hidden;">Next →</button></div>
+  </div>`;
+  const opts=area.querySelectorAll('.qopt');
+  opts.forEach(b=>b.addEventListener('click',()=>{
+    if(answered)return;answered=true;const chosen=+b.dataset.i;
+    opts.forEach((o,i)=>{o.disabled=true;if(i===item.a)o.classList.add('correct');});
+    if(chosen===item.a){score++;}else{b.classList.add('wrong');}
+    area.querySelector('.qscore').textContent=`Score: ${score}`;
+    document.getElementById('qexpl').classList.add('show');
+    document.getElementById('qnext').style.visibility='visible';
+  }));
+  document.getElementById('qnext').addEventListener('click',()=>{qi++;renderQuiz();});
+}
+document.getElementById('modeFlash').addEventListener('click',()=>{
+  document.getElementById('modeFlash').setAttribute('aria-pressed','true');
+  document.getElementById('modeQuiz').setAttribute('aria-pressed','false');
+  document.getElementById('flashArea').style.display='flex';document.getElementById('quizArea').style.display='none';});
+document.getElementById('modeQuiz').addEventListener('click',()=>{
+  document.getElementById('modeQuiz').setAttribute('aria-pressed','true');
+  document.getElementById('modeFlash').setAttribute('aria-pressed','false');
+  document.getElementById('flashArea').style.display='none';document.getElementById('quizArea').style.display='block';
+  qi=0;score=0;renderQuiz();});
+
+/* ---------- product dev glossary / pdlc / principles ---------- */
+const GLOSS=[
+  ["JPD","k-dd","Jira Product Discovery","Where early ideas, opportunities, and insights are captured and prioritized before they become committed work."],
+  ["PRD","k-dd","Product Requirements Doc","The scope, requirements, and success criteria for a solution. The source of truth a squad builds from."],
+  ["Discovery","k-dd","Validate the problem","Confirming the problem (and solution) is real with customers and data before committing. Problems before solutions."],
+  ["Solution design","k-ds","End-to-end coverage","Designing the architecture, product, and experience that will actually solve the validated problem."],
+  ["Prototyping","k-ds","Make it tangible","Bringing the solution to life with design tools (e.g. Figma) to test and align before building."],
+  ["Spike","k-op","Resolve unknowns","A timeboxed investigation to de-risk a technical or design uncertainty. Optional, used when there's real ambiguity."],
+  ["Epic","k-bd","Large body of work","A meaningful outcome too big for one ticket, broken into stories, tasks, and bugs."],
+  ["Story","k-bd","User feature","A unit of user-facing value — what the customer can now do."],
+  ["Task","k-bd","Generic work","Work that isn't directly user-facing, e.g. a migration or infra change."],
+  ["Bug","k-bd","Defect","Something broken that needs fixing."],
+  ["Sub-task","k-bd","Steps within an item","The concrete steps that make up a single story, task, or bug."],
+  ["Docs / Wiki","k-doc","Docs & specs","Where PRDs, specs, and notes live — the written record around the work."],
+  ["Triad","k-doc","PM · EM · Designer","The squad leadership trio that steers direction: product vision, technical execution, and user experience."]
+];
+document.getElementById('glossGrid').innerHTML=GLOSS.map(g=>`<div class="gcard"><span class="gk ${g[1]}">${g[0]}</span><h4>${g[2]}</h4><p>${g[3]}</p></div>`).join('');
+
+const PDLC=[
+  ["Discovery","#9DA8F0",58],["Solution design","#7FD4B0",70],["Build (R1…R4)","#F0C98A",100],
+  ["Test (per release)","#E8B07A",62],["Maintain / optimize","#F3E0BC",46]
+];
+document.getElementById('pdlcRows').innerHTML=PDLC.map((r,i)=>`<div class="pdlc-row"><span class="lbl">${r[0]}</span><div class="bar" style="background:${r[1]};width:${r[2]}%;margin-left:${i*7}%;color:${r[1]==='#F3E0BC'?'#7A5B12':'#16201C'};">${r[0]}</div></div>`).join('');
+
+const PRINCIPLES=[
+  ["Problems before solutions","Always start with customers (qual, quant, analytics), then the business (vision, KPIs, opportunity size), and only then solutions. Weigh desirability, feasibility, and viability.",["Desirability","Feasibility","Viability"]],
+  ["The triad steers each squad","Product Manager, Engineering Manager, and Designer share the wheel — aligning product vision, technical execution, and user experience.",["PM","EM","Designer"]],
+  ["Planning is bottoms-up and tops-down","Context → Plans → Integration → Buy-in. Leadership sets direction; teams shape the work; they meet in the middle.",["Context","Plans","Buy-in"]],
+  ["Balance the portfolio","Healthy roadmaps mix stability, improvements, growth, and bets. Every quarter: do we like the mix, and are we still on the right things?",["Stability","Growth","Bets"]]
+];
+document.getElementById('pcards').innerHTML=PRINCIPLES.map(p=>`<div class="pcard"><h4>${p[0]}</h4><p>${p[1]}</p><div class="chips">${p[2].map(c=>`<span>${c}</span>`).join('')}</div></div>`).join('');
+
+/* ---------- resources ---------- */
+const RES=[
+  ["Books","The foundations worth owning",[
+    ["Book","INSPIRED","Marty Cagan","How to structure product teams and discover products customers love. The canonical PM text.","https://www.svpg.com/books/inspired-how-to-create-tech-products-customers-love-2nd-edition/",true],
+    ["Book","EMPOWERED","Cagan & Jones","The leadership companion to INSPIRED — coaching, strategy, and empowered product teams.","https://www.svpg.com/inspired-and-empowered/",false],
+    ["Book","TRANSFORMED","Marty Cagan","Moving to the product operating model — practical for orgs mid-transition.","https://www.svpg.com/transformed/",false],
+    ["Book","Continuous Discovery Habits","Teresa Torres","Weekly customer touchpoints and the opportunity solution tree. The how-to for discovery.","https://www.producttalk.org/continuous-discovery-habits/",true],
+    ["Book","Shape Up","Basecamp (Ryan Singer)","A different take on betting, scoping, and shipping in fixed appetites. Free online.","https://basecamp.com/shapeup",false],
+    ["Book","Designing Data-Intensive Applications","Martin Kleppmann","The deep technical backbone for the non-functional side: reliability, scalability, consistency.","https://dataintensive.net/",false]
+  ]],
+  ["Articles & frameworks","Sharper, shorter reads",[
+    ["Articles","SVPG Articles","Silicon Valley Product Group","Marty Cagan and partners on discovery, delivery, and the product model. Deep archive.","https://www.svpg.com/articles/",true],
+    ["Framework","The W-Framework for growth strategy","Lean Summits","A structured way to build a growth strategy bottoms-up and tops-down.","https://www.leansummits.com/how-to-use-the-w-framework-to-build-a-successful-growth-strategy",true],
+    ["Framework","Product Manager Roles & Competencies","Ravi Mehta","A clear model of PM archetypes and the competencies that define the craft.","https://www.ravi-mehta.com/product-manager-roles/",true],
+    ["Reference","Google SRE Book","Google","SLOs, error budgets, and reliability practice — the source behind half this guide's vocabulary.","https://sre.google/books/",false]
+  ]],
+  ["Ongoing","Keep the muscle warm",[
+    ["Newsletter","Lenny's Newsletter","Lenny Rachitsky","Weekly, practical PM and growth essays plus a deep interview archive.","https://www.lennysnewsletter.com/",false],
+    ["Blog","Product Talk","Teresa Torres","Continuous discovery techniques, opportunity solution trees, interview methods.","https://www.producttalk.org/",false]
+  ]]
+];
+document.getElementById('resArea').innerHTML=RES.map(group=>`
+  <div class="resgroup"><h3>${group[0]}</h3><p class="rgsub">${group[1]}</p>
+    <div class="reslist">${group[2].map(r=>`
+      <a class="rescard" href="${r[4]}" target="_blank" rel="noopener noreferrer">
+        <div class="rtype">${r[0]}</div><h4>${r[1]}</h4><div class="rby">${r[2]}</div>
+        <div class="rnote">${r[3]}</div>${r[5]?'<span class="rpick">★ start here</span>':''}
+        <div class="rlink">Open ↗</div>
+      </a>`).join('')}</div>
+  </div>`).join('');
+
+/* init */
+render();
+renderChecklist();
+renderFlash();
+
+/* topnav elevates on scroll */
+const _tn=document.querySelector('.topnav');
+const _onScroll=()=>{ _tn.classList.toggle('scrolled', window.scrollY>8); };
+window.addEventListener('scroll',_onScroll,{passive:true});
+_onScroll();
+</script>
+</body>
+</html>

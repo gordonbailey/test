@@ -47,6 +47,37 @@ which is the point. Never fill a skeleton with plausible-sounding filler.
 nodes share an id, the view set drifts from the node list, or the markup has an
 unbalanced `</div>`.
 
+## Embedding a standalone HTML app
+
+Both guides are self-contained HTML tools with their own global CSS and JS. They
+are embedded rather than linked, so the portfolio is the place you read them
+rather than a directory of links to files nobody can open.
+
+Drop the file in `guides/`, add `"embed": "<file>.html"` to its node, and put
+`<div class="gembed" data-guide="<id>"><div class="gload">…</div></div>` in the
+page body. `build.py` base64s the file into its own `<script>` payload and
+`hydrateGuides()` in `shell.js` turns it into a `srcdoc` iframe the first time
+that view is opened. The build fails if a declared embed has no placeholder, or
+a placeholder has no embed.
+
+Four things this arrangement is deliberately buying:
+
+- **An iframe, not inlined markup.** Each guide sets global styles and defines
+  top-level JS; merging two of them into this document would collide with the
+  shell and with each other.
+- **base64, not raw markup.** The guides contain their own `</script>` tags,
+  which would terminate the payload early.
+- **`TextDecoder`, not `atob` alone.** `atob` returns latin-1, so decoding the
+  UTF-8 payload directly mojibakes every `·`, `—` and `’` in the guides.
+- **Lazy hydration.** The two are ~370KB of markup together; parsing both at
+  load would delay first paint for readers who never open a guide.
+
+Verified that inline `<script>` inside a `srcdoc` iframe still runs under the
+artifact's sandbox, which grants `allow-scripts` but not `allow-same-origin`.
+Google Fonts links are stripped when the file is copied in — the artifact CSP
+blocks them — and the build rejects a guide that still references them. Both
+guides declare full system fallbacks, so they lose nothing but the webfont.
+
 ## Palette
 
 Categorical slots are validated with the dataviz validator in both modes rather

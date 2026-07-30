@@ -10,8 +10,8 @@
     <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">A self-contained interactive HTML tool. Five sections: Product Dev, Architecture, Requirements, Quiz, Resources.</p>
   </div>
   <div class="dl">
-    <span class="pill warn">Not yet hosted</span>
-    <span class="lm" style="max-width:38ch">A standalone file, so it has no URL to link to — same handover risk as the repo guide.</span>
+    <span class="pill good">Embedded below</span>
+    <span class="lm" style="max-width:38ch">The full tool runs inside this page. The source file also lives at <code>analysis/report/guides/</code>.</span>
   </div>
 </div>
 
@@ -20,6 +20,14 @@
   <div class="stat accent"><div class="k">Marked core</div><div class="v" data-count="6">6</div><div class="d">learn these first</div></div>
   <div class="stat"><div class="k">Checklist items</div><div class="v" data-count="53">53</div><div class="d">across 3 release phases</div></div>
   <div class="stat"><div class="k">Curated resources</div><div class="v" data-count="12">12</div><div class="d">5 flagged "start here"</div></div>
+</div>
+
+<h2>The guide</h2>
+<div class="gbar">
+  <span class="gnote">Running live below: five sections, 24 requirements, flashcards and a quiz. Scroll inside the frame; the guide has its own navigation.</span>
+</div>
+<div class="gembed reveal" data-guide="guide-nonfunc" data-title="Non-Functional Field Guide">
+  <div class="gload"><i aria-hidden="true"></i>Loading the guide…</div>
 </div>
 
 <h2>The problem</h2>
@@ -178,12 +186,12 @@
   <div class="sk"><h3>The 24 are not weighted for this product</h3><p>A donation platform has an unusual risk profile: payments correctness, PCI scope, giving-season load spikes, and a failed donation that is not a retryable inconvenience. Data Integrity and Compliance probably rank higher here than the generic ordering suggests, and the guide does not make that case.</p></div>
   <div class="sk"><h3>No accessibility depth, despite the audience</h3><p>Accessibility appears as one of 24 requirements alongside internationalization and compatibility. For a public donation product it is both a legal exposure and a conversion issue, and it would justify more than parity with cost efficiency.</p></div>
   <div class="sk"><h3>The quiz measures recall, and nothing measures use</h3><p>Flashcards and a quiz test whether the vocabulary stuck. Whether a PM who took it writes better PRDs is unmeasured, and since nothing saves between sessions there is no way to tell who has been through it or where people get stuck.</p></div>
-  <div class="sk"><h3>Same hosting problem as the repo guide</h3><p>A single self-contained HTML file with no home. Both guides share this, and for a handover artifact it is the difference between existing and not.</p></div>
+  <div class="sk"><h3>It still has no internal URL</h3><p>Embedding it here gives it a home, and the source is in the repo, but neither is an internal link a Jira epic template or a PRD template can point at. That is the remaining step.</p></div>
 </div>
 
 <h2>Pick this up next</h2>
 <div class="acts reveal">
-  <div class="act"><span class="num">1</span><div><div class="t">Host both guides, then link them from where work starts</div><div class="m">A URL in the Jira epic or PRD template is worth more than any amount of extra content. Unhosted, this is a file on a laptop.</div></div></div>
+  <div class="act"><span class="num">1</span><div><div class="t">Link the guide from where work starts</div><div class="m">It runs in this page now, so the remaining step is a durable internal URL referenced from the Jira epic and PRD templates. A link at the moment of writing a spec is worth more than any amount of extra content.</div></div></div>
   <div class="act"><span class="num">2</span><div><div class="t">Attach the Build checklist to the epic template</div><div class="m">It is already written for that moment. Making it a template field turns 53 good items into a process.</div></div></div>
   <div class="act"><span class="num">3</span><div><div class="t">Fill in GoFundMe's real numbers</div><div class="m">Actual p95 targets, SLOs and error budgets for the surfaces PMs work on. The <a href="#/instrumentation" data-jump="instrumentation">instrumentation framework</a> already proposes p50/p90 load times for reports and campaign insights, and the two should share numbers.</div></div></div>
   <div class="act"><span class="num">4</span><div><div class="t">Pilot the Release Lead role on one offcycle release</div><div class="m">Rotating roles get adopted in the first month or never. Run one real release and document the gaps afterwards.</div></div></div>
