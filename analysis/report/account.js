@@ -85,7 +85,11 @@ clearEl.addEventListener('click', () => { qEl.value = ''; renderSuggest(); qEl.f
 document.addEventListener('click', e => {
   if (!e.target.closest('.searchwrap')){ sgEl.hidden = true; qEl.setAttribute('aria-expanded','false'); }
 });
-function pick(i){ sgEl.hidden = true; qEl.setAttribute('aria-expanded','false'); qEl.value = L.accounts[i].n; renderSuggest(); select(i); }
+/* Every user-driven selection scrolls the account into view. #book renders
+   before #a-hero in the DOM, so picking the 40th row of a 67-account book used
+   to render the card ~2,000px off screen: the account loaded and the seller saw
+   nothing change. */
+function pick(i){ sgEl.hidden = true; qEl.setAttribute('aria-expanded','false'); qEl.value = L.accounts[i].n; renderSuggest(); select(i, {scroll: true}); }
 
 /* ---- seller book -------------------------------------------------------- */
 const ownerCounts = new Map();
@@ -126,11 +130,21 @@ function renderBook(){
       : x.dg.startsWith(OPT_PREFIX) ? 'Room to grow' : x.x ? 'Standout' : 'On track';
     const tone = x.dg.startsWith(ACT_PREFIX) ? 'warn'
       : x.dg.startsWith(OPT_PREFIX) ? 'warn' : x.x ? 'good' : 'info';
-    return `<button class="pr" data-i="${i}" style="grid-template-columns:1fr 118px 96px 84px">
+    // Every account has a peer median through its cohort, so every row gets a
+    // comparison. Printing only shortfalls left 58 of 67 rows reading "—",
+    // which a seller reasonably takes to mean the median is missing.
+    const med = (L.cohorts[x.c] || {}).med;
+    const delta = med == null ? null : x.m[0][0] - med;
+    const dCol = delta == null ? 'var(--ink-3)'
+      : delta < 0 ? 'var(--warn-ink)' : 'var(--good-ink)';
+    const dTxt = delta == null ? '—'
+      : (delta < 0 ? '−' : '+') + money(Math.abs(delta));
+    return `<button class="pr" data-i="${i}" style="grid-template-columns:1fr 112px 92px 132px">
       <div><div class="n2">${esc(x.n)}</div><div class="s2">${esc(x.s)} · ${esc(x.b)}</div></div>
       <div class="v2"><span class="pill ${tone}" style="font-size:.7rem">${label}</span></div>
       <div class="v2">${money(x.m[0][0])}<small>raised</small></div>
-      <div class="v2">${x.gap > 0 ? `<span style="color:var(--warn-ink)">−${money(x.gap)}</span>` : '—'}<small>vs median</small></div>
+      <div class="v2"><span style="color:${dCol}">${dTxt}</span><small>vs median${
+        med == null ? '' : ` · ${ordinal(x.m[0][1])}`}</small></div>
     </button>`;
   }).join('');
   bookListEl.querySelectorAll('.pr').forEach(el =>
@@ -154,10 +168,12 @@ ownerEl.addEventListener('change', renderBook);
 })();
 
 /* ---- render -------------------------------------------------------------- */
-function select(i){
+function select(i, {scroll = false} = {}){
   sel = i;
   const a = L.accounts[i], C = L.cohorts[a.c];
   emptyEl.hidden = true; acctEl.hidden = false;
+  if (scroll) requestAnimationFrame(() => document.getElementById('a-hero')
+    .scrollIntoView({behavior: REDUCED ? 'auto' : 'smooth', block: 'start'}));
 
   const pctl = a.m[0][1], tone = statusTone(a.st), col = statusColor(a.st);
   const circ = 2 * Math.PI * 44;
@@ -384,8 +400,7 @@ function renderPeers(){
 function openAccount(i){
   selectTab('tab-acct', {scroll:false});
   qEl.value = L.accounts[i].n; clearEl.classList.add('on'); sgEl.hidden = true;
-  select(i);
-  document.getElementById('a-hero').scrollIntoView({behavior: REDUCED ? 'auto' : 'smooth', block:'start'});
+  select(i, {scroll: true});
 }
 
 /* ---- presentation mode --------------------------------------------------- */

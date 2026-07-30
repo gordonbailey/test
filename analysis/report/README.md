@@ -47,6 +47,27 @@ which is the point. Never fill a skeleton with plausible-sounding filler.
 nodes share an id, the view set drifts from the node list, or the markup has an
 unbalanced `</div>`.
 
+## Client exports
+
+Two per-account exports, both built in the browser because the page has no
+network access and neither may leak a peer organization's name:
+
+- **Client one-pager** (`account.js`) — a PNG drawn op-by-op on a canvas.
+- **Scorecard PDF** (`scorecard.js`) — a single-page US Letter PDF written byte
+  by byte: seven objects, no compression, the two base-14 Helvetica variants,
+  and selectable vector text so it survives printing and pasting into a deck.
+
+The PDF writer measures text with a canvas 2d context rather than embedding AFM
+width tables for two fonts. That is an approximation of real Helvetica metrics,
+which is fine for right-aligning numbers and wrapping paragraphs. Non-ASCII
+characters are folded to ASCII (`—`→`-`, `→`→`->`) because the strings are
+latin-1; anything unmapped is dropped, so add to `PDF_FOLD` before using a new
+glyph. `pdfCanvas` tracks the deepest y any operator touched, and
+`buildScorecard` returns `bodyMaxY` separately from the fixed footer — a
+one-page layout fed variable-length content can silently run off the bottom,
+and a PDF raises no error when it does. All 3,161 accounts currently fit, worst
+case 675pt against a footer at 726pt.
+
 ## Embedding a standalone HTML app
 
 Both guides are self-contained HTML tools with their own global CSS and JS. They
