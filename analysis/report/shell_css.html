@@ -194,12 +194,18 @@ a.btn{text-decoration:none}
 .gdv.gdvwarn b{color:var(--warn-ink)}
 .tsub{font-size:.75rem;color:var(--ink-3)}
 
-/* Cross-project links inside callouts. The router picks these up via
-   data-jump, so they behave as in-page navigation, not external links. */
-.note a{color:var(--brand-strong);font-weight:650;text-decoration:none;
+/* Cross-project and external links in running text. Listed explicitly rather
+   than styling every `a`, so buttons, nav links and cards keep their own
+   treatment. Body-paragraph links were falling through to browser-default blue
+   underline, which looked broken next to everything else. */
+.note a,.sub a,.blist a,.sk p a,.tiernote a,.act .m a,.rv a,.lm a{
+  color:var(--brand-strong);font-weight:650;text-decoration:none;
   border-bottom:1px solid color-mix(in srgb,var(--brand) 45%,transparent)}
-.note a:hover{border-bottom-color:var(--brand)}
-.note a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.note a:hover,.sub a:hover,.blist a:hover,.sk p a:hover,.tiernote a:hover,
+.act .m a:hover,.rv a:hover,.lm a:hover{border-bottom-color:var(--brand)}
+.note a:focus-visible,.sub a:focus-visible,.blist a:focus-visible,
+.sk p a:focus-visible,.tiernote a:focus-visible,.act .m a:focus-visible{
+  outline:2px solid var(--brand);outline-offset:2px}
 
 /* evidence tiles — a number and who said it */
 .evid{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px}
