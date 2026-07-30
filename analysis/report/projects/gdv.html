@@ -1,0 +1,110 @@
+<!-- How to grow GDV. The quantitative core of the strategy branch: the
+     concentration table, the two charts drawn on separate axes (never dual), and
+     the one-more-gift economics. Every figure is from Amplitude GFM v2 Prod,
+     trailing 12 months, and the three conflicting GDV totals are reconciled in
+     the limits section rather than silently resolved. -->
+
+<div class="stats reveal">
+  <div class="stat"><div class="k">Super donor GDV</div><div class="v">$1.78B</div><div class="d">2+ gifts in 365 days</div></div>
+  <div class="stat accent"><div class="k">Share of GDV</div><div class="v">39%</div><div class="d">from 20% of donors</div></div>
+  <div class="stat"><div class="k">Concentration</div><div class="v">1.9×</div><div class="d">over-index on value</div></div>
+  <div class="stat"><div class="k">In the 2-gift band</div><div class="v">$871M</div><div class="d">half of all super donor GDV</div></div>
+</div>
+
+<h2>The problem</h2>
+<p class="sub">Growth is getting narrower. Donation sizes are rising while donor counts are flat to down, which means the platform is monetising moments of generosity more efficiently rather than producing more generous people. The strategic question is whether there is a cohort worth building a programme around — and if so, which one.</p>
+<p class="sub">There is. But the widely-quoted version of the finding is missing the number that makes it an argument.</p>
+<div class="note warn"><b>"~40% of GDV" is not, by itself, evidence of anything.</b> The first question any reader asks is "out of what share of donors?" If super donors were 40% of donors producing 40% of GDV, there would be no story at all. The answer is that they are <b>20% of donors producing 39% of GDV</b> — a 1.9× over-index. <b>Lead with 20/39, not 40.</b></div>
+
+<h2>What was done</h2>
+<p class="sub">Every figure below is queried from Amplitude (GFM v2 Prod, project 530253) over a trailing 12-month window, using the same super donor definition as the existing cohort: <b>2 or more <code>eCommerce - Purchase</code> events in a rolling 365 days</b>. GDV is the sum of <code>donation_amount</code>.</p>
+<div class="card reveal">
+  <div class="tl tlwide">
+    <div class="tli"><span class="tld">Definition</span><span class="tlt">Reused the existing cohort's rule rather than inventing one, so the numbers are comparable to what is already circulating</span></div>
+    <div class="tli"><span class="tld">Basis</span><span class="tlt">GDV and gift counts are 12-month <b>sums</b> — both additive, so they divide cleanly</span></div>
+    <div class="tli tlhot"><span class="tld">Donor counts</span><span class="tlt"><b>Derived as gifts ÷ N per band</b>, not read from a uniques query — see the basis trap below</span></div>
+    <div class="tli"><span class="tld">Cross-check</span><span class="tlt">Derived super donor count came to 7.38M against the cohort's own 7.12M — 3.7% apart</span></div>
+  </div>
+</div>
+<div class="note bad"><b>The basis trap, because it would have inverted the conclusion.</b> Querying unique donors per band returns a <i>monthly average of active donors</i>, not an annual population. On that basis super donors look like ~37% of donors — because a 2+ donor is mechanically more likely to be active in any given month than a one-time donor. Divide 39% of GDV by 37% of donors and the concentration argument evaporates. The annual basis is both the honest one and the stronger one.</div>
+
+<h2>What came out of it</h2>
+
+<h3>Where the GDV actually is</h3>
+<p class="sub tight">Total donation GDV by gifts-per-donor, trailing 12 months. One measure, one axis.</p>
+<div class="card reveal">
+  <div class="bars" style="--lw:96px;--vw:150px;--lwm:76px;--vwm:120px">
+    <div class="bar"><div class="l">1 gift</div><div class="trk"><div class="fil" data-w="100" style="background:var(--ink-3)"></div></div><div class="v">$2,760.7M<small>29.2M donors · 60.9%</small></div></div>
+    <div class="bar"><div class="l"><b>2 gifts</b></div><div class="trk"><div class="fil" data-w="31.5" style="background:var(--brand)"></div></div><div class="v">$870.9M<small>4.9M donors · 19.2%</small></div></div>
+    <div class="bar"><div class="l">3 gifts</div><div class="trk"><div class="fil" data-w="12.5" style="background:var(--brand)"></div></div><div class="v">$344.1M<small>1.4M donors · 7.6%</small></div></div>
+    <div class="bar"><div class="l">4 gifts</div><div class="trk"><div class="fil" data-w="6" style="background:var(--brand)"></div></div><div class="v">$166.0M<small>513K donors · 3.7%</small></div></div>
+    <div class="bar"><div class="l">5 gifts</div><div class="trk"><div class="fil" data-w="3.3" style="background:var(--brand)"></div></div><div class="v">$91.3M<small>236K donors · 2.0%</small></div></div>
+    <div class="bar"><div class="l">6+ gifts</div><div class="trk"><div class="fil" data-w="11" style="background:var(--brand)"></div></div><div class="v">$302.6M<small>~403K donors · 6.7%</small></div></div>
+  </div>
+  <p class="sub" style="margin:16px 0 0;font-size:.85rem">Grey is the one-time band, shown because the comparison is the argument. Green is the super donor bands.</p>
+</div>
+<div class="note good"><b>The money is in the shallow end.</b> The 2-gift band alone is <b>$871M — 49% of all super donor GDV</b>, from 4.9M people. The entire 6+ tail is $303M from roughly 403,000 people. Any programme aimed at making top givers famous is aimed at the smallest pot on the chart.</div>
+
+<h3>What each band is worth per donor</h3>
+<p class="sub tight">The same population, different measure, <b>deliberately a second chart rather than a second axis</b>. Two y-scales on one plot invent a correlation the data does not contain — and in this case they invert the conclusion, because the per-donor bar for the 6+ tail towers over its own GDV bar.</p>
+<div class="card reveal">
+  <div class="bars" style="--lw:96px;--vw:150px;--lwm:76px;--vwm:120px">
+    <div class="bar"><div class="l">1 gift</div><div class="trk"><div class="fil" data-w="12.6" style="background:var(--s2)"></div></div><div class="v">$94.63<small>avg gift $94.63</small></div></div>
+    <div class="bar"><div class="l"><b>2 gifts</b></div><div class="trk"><div class="fil" data-w="23.8" style="background:var(--s2)"></div></div><div class="v">$179.00<small>avg gift $89.50</small></div></div>
+    <div class="bar"><div class="l">3 gifts</div><div class="trk"><div class="fil" data-w="33.7" style="background:var(--s2)"></div></div><div class="v">$253.16<small>avg gift $84.39</small></div></div>
+    <div class="bar"><div class="l">4 gifts</div><div class="trk"><div class="fil" data-w="43.1" style="background:var(--s2)"></div></div><div class="v">$323.70<small>avg gift $80.92</small></div></div>
+    <div class="bar"><div class="l">5 gifts</div><div class="trk"><div class="fil" data-w="51.4" style="background:var(--s2)"></div></div><div class="v">$386.36<small>avg gift $77.27</small></div></div>
+    <div class="bar"><div class="l">6+ gifts</div><div class="trk"><div class="fil" data-w="100" style="background:var(--s2)"></div></div><div class="v">~$751<small>avg gift $77.37</small></div></div>
+  </div>
+  <p class="sub" style="margin:16px 0 0;font-size:.85rem">Annual GDV per donor. The sub-line is the average <i>per gift</i> in that band.</p>
+</div>
+
+<div class="note"><b>Average gift size falls as frequency rises</b> — $94.63 at one gift, down to $77.27 at five. Super donors give more in total and less per gift. Two consequences worth planning for:
+  <br><br>
+  <b>1.</b> A successful frequency programme will <i>reduce</i> average donation size. Anyone tracking avg gift as a KPI will read success as failure. Say so before you start, not afterwards.
+  <br>
+  <b>2.</b> "Donation sizes are up ~28% while donor counts are flat" may be partly <i>composition</i> — the mix shifting toward one-time donors, who give the largest single gifts — rather than rising generosity.</div>
+
+<h3>The table view</h3>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th>Gifts / 365d</th><th class="n">Donors</th><th class="n">Gifts</th><th class="n">GDV</th><th class="n">% GDV</th><th class="n">Avg gift</th><th class="n">Annual / donor</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="n">29,173,523</td><td class="n">29,173,523</td><td class="n">$2,760.7M</td><td class="n">60.9%</td><td class="n">$94.63</td><td class="n">$94.63</td></tr>
+      <tr><td><b>2</b></td><td class="n">4,865,245</td><td class="n">9,730,490</td><td class="n"><b>$870.9M</b></td><td class="n">19.2%</td><td class="n">$89.50</td><td class="n">$179.00</td></tr>
+      <tr><td>3</td><td class="n">1,359,379</td><td class="n">4,078,136</td><td class="n">$344.1M</td><td class="n">7.6%</td><td class="n">$84.39</td><td class="n">$253.16</td></tr>
+      <tr><td>4</td><td class="n">512,920</td><td class="n">2,051,679</td><td class="n">$166.0M</td><td class="n">3.7%</td><td class="n">$80.92</td><td class="n">$323.70</td></tr>
+      <tr><td>5</td><td class="n">236,288</td><td class="n">1,181,442</td><td class="n">$91.3M</td><td class="n">2.0%</td><td class="n">$77.27</td><td class="n">$386.36</td></tr>
+      <tr><td>6+</td><td class="n">~403,000</td><td class="n">3,911,034</td><td class="n">$302.6M</td><td class="n">6.7%</td><td class="n">$77.37</td><td class="n">~$751</td></tr>
+      <tr><td><b>All 2+</b></td><td class="n"><b>~7,376,832</b></td><td class="n">20,952,781</td><td class="n"><b>$1,775.0M</b></td><td class="n"><b>39.1%</b></td><td class="n">$84.71</td><td class="n">$240.61</td></tr>
+      <tr><td><b>Total</b></td><td class="n"><b>~36,550,355</b></td><td class="n">50,126,304</td><td class="n"><b>$4,535.7M</b></td><td class="n">100%</td><td class="n">$90.49</td><td class="n">$124.09</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<h3>The one-more-gift economics</h3>
+<p class="sub tight">Moving a donor from one gift to two adds <b>$84.37</b> of annual GDV — the gap between $179.00 and $94.63. The addressable population is 29.2 million people.</p>
+<div class="grid3 reveal">
+  <div class="card flat"><div class="gdv" style="border:none;padding:0;margin:0"><b>$24.6M</b></div><p class="tiernote" style="margin-top:8px"><b>1%</b> of one-time donors give a second gift — 291,735 people.</p></div>
+  <div class="card flat"><div class="gdv" style="border:none;padding:0;margin:0"><b>$123M</b></div><p class="tiernote" style="margin-top:8px"><b>5%</b> convert — 1.46M people. Comparable to the deck's $87M estimate, on a firmer base.</p></div>
+  <div class="card flat"><div class="gdv" style="border:none;padding:0;margin:0"><b>$246M</b></div><p class="tiernote" style="margin-top:8px"><b>10%</b> convert — 2.92M people.</p></div>
+</div>
+<div class="note good"><b>Why this beats "a 5% lift on super donor GDV = $87M."</b> A 5% lift on an existing cohort is an assumption about a number nobody controls. A 1→2 conversion rate is a <b>measurable behaviour</b> with a 29-million-person base, a known baseline, and a known intervention window — see <a href="#/gdv-donors" data-jump="gdv-donors">acquiring better donors</a> for the 12.3% baseline and the three-week window.</div>
+
+<h2>What it does not cover</h2>
+<div class="card reveal">
+  <div class="sk"><h3>Three different GDV totals are in circulation, and this page does not resolve them</h3><p>The strategy deck says <b>$1.74B</b>. The <i>SuperDonor GDV by donation count</i> spreadsheet sums to <b>~$1.55B</b>. This page's Amplitude query gives <b>$1.775B</b>. The spreadsheet runs ~13% below the Amplitude figures in <i>every</i> band, which points to one systematic difference — most likely calendar 2025 versus a trailing 12-month window, or <code>donation_amount</code> versus a net/settled revenue field. The <i>shares</i> are stable across all three, so the 20/39 argument holds regardless. The absolute dollars should be reconciled to one source before any of them appears in a decision document.</p></div>
+  <div class="sk"><h3>GDV may not be currency-normalised</h3><p>The purchase event carries <code>donation_currency</code> and <code>donor_selected_currency_donation_amount</code> alongside <code>donation_amount</code>. Whether the summed field is already converted to a single currency has not been verified. If it is not, the totals mix currencies. Again, shares survive this; absolute dollars may not.</p></div>
+  <div class="sk"><h3>The 6+ band's donor count is estimated</h3><p>Bands 1–5 divide gifts by an exact N. The 6+ band has no single N, so its donor count (~403,000) is derived from the frequency distribution's gift-weighted average of ~9.7 gifts per donor. Everything downstream of that band — its per-donor figure of ~$751 — inherits the estimate.</p></div>
+  <div class="sk"><h3>This is consumer GoFundMe only</h3><p>Project 530253 is GFM v2 Prod. Nothing here includes GoFundMe Pro (project 716579), so the analysis says nothing about nonprofit-side donor behaviour or how the two books interact.</p></div>
+  <div class="sk"><h3>Frequency is not the only definition of a valuable donor</h3><p>The cohort rule is 2+ gifts in 365 days, which treats a donor giving $20 twice as a super donor and one giving $5,000 once as not. That is a defensible choice for a habit-formation strategy and a poor one for a major-gift strategy. It is a definition, not a discovery.</p></div>
+  <div class="sk"><h3>No causal claim is available here</h3><p>Donors in higher-frequency bands are worth more per year. Nothing in this analysis shows that <i>moving</i> a donor between bands produces the value gap — the bands may simply contain different kinds of people. The $24.6M-per-percentage-point figures are the value of the observed gap, not a measured treatment effect. Only an experiment settles it.</p></div>
+</div>
+
+<h2>Pick this up next</h2>
+<div class="acts reveal">
+  <div class="act"><span class="num">1</span><div><div class="t">Reconcile to one GDV number</div><div class="m">$1.55B / $1.74B / $1.775B. Pick the window and the field, write them down, and re-cut the three artifacts from the same source.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Re-aim the programme at the 2-gift band</div><div class="m">$871M and 4.9M people, versus $303M and ~403K in the 6+ tail. The recognition and tiering ideas are pointed at the wrong end of the distribution — see <a href="#/gdv-super" data-jump="gdv-super">super donor relationships</a>.</div></div></div>
+  <div class="act"><span class="num">3</span><div><div class="t">Pre-agree that average gift size will fall</div><div class="m">It falls monotonically with frequency. Get that in front of whoever owns the avg-donation KPI before the programme starts, or a success looks like a regression.</div></div></div>
+  <div class="act"><span class="num">4</span><div><div class="t">Design the experiment before the programme</div><div class="m">A holdout on the 1→2 intervention is the only thing that converts the observed $84/donor gap into a defensible causal number. Without it this stays a correlation with a big multiplier attached.</div></div></div>
+</div>

@@ -156,8 +156,10 @@
       "short": "Corporate Strategy",
       "order": 60,
       "kind": "group",
-      "status": "drafting",
-      "blurb": "The growth argument the project work sits underneath."
+      "status": "live",
+      "blurb": "Two gaps, one through-line — taken to Amplitude rather than accepted on its face. Three parts of the argument held; two got redirected by the distribution.",
+      "h1": "Corporate Strategy",
+      "lede": "The growth argument the project work sits underneath. Both gaps are versions of the same problem: the platform monetises moments of generosity but does not build generous people."
     },
     {
       "id": "gdv",
@@ -166,9 +168,10 @@
       "short": "How to grow GDV",
       "order": 10,
       "kind": "group",
-      "status": "awaiting",
-      "needs": "The framing you settled on — which levers you argued GDV actually moves on, and the evidence behind each. The three questions below hang off it.",
-      "blurb": "Three sub-questions, each with its own page."
+      "status": "live",
+      "blurb": "20% of donors produce 39% of GDV — and half of that sits in the 2-gift band, not the loyal tail. The concentration analysis, the per-donor slope, and what one more gift is worth.",
+      "h1": "How do we grow GDV?",
+      "lede": "“~40% of GDV” is not an argument until you know the denominator. It is 20% of donors — a 1.9× over-index — and the money sits in the shallow end of the frequency curve, not the tail."
     },
     {
       "id": "gdv-donors",
@@ -176,8 +179,10 @@
       "title": "How Do We Acquire Better Donors?",
       "short": "Acquire better donors",
       "order": 10,
-      "status": "awaiting",
-      "needs": "What \"better\" means here — retention, gift size, referral, or lifetime value — and the acquisition sources you compared on it."
+      "status": "live",
+      "blurb": "“Better” defined as likely to return, then measured: a 12.3% baseline repeat rate, a median 23-day window, and roughly $36M a year per percentage point of lift.",
+      "h1": "How do we acquire better donors?",
+      "lede": "Not actionable until “better” has a definition. Defined here as a donor who gives again — because a second gift nearly doubles annual value, and because it can be evaluated in 90 days rather than a year."
     },
     {
       "id": "gdv-super",
@@ -185,8 +190,10 @@
       "title": "How Do We Build Better Relationships With Super Donors?",
       "short": "Super donor relationships",
       "order": 20,
-      "status": "awaiting",
-      "needs": "Where the super-donor line sits, how many of them there are, and what is being proposed — product, service, or both."
+      "status": "live",
+      "blurb": "The programme design with the distribution applied: keep the owner, split the lifecycle work, and move the first tier to the second gift rather than the tenth.",
+      "h1": "How do we build better relationships with super donors?",
+      "lede": "7.1 million people produce 39% of GDV and receive the same experience as a first-time donor. The structural gap is real — but the four proposed mechanics are aimed at the smallest pot on the chart."
     },
     {
       "id": "gdv-cool",
@@ -194,8 +201,10 @@
       "title": "How Do We Make Giving Cool?",
       "short": "Make giving cool",
       "order": 30,
-      "status": "awaiting",
-      "needs": "The audience you are aiming at, what currently makes giving feel uncool to them, and any concepts you tested."
+      "status": "live",
+      "blurb": "Chat and copy-link referrals return at 27–28%; organic social returns at 10.6%, below platform average. The split that predicts repeat giving is interpersonal versus broadcast.",
+      "h1": "How do we make giving cool?",
+      "lede": "Coolness has to be borrowed from somewhere. The intuitive answer is fame — athletes, celebrities, creators. The referral data points somewhere else, and it points there clearly."
     }
   ]
 }

@@ -1,0 +1,81 @@
+<!-- Make giving cool. The channel data is the core evidence here, and it
+     redirects the recommendation: the split that predicts repeat giving is
+     interpersonal vs broadcast, not social vs non-social. -->
+
+<div class="stats reveal">
+  <div class="stat"><div class="k">Chat referral</div><div class="v">28.3%</div><div class="d">give again within 90 days</div></div>
+  <div class="stat"><div class="k">Copy-link</div><div class="v">27.4%</div><div class="d">2.2× the platform baseline</div></div>
+  <div class="stat"><div class="k">Platform baseline</div><div class="v">12.3%</div><div class="d">all donors</div></div>
+  <div class="stat"><div class="k">Organic social</div><div class="v">10.6%</div><div class="d">below baseline</div></div>
+</div>
+
+<h2>The problem</h2>
+<p class="sub">Giving on GoFundMe is episodic. Donors arrive for a crisis and disappear, and there is no identity, status or habit attached to being generous here. Marketplace is a first attempt at an answer, but a donation is not inherently cool — the <i>experience around</i> giving is where coolness could live.</p>
+<p class="sub">Which raises the real question: <b>coolness has to be borrowed from somewhere. From where?</b> The intuitive answer is fame — athletes, celebrities, musicians, creators. The data points somewhere else.</p>
+
+<h2>What was done</h2>
+<p class="sub">Two hypotheses were available to test against the referral data on donation events, using second-gift rate within 90 days as the proxy for whether a donor formed a habit:</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:30%">Hypothesis</th><th>What it predicts</th><th style="width:20%">Verdict</th></tr></thead>
+    <tbody>
+      <tr><td><b>Borrowed fame</b><br><span class="tsub">celebrities, athletes, creators</span></td><td>Donors arriving through broadcast social channels should form habits at least as well as anyone else — reach creates culture.</td><td><span class="pill bad">Not supported</span></td></tr>
+      <tr><td><b>Giving is social</b><br><span class="tsub">"with people, not alone on your phone"</span></td><td>Donors arriving through a person — a shared link, a message — should return at higher rates than donors who arrive alone.</td><td><span class="pill good">Supported</span></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<h2>What came out of it</h2>
+
+<h3>Second-gift rate within 90 days, by referral medium</h3>
+<p class="sub tight">Donation events over the last 6 months, split by the <code>campaign_medium</code> on the first gift. The marker on each bar is the 12.3% platform baseline.</p>
+<div class="card reveal">
+  <div class="bars" style="--lw:132px;--vw:124px;--lwm:104px;--vwm:104px">
+    <div class="bar"><div class="l">chat</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="100" style="background:var(--brand)"></div></div><div class="v">28.3%<small>n=699</small></div></div>
+    <div class="bar"><div class="l">copy_link_all</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="96.8" style="background:var(--brand)"></div></div><div class="v">27.4%<small>n=13,985</small></div></div>
+    <div class="bar"><div class="l">customer, social</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="91.5" style="background:var(--brand)"></div></div><div class="v">25.9%<small>n=1,191</small></div></div>
+    <div class="bar"><div class="l">copy_link</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="85.2" style="background:var(--brand)"></div></div><div class="v">24.1%<small>n=10,588</small></div></div>
+    <div class="bar"><div class="l">email</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="72.1" style="background:var(--brand)"></div></div><div class="v">20.4%<small>n=69,867</small></div></div>
+    <div class="bar"><div class="l">referral</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="67.8" style="background:var(--brand)"></div></div><div class="v">19.2%<small>n=34,995</small></div></div>
+    <div class="bar"><div class="l">paid</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="62.5" style="background:var(--ink-3)"></div></div><div class="v">17.7%<small>n=609</small></div></div>
+    <div class="bar"><div class="l">social</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="59.7" style="background:var(--ink-3)"></div></div><div class="v">16.9%<small>n=128,844</small></div></div>
+    <div class="bar"><div class="l">partner</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="51.6" style="background:var(--ink-3)"></div></div><div class="v">14.6%<small>n=76,659</small></div></div>
+    <div class="bar"><div class="l">customer</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="45.2" style="background:var(--ink-3)"></div></div><div class="v">12.8%<small>n=11.5M</small></div></div>
+    <div class="bar"><div class="l">(none)</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="40.6" style="background:var(--ink-3)"></div></div><div class="v">11.5%<small>n=8.3M</small></div></div>
+    <div class="bar"><div class="l">organic_social</div><div class="trk"><div class="bmark" style="left:43.5%"></div><div class="fil" data-w="37.5" style="background:var(--ink-3)"></div></div><div class="v">10.6%<small>n=1,053</small></div></div>
+  </div>
+  <div class="legend" style="margin:16px 0 0">
+    <span><i style="background:var(--brand)"></i>Interpersonal — a person handed you the link</span>
+    <span><i style="background:var(--ink-3)"></i>Broadcast &amp; untagged</span>
+    <span><i style="background:var(--surface);box-shadow:0 0 0 1px var(--ink-3)"></i>12.3% platform baseline</span>
+  </div>
+  <p class="sub" style="margin:12px 0 0;font-size:.85rem">Colour carries channel type only. Position against the baseline marker carries performance — <code>organic_social</code> and <code>(none)</code> are the two that fall short of it. <code>n</code> is donors at the first gift.</p>
+</div>
+
+<div class="note good"><b>The split is interpersonal versus broadcast — not social versus non-social.</b> Someone who arrived through a link a person handed them (chat, copy-link, email, referral) returns at 19–28%. Someone who arrived through <b>organic social returns at 10.6% — below the platform average of 12.3%</b>. Broadcast social is the worst-retaining channel in the table, and it is the channel a celebrity strategy buys.</div>
+
+<div class="note warn"><b>So the recommendation inverts.</b> "Borrow coolness from athletes, celebrities, creators" is a broadcast play, and broadcast produces the least habit-forming donors measured here. <b>"Make giving something you do with people rather than alone on your phone" is the interpersonal play, and it is 2.2× baseline.</b> Giving circles are the productised version of the thing that already works — they are not a nice-to-have alongside the celebrity idea, they are the idea the evidence supports.</div>
+
+<h3>What this does and does not license you to say</h3>
+<div class="card reveal">
+  <div class="sk"><h3>Fair to say</h3><p>Donors who arrive through an interpersonal channel are roughly twice as likely to give again within 90 days as the platform average, and roughly 2.6× as likely as donors arriving via organic social. Person-to-person sharing is where repeat giving concentrates.</p></div>
+  <div class="sk"><h3>Not fair to say</h3><p>That adding share buttons, or running a giving-circles feature, will produce a 2× lift. The channel is very likely a <b>marker of relationship strength</b> rather than a cause of it — a person who receives a link from a friend is already closer to the cause than a stranger scrolling a feed. The correlation is real; the causal arrow is unestablished.</p></div>
+</div>
+
+<h2>What it does not cover</h2>
+<div class="card reveal">
+  <div class="sk"><h3>Selection, not causation — and it is the whole ballgame</h3><p>The best-performing channels are the ones a friend uses to reach you. Those donors would plausibly have retained better regardless of the mechanism they arrived through. Nothing here separates "interpersonal channels build habits" from "people with existing relationships use interpersonal channels." An experiment that randomises the <i>prompt</i> to share, not the channel, is the only way through.</p></div>
+  <div class="sk"><h3>The best cells are the smallest</h3><p>chat is n=699 and organic_social is n=1,053, against a 20.2M baseline — a few thousandths of a percent of donors. Only <code>social</code> (128,844), <code>partner</code> (76,659), <code>email</code> (69,867), <code>referral</code> (34,995) and the two large buckets carry enough volume to plan against. The headline 28.3% is directional colour, not a forecastable rate.</p></div>
+  <div class="sk"><h3>41% of donors have no medium at all</h3><p>8.3M <code>(none)</code> plus 19,468 <code>undefined</code> out of 20.2M. So the entire comparison is drawn from the tagged 59%, and tagged traffic is not a random sample of all traffic — it skews toward campaigns someone bothered to instrument. This is the consumer-side view of the same attribution failure the <a href="#/utm" data-jump="utm">UTM project</a> exists to fix and the <a href="#/interviews" data-jump="interviews">interview research</a> found on the nonprofit side, where 96% of Salvation Army transactions carry no referral data.</p></div>
+  <div class="sk"><h3>The medium field is dirty enough to affect the read</h3><p>Meta ad-set identifiers are leaking into <code>campaign_medium</code> — values like <code>[Worldwide]|120239607932490314</code> and <code>[C1] [EUA EU]|120239963371910207</code> appear as media. <code>Email</code> and <code>email</code> are separate values. <code>customer,customer</code> and <code>customer,social</code> are concatenations rather than single media. Some of what is labelled broadcast may be mislabelled, and vice versa.</p></div>
+  <div class="sk"><h3>Repeat gift is a proxy for "cool", and a narrow one</h3><p>Second-gift rate measures habit formation. It says nothing about whether giving became <i>identity-forming</i> or socially visible, which is what the strategy is actually reaching for. A donor could return twice a year and still feel nothing about being a generous person.</p></div>
+  <div class="sk"><h3>No brand or attitudinal measurement at all</h3><p>Everything here is behavioural. Whether giving is perceived as cool — by whom, relative to what — has not been asked. There is no survey, no brand tracker, and no segmentation of the audience the strategy is aimed at.</p></div>
+</div>
+
+<h2>Pick this up next</h2>
+<div class="acts reveal">
+  <div class="act"><span class="num">1</span><div><div class="t">Instrument sharing before building anything</div><div class="m">Copy-link is the best-performing real-volume channel and it is barely measured — 13,985 tagged donors when the true number is certainly far higher. You cannot optimise a mechanism you cannot see.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Run the giving-circles test as an experiment, not a launch</div><div class="m">Randomise the invitation to give alongside someone, hold out a control, and measure second-gift rate at 90 days. That converts a 2× correlation into a treatment effect — or kills it cheaply.</div></div></div>
+  <div class="act"><span class="num">3</span><div><div class="t">Separate the two jobs celebrities and friends do</div><div class="m">Broadcast may still be the right instrument for first-gift volume; it is demonstrably the wrong one for habit. Fund them against different metrics rather than arguing about which is "the" strategy.</div></div></div>
+  <div class="act"><span class="num">4</span><div><div class="t">Add an attitudinal measure</div><div class="m">If the goal is that giving <i>feels</i> cool, behaviour alone will never confirm it. One question in an existing survey — would you tell a friend you did this — gets further than another funnel query.</div></div></div>
+</div>

@@ -267,6 +267,15 @@ a.btn{text-decoration:none}
   .rung{grid-template-columns:1fr;gap:4px}
 }
 
+/* Baseline marker on a bar track — a solid hairline, never dashed (a dashed rule
+   reads as "projection" when it is just a reference value).
+   Sits ABOVE the fill: underneath it, every bar longer than the baseline hid its
+   own marker, which is every bar that matters. Surface-coloured with a hairline
+   edge so it reads both over a saturated fill and over the empty track. */
+.bmark{position:absolute;top:-3px;bottom:-3px;width:3px;background:var(--surface);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--ink-3) 60%,transparent);
+  border-radius:1px;z-index:3}
+
 /* Linked-artifact rows: kind chip, title link, one line of provenance. */
 .lnks{display:flex;flex-direction:column;gap:2px}
 /* max-content, not a fixed 88px: "Confluence" in tracked-out uppercase is
