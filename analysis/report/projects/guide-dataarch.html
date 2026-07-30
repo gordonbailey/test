@@ -23,8 +23,8 @@
 </div>
 
 <h2>The problem</h2>
-<p class="sub">A product manager gets told a feature is broken, or wants to know where something lives, and faces 1,202 repositories with no map. The honest answer today is "ask an engineer" — which works, costs that engineer twenty minutes, and teaches the asker nothing they can reuse. Multiply that by every new PM, every incident, every "which team owns this?" and it is a standing tax on the people who can least afford to pay it.</p>
-<p class="sub">The failure mode to avoid is a diagram that looks authoritative and is quietly wrong. An architecture map built from guesses gets trusted, then sends someone to the wrong repo during an incident. So the design constraint was: <b>be useful without pretending to be the source of truth</b>, and say which it is on every screen.</p>
+<p class="sub">The answer today is "ask an engineer", which works, costs that engineer twenty minutes, and teaches the asker nothing reusable. Across every new PM, every incident and every "which team owns this?", that adds up.</p>
+<p class="sub">The risk is a diagram that looks authoritative and is quietly wrong, because a map built from guesses gets trusted and then sends someone to the wrong repo mid-incident. So the design constraint is to <b>be useful without pretending to be the source of truth</b>, and to say which it is on every screen.</p>
 
 <h2>What was done</h2>
 <p class="sub">Five tools over one inventory, each answering a different question a newcomer actually asks — in the order they ask them.</p>
@@ -58,10 +58,10 @@
     <div class="bar"><div class="l">Unclassified<small>metadata said too little</small></div><div class="trk"><div class="fil" data-w="68" style="background:#8e97a1"></div></div><div class="v">271<small>101 active</small></div></div>
   </div>
 </div>
-<div class="note"><b>Two numbers to sit with.</b> <b>271 repos could not be classified</b> from metadata at all, and 101 of them are actively being pushed to — that is a bigger pile of active-but-unplaceable code than the frontend, mobile, SDK and docs clusters combined. And <b>286 are archived</b>: excellent for "why did we stop doing X?", never current truth. The guide labels both categories honestly rather than forcing them into a cluster to make the picture look tidier.</div>
+<div class="note"><b>271 repos could not be classified</b> from metadata at all, and 101 of them are actively being pushed to. That is more active-but-unplaceable code than the frontend, mobile, SDK and docs clusters combined. A further <b>286 are archived</b>: useful for "why did we stop doing X?", never current truth. Both categories are labelled as such rather than forced into a cluster.</div>
 
 <h3>Four journeys, traced end to end</h3>
-<p class="sub tight">The most useful thing on the system map: a named path through named repos, so a newcomer can see the whole chain rather than a cloud of boxes.</p>
+<p class="sub tight">A named path through named repos, so a newcomer sees the whole chain rather than a cloud of boxes.</p>
 <div class="card reveal">
   <div class="tw"><table>
     <thead><tr><th style="width:24%">Journey</th><th>The chain</th></tr></thead>
@@ -107,8 +107,8 @@
   </div>
 </div>
 
-<h3>Ownership — and how confident each answer is</h3>
-<p class="sub tight">The hardest and most valuable part. 114 of the 1,202 repos have an owning team attached, with the confidence stated rather than implied.</p>
+<h3>Ownership, and how confident each answer is</h3>
+<p class="sub tight">114 of the 1,202 repos have an owning team attached, each with its confidence stated rather than implied.</p>
 <div class="card reveal">
   <div class="tw"><table>
     <thead><tr><th style="width:20%">Confidence</th><th style="width:12%" class="n">Repos</th><th>What it means for the reader</th></tr></thead>
@@ -122,7 +122,7 @@
 </div>
 
 <h3>Where the ownership data came from</h3>
-<p class="sub tight">Cited on the page itself, which is what makes the confidence levels checkable rather than decorative.</p>
+<p class="sub tight">Cited on the page itself, so the confidence levels can be checked.</p>
 <div class="card reveal">
   <div class="lnks">
     <div class="lnk"><span class="lk">Sheet</span><div><a href="https://docs.google.com/spreadsheets/d/1yHCe4ki6211KZloTx2PMchGxQBEnCUKrmlmvwYHZsqw/edit" target="_blank" rel="noopener">"All our services and who owns them" — GFM service catalog</a><span class="lm">The single richest source behind the documented mappings</span></div></div>
@@ -137,19 +137,19 @@
 
 <h2>What it does not cover</h2>
 <div class="card reveal">
-  <div class="sk"><h3>It is inferred from GitHub metadata, and says so on every screen</h3><p>Names, descriptions, primary languages and timestamps — nothing else. No import graphs, no service-mesh traces, no runtime call data. The guide describes itself as "an orientation map for PMs, not a confirmed architecture diagram" and tells the reader to confirm wiring with the owning team. That framing is the most important thing on it, and it should survive any future edit.</p></div>
+  <div class="sk"><h3>It is inferred from GitHub metadata, and says so on every screen</h3><p>Names, descriptions, primary languages and timestamps, and nothing else. No import graphs, no service-mesh traces, no runtime call data. The guide describes itself as "an orientation map for PMs, not a confirmed architecture diagram" and tells the reader to confirm wiring with the owning team. Keep that framing in any future edit.</p></div>
   <div class="sk"><h3>The edges are plausible, not measured</h3><p>Every connection on the system map carries a confidence marker, and the honest reading of "high" is <i>obviously true from the names involved</i> rather than <i>verified</i>. Frontend calling backend APIs is safe. Which specific services a given repo talks to is not something metadata can answer.</p></div>
   <div class="sk"><h3>271 repos are unplaceable, and 101 of them are live</h3><p>Not a gap in the tool so much as a finding about the estate: a fifth of the org's repositories do not describe themselves well enough to be categorised. The guide surfaces this as "a good list to ask an engineer about", which is the right move, but nobody has worked through it.</p></div>
   <div class="sk"><h3>Ownership covers 114 of 1,202 repos, and only 40 are documented</h3><p>That is 3% of the estate with a citable owner. For the rest the guide points at each repo's CODEOWNERS and <code>terraform-github</code>'s <code>repos.json</code> — the actual permission source of truth — which is the correct answer but not a fast one.</p></div>
   <div class="sk"><h3>It is a snapshot with no refresh mechanism</h3><p>Inventory as of 2026-06-30, ownership as of 2026-07-02. Nothing recomputes it. Given a third of the active estate moves within 30 days, the cluster counts and freshness figures decay quickly, and the ownership data decays faster because migrations are ongoing — two of the guide's own sources are migration notes.</p></div>
-  <div class="sk"><h3>The triage tool has never been tested against real incidents</h3><p>The rules match URL patterns and feature language onto weighted repo lists. Whether the top suggestion is right when someone pastes a genuine Slack complaint is unmeasured — and that, not the map, is the feature people will judge it on.</p></div>
+  <div class="sk"><h3>The triage tool has never been tested against real incidents</h3><p>The rules match URL patterns and feature language onto weighted repo lists. Whether the top suggestion is right when someone pastes a genuine Slack complaint is unmeasured, and that is the feature people will judge it on.</p></div>
 </div>
 
 <h2>Pick this up next</h2>
 <div class="acts reveal">
-  <div class="act"><span class="num">1</span><div><div class="t">Give it a URL</div><div class="m">It is a single self-contained HTML file, which is why it works offline and why it will vanish at handover. Publish it somewhere durable — Confluence attachment, an internal static host, or a repo with Pages — before anything else. An unhosted guide helps nobody.</div></div></div>
+  <div class="act"><span class="num">1</span><div><div class="t">Give it a URL</div><div class="m">A single self-contained HTML file works offline and vanishes at handover. Publish it somewhere durable first: a Confluence attachment, an internal static host, or a repo with Pages.</div></div></div>
   <div class="act"><span class="num">2</span><div><div class="t">Make the inventory regenerable</div><div class="m">A script against the GitHub API that rebuilds the repo list, clusters and freshness figures turns a decaying snapshot into something that stays true. The cluster rules already exist in the file; they just need to run on a schedule rather than once.</div></div></div>
   <div class="act"><span class="num">3</span><div><div class="t">Convert inferred ownership to documented</div><div class="m">73 inferred and 1 contested. Reading CODEOWNERS and <code>terraform-github/repos.json</code> for the repos that appear in the four journeys would upgrade the ones people actually hit, without doing all 1,202.</div></div></div>
-  <div class="act"><span class="num">4</span><div><div class="t">Test the triage tool on real complaints</div><div class="m">Take twenty genuine bug reports from Slack, run each through it, and record whether the right repo appeared in the top three. That is a morning's work and it is the difference between a demo and a tool.</div></div></div>
+  <div class="act"><span class="num">4</span><div><div class="t">Test the triage tool on real complaints</div><div class="m">Take twenty genuine bug reports from Slack, run each through it, and record whether the right repo appeared in the top three. About a morning's work, and it is the only way to know if the tool works.</div></div></div>
   <div class="act"><span class="num">5</span><div><div class="t">Triage the 271 unclassified</div><div class="m">Start with the 101 that are actively being pushed to. Anything actively maintained but undescribable is also the thing nobody can hand over.</div></div></div>
 </div>

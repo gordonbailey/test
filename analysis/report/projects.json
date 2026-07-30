@@ -6,7 +6,7 @@
     "term": "Summer 2026",
     "owner": "Gordon Bailey",
     "h1": "Internship Portfolio",
-    "lede": "Everything built this summer, in one place. Six workstreams, from a peer benchmarking engine sellers can screen-share to the instrumentation and UTM plumbing underneath it. Each one keeps its own page with the same five headings: the problem, what was done, what came out of it, what it does not cover, and what the next person should pick up."
+    "lede": "Everything built this summer, in one place. Six workstreams, from a peer benchmarking engine sellers can screen-share to the instrumentation and UTM plumbing underneath it. Every page follows the same five headings: the problem, what was done, what came out of it, what it does not cover, and what to pick up next."
   },
   "_comment": [
     "One node per page. `parent` nests it; `order` sorts within a parent.",
@@ -48,7 +48,7 @@
       "short": "Hackathon",
       "order": 10,
       "status": "live",
-      "blurb": "Sixteen hackathon projects, scored on one scale and tiered into build / validate / park — with an effort estimate from whoever wrote the code, and an honest read on which estimates do not exist yet.",
+      "blurb": "Sixteen hackathon projects scored on one scale and tiered into build, validate and park, with an effort estimate from whoever wrote the code.",
       "h1": "Which sixteen hackathon projects deserve a roadmap slot?",
       "lede": "A hackathon produces enthusiasm, not a roadmap. This scores all sixteen projects on GDV impact, churn prevention and feasibility, merges the duplicates, collects an estimate from each owner, and sorts them into four to build now, five to validate in Q3, and five to park with a named unlock."
     },
@@ -59,7 +59,7 @@
       "order": 20,
       "kind": "group",
       "status": "live",
-      "blurb": "Three strands of the same question: how do we tell a customer something true about their own fundraising that they could not work out alone? Two ran independently and converged on the same gap.",
+      "blurb": "Three strands of one question: how do we tell a customer something true about their own fundraising that they could not work out alone? Two ran independently and found the same gap.",
       "h1": "Customer Intelligence",
       "lede": "What customers said they need, what the market already claims to offer, and a working answer to the gap both pointed at."
     },
@@ -82,9 +82,9 @@
       "short": "Competitive intelligence",
       "order": 20,
       "status": "live",
-      "blurb": "Nine vendors, eight AI launches in twelve months, every claim graded on its evidence. Trust language has converged across the whole market; verifiability is unclaimed by all nine.",
+      "blurb": "Nine vendors, eight AI launches in twelve months, every claim graded on its evidence. Trust language has converged across the market; verifiability is unclaimed by all nine.",
       "h1": "What nine competitors ship, claim, and never mention",
-      "lede": "Every vendor in the category now says \"we have AI\", which makes the marketing useless as a signal. This separates what has shipped from what is merely announced, dates the whole landscape onto one timeline, and marks the evidence strength on every cell."
+      "lede": "Every vendor in the category now says “we have AI”, which makes the marketing useless as a signal. This separates what has shipped from what is only announced, dates the landscape onto one timeline, and marks the evidence strength on every cell."
     },
     {
       "id": "interviews",
@@ -93,9 +93,9 @@
       "short": "Interview synthesis",
       "order": 30,
       "status": "live",
-      "blurb": "39 admin interviews across 33 organizations. The unmet need is not more AI — it is AI that is controllable, explainable and measurable. Reporting turned out to be the largest pain cluster in the dataset.",
+      "blurb": "39 admin interviews across 33 organizations. The unmet need is AI that is controllable, explainable and measurable. Reporting turned out to be the largest pain cluster in the dataset.",
       "h1": "What 39 admins said about AI, reporting and insights",
-      "lede": "Everyone agrees customers want AI. Nobody could say which AI, or why the AI already shipped was not being adopted. This synthesizes 39 interviews across 33 organizations, nine workflow personas and all five segments — and the headline is not what anyone expected."
+      "lede": "Everyone agrees customers want AI. Nobody could say which AI, or why the AI already shipped was not being adopted. This synthesises 39 interviews across 33 organizations, nine workflow personas and all five segments."
     },
     {
       "id": "instrumentation",
@@ -105,7 +105,7 @@
       "status": "live",
       "blurb": "A two-layer measurement framework for Pro admin: a lagging health scoreboard, and leading per-workflow instrumentation across eight areas where every KPI names the decision it informs.",
       "h1": "How would we know if the admin experience got better?",
-      "lede": "Pro had a scoreboard and almost no game film — health metrics but nothing giving early signal on a specific workflow, and no agreed definition of \"active admin\", so two people could report different activation numbers from the same database and both be right."
+      "lede": "Pro had health metrics and almost no early signal on any specific workflow, and no agreed definition of “active admin” — so two people could report different activation numbers from the same database and both be right."
     },
     {
       "id": "utm",
@@ -113,9 +113,9 @@
       "short": "UTM",
       "order": 40,
       "status": "live",
-      "blurb": "Twelve Jira tickets across two epics, the ten-hop chain UTM has to survive, and every linked Confluence page, Figma file and PR pulled from the tickets themselves. Five ticket statuses had moved since the programme map was drawn.",
+      "blurb": "Twelve Jira tickets across two epics, the ten-hop chain UTM has to survive, and every linked Confluence page, Figma file and PR pulled from the tickets. Five ticket statuses had moved since the programme map was drawn.",
       "h1": "Making UTM survive the whole donation stack",
-      "lede": "Marketing attribution was broken end to end: some Studio URLs carried UTMs, nothing persisted them to the transaction, and nothing surfaced them in reporting or the API. This maps the programme — origins, active epics, the system the tickets build, and what is still open — with every status verified against Jira rather than the slide."
+      "lede": "Marketing attribution was broken end to end: some Studio URLs carried UTMs, nothing persisted them to the transaction, and nothing surfaced them in reporting or the API. This maps the programme with every status verified against Jira rather than the slide."
     },
     {
       "id": "guides",
@@ -124,9 +124,9 @@
       "order": 50,
       "kind": "group",
       "status": "live",
-      "blurb": "Two attempts to make something reusable by someone who was not here — one mapping 1,202 repositories, one translating 24 non-functional requirements into questions a PM can ask.",
+      "blurb": "Two attempts to make something reusable by someone who was not here: one mapping 1,202 repositories, one turning 24 non-functional requirements into questions a PM can ask.",
       "h1": "Guides",
-      "lede": "Written so the next person does not have to reconstruct any of this from scratch — and honest enough about their own limits to be safe to trust."
+      "lede": "Written so the next person does not have to reconstruct any of this from scratch, and honest enough about their own limits to be safe to trust."
     },
     {
       "id": "guide-nonfunc",
@@ -135,9 +135,9 @@
       "short": "Non-functional guide",
       "order": 10,
       "status": "live",
-      "blurb": "The 24 requirements that decide whether a release survives production, each with the questions to ask engineering and the spec language to write down — plus a 53-item release-readiness process and a rotating Release Lead role.",
+      "blurb": "The 24 requirements that decide whether a release survives production, each with the questions to ask engineering and the spec language to write down, plus a 53-item release-readiness process and a rotating Release Lead role.",
       "h1": "The qualities that decide whether a release survives production",
-      "lede": "A working feature answers \"what does it do?\" Everything that decides whether it holds up — speed, reliability, safety, and the cost of changing it later — sits in a vocabulary most product managers were never taught. This is a translation layer: 24 requirements, each turned into a plain definition, the questions to ask engineering, and the language to put in a PRD."
+      "lede": "A working feature answers “what does it do?” Everything that decides whether it holds up — speed, reliability, safety, and the cost of changing it later — sits in a vocabulary most product managers were never taught. This is the translation layer."
     },
     {
       "id": "guide-dataarch",
@@ -146,9 +146,9 @@
       "short": "Data arch repo guide",
       "order": 20,
       "status": "live",
-      "blurb": "1,202 repositories mapped into ten clusters, four journeys traced end to end, a decision tree for “where do I look?” and a triage tool for “what broke?” — with ownership labelled documented, inferred or contested.",
+      "blurb": "1,202 repositories mapped into ten clusters, four journeys traced end to end, a decision tree for “where do I look?” and a triage tool for “what broke?”, with ownership labelled documented, inferred or contested.",
       "h1": "Where do I look, in 1,202 repositories?",
-      "lede": "A product manager gets told something is broken and faces the whole GitHub org with no map. The honest answer today is “ask an engineer” — which works, costs that engineer twenty minutes, and teaches the asker nothing reusable. This is an orientation map built from repository metadata, explicit on every screen about being exactly that."
+      "lede": "A product manager gets told something is broken and faces the whole GitHub org with no map. This is an orientation map built from repository metadata, and it says so on every screen."
     },
     {
       "id": "strategy",
@@ -157,7 +157,7 @@
       "order": 60,
       "kind": "group",
       "status": "live",
-      "blurb": "Two gaps, one through-line — taken to Amplitude rather than accepted on its face. Three parts of the argument held; two got redirected by the distribution.",
+      "blurb": "Two gaps and five findings that size them, taken to Amplitude rather than accepted on their face.",
       "h1": "Corporate Strategy",
       "lede": "The growth argument the project work sits underneath. Both gaps are versions of the same problem: the platform monetises moments of generosity but does not build generous people."
     },
@@ -169,9 +169,9 @@
       "order": 10,
       "kind": "group",
       "status": "live",
-      "blurb": "20% of donors produce 39% of GDV — and half of that sits in the 2-gift band, not the loyal tail. The concentration analysis, the per-donor slope, and what one more gift is worth.",
+      "blurb": "20% of donors produce 39% of GDV, and half of that sits in the 2-gift band rather than the loyal tail. The concentration analysis, the per-donor slope, and what one more gift is worth.",
       "h1": "How do we grow GDV?",
-      "lede": "“~40% of GDV” is not an argument until you know the denominator. It is 20% of donors — a 1.9× over-index — and the money sits in the shallow end of the frequency curve, not the tail."
+      "lede": "Repeat donors are 20% of donors producing 39% of GDV, a 1.9× over-index. The money sits in the shallow end of the frequency curve, not the tail."
     },
     {
       "id": "gdv-donors",
@@ -182,7 +182,7 @@
       "status": "live",
       "blurb": "“Better” defined as likely to return, then measured: a 12.3% baseline repeat rate, a median 23-day window, and roughly $36M a year per percentage point of lift.",
       "h1": "How do we acquire better donors?",
-      "lede": "Not actionable until “better” has a definition. Defined here as a donor who gives again — because a second gift nearly doubles annual value, and because it can be evaluated in 90 days rather than a year."
+      "lede": "A better donor is one who gives again, because a second gift nearly doubles annual value and can be measured in 90 days rather than a year."
     },
     {
       "id": "gdv-super",
@@ -191,9 +191,9 @@
       "short": "Super donor relationships",
       "order": 20,
       "status": "live",
-      "blurb": "The programme design with the distribution applied: keep the owner, move the first tier to the second gift, activate the existing Amplitude cohort in Braze, and fund the Giving Conference as research rather than recognition.",
+      "blurb": "Four mechanics aimed at the 2-gift band: an owner, a Braze programme in the 23-day window, the Giving Conference as research, and Giving Wrapped.",
       "h1": "How do we build better relationships with super donors?",
-      "lede": "7.1 million people produce 39% of GDV and receive the same experience as a first-time donor. The structural gap is real — but the four proposed mechanics are aimed at the smallest pot on the chart."
+      "lede": "7.1 million people produce 39% of GDV and receive the same experience as a first-time donor. The programme belongs at the second gift, where 4.9M people and $871M already sit."
     },
     {
       "id": "gdv-cool",
@@ -202,9 +202,9 @@
       "short": "Make giving cool",
       "order": 30,
       "status": "live",
-      "blurb": "Chat and copy-link referrals return at 27–28%; organic social returns at 10.6%, below platform average. The productised answer is in-person community events with the donation captured in the room.",
+      "blurb": "Chat and copy-link referrals return at 27–28%; organic social returns at 10.6%, below platform average. The answer is in-person community events with the donation captured in the room.",
       "h1": "How do we make giving cool?",
-      "lede": "Coolness has to be borrowed from somewhere. The intuitive answer is fame — athletes, celebrities, creators. The referral data points somewhere else, and it points there clearly."
+      "lede": "Coolness has to be borrowed from somewhere. The intuitive source is fame. The referral data points at people you already know."
     }
   ]
 }

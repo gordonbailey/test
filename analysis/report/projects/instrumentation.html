@@ -26,8 +26,8 @@
 </div>
 
 <h2>The problem</h2>
-<p class="sub">You cannot tell whether a launch worked if the only numbers available are the scoreboard. Pro had health metrics — logins, orgs, revenue — and almost nothing that would give early signal on a specific workflow. Worse, "active admin" had no agreed definition, so two people could report different activation numbers from the same database and both be right.</p>
-<p class="sub">Two failure modes to design against. Measuring clicks, which produces dashboards nobody acts on. And measuring only outcomes, which tells you the campaign-creation funnel is broken without telling you which step to fix.</p>
+<p class="sub">The existing metrics were logins, orgs and revenue: a scoreboard with no game film.</p>
+<p class="sub">There are two ways to design the replacement badly. Measuring clicks produces dashboards nobody acts on. Measuring only outcomes says the campaign-creation funnel is broken without saying which step to fix.</p>
 
 <h2>What was done</h2>
 <div class="grid2 reveal">
@@ -56,11 +56,11 @@
   </table></div>
   <p class="sub" style="margin:16px 0 0;font-size:.88rem"><b>Active org</b> = an org with at least one A2+ admin in the period. <b>MANPO</b> (monthly active nonprofits, per the GFM Channel ask) = A2+ at org level. A <b>ramped customer</b> requires both A3 status <i>and</i> ≥90 days as a customer — so anyone at A1–A2, or at A3 for under 90 days, is by definition not ramped.</p>
 </div>
-<div class="note"><b>Why the tiers matter more than they look.</b> "Active users" is the number most often quoted and least often defined. A1 counts someone who logged in and bounced; A3 counts someone who published a campaign. Reporting them as one figure is how a product looks healthy while nobody does anything in it.</div>
+<div class="note"><b>"Active users" is the number most often quoted and least often defined.</b> A1 counts someone who logged in and bounced; A3 counts someone who published a campaign. Reporting them as one figure is how a product looks healthy while nobody does anything in it.</div>
 
 <h3>Then work out who is doing the work</h3>
-<p class="sub tight">You cannot survey every admin, so role assignments plus behavior approximate the personas.</p>
-<div class="note good" style="margin-top:0"><b>These are the same nine personas from the interview research.</b> The framework reuses them deliberately, which is what lets a qualitative finding become a measurable one — see the <a href="#/interviews" data-jump="interviews">interview synthesis</a>, where all nine were coded from 39 interviews.</div>
+<p class="sub tight">Surveying every admin is not practical, so role assignments plus behaviour approximate the personas.</p>
+<div class="note good" style="margin-top:0"><b>These are the same nine personas from the interview research</b>, reused so a qualitative finding becomes a measurable one. All nine were coded from the 39 interviews in the <a href="#/interviews" data-jump="interviews">interview synthesis</a>.</div>
 <div class="card reveal">
   <div class="tw"><table>
     <thead><tr><th style="width:30%">Persona</th><th>Behavioral / role proxy</th></tr></thead>
@@ -109,38 +109,38 @@
   <div class="tw"><table>
     <thead><tr><th style="width:22%">Workflow</th><th style="width:14%">Shape</th><th>The sharpest question in it</th></tr></thead>
     <tbody>
-      <tr><td><b>4.1 Payment processor setup</b><br><span class="tsub">everyone at day 0</span></td><td><span class="pill bad">Funnel</span></td><td><b>The single most load-bearing funnel in the product: no processor, no donations.</b> Where exactly do they stall, and what share are stuck in verification states?</td></tr>
-      <tr><td><b>4.2 Campaign creation &amp; launch</b><br><span class="tsub">Donna, Billy, Penny, Sally</span></td><td><span class="pill warn">Hybrid</span></td><td>Template versus duplicate versus from-scratch rate — <b>duplication far exceeds templates because templates break with custom code, so the duplicate rate is the "templates aren't working" meter.</b></td></tr>
+      <tr><td><b>4.1 Payment processor setup</b><br><span class="tsub">everyone at day 0</span></td><td><span class="pill bad">Funnel</span></td><td><b>The most load-bearing funnel in the product: no processor, no donations.</b> Where do orgs stall, and what share sit in verification states?</td></tr>
+      <tr><td><b>4.2 Campaign creation &amp; launch</b><br><span class="tsub">Donna, Billy, Penny, Sally</span></td><td><span class="pill warn">Hybrid</span></td><td>Template versus duplicate versus from-scratch rate. <b>Duplication far exceeds templates because templates break with custom code, so the duplicate rate measures whether templates work.</b></td></tr>
       <tr><td><b>4.3 Reporting</b><br><span class="tsub">David, Fay, Oscar; Adam via clients</span></td><td><span class="pill info">Engagement</span></td><td>Is export replacing in-platform analysis? Export-to-view ratio trended; % of orgs exporting the same report 3+ times a month.</td></tr>
-      <tr><td><b>4.4 Transactions &amp; supporter ops</b><br><span class="tsub">Oscar — highest-ROI persona</span></td><td><span class="pill info">Efficiency</span></td><td>Median time and steps to complete a refund, offline donation, recurring plan change or receipt resend — so "reduce clicks" becomes measurable before and after.</td></tr>
-      <tr><td><b>4.5 Team &amp; administration</b><br><span class="tsub">Fay, Donna</span></td><td><span class="pill warn">Funnel + adoption</span></td><td>Are agencies sharing logins? Orgs with one login but multi-location/multi-device session patterns. <b>Adam's explicit ask, and a security issue.</b></td></tr>
-      <tr><td><b>4.6 Integrations &amp; API</b><br><span class="tsub">David, Sally</span></td><td><span class="pill bad">Funnel + retention</span></td><td>Do integrated orgs actually retain better? 90-day retention, integrated versus not, controlled by segment — <b>validates or kills the "integrations = stickiness" thesis before anything gets built on it.</b></td></tr>
+      <tr><td><b>4.4 Transactions &amp; supporter ops</b><br><span class="tsub">Oscar — highest-ROI persona</span></td><td><span class="pill info">Efficiency</span></td><td>Median time and steps to complete a refund, offline donation, recurring plan change or receipt resend, so "reduce clicks" becomes measurable.</td></tr>
+      <tr><td><b>4.5 Team &amp; administration</b><br><span class="tsub">Fay, Donna</span></td><td><span class="pill warn">Funnel + adoption</span></td><td>Are agencies sharing logins? Orgs with one login but multi-device session patterns. <b>Adam's explicit ask, and a security issue.</b></td></tr>
+      <tr><td><b>4.6 Integrations &amp; API</b><br><span class="tsub">David, Sally</span></td><td><span class="pill bad">Funnel + retention</span></td><td>Do integrated orgs retain better? 90-day retention, integrated versus not, controlled by segment. <b>Validates or kills the integrations-equal-stickiness thesis.</b></td></tr>
       <tr><td><b>4.7 GFM Channel</b><br><span class="tsub">PTFY25-3633 scope</span></td><td><span class="pill warn">Activation + engagement</span></td><td>Is the channel additive? MANPO, and % of org GDV via the GFM channel, trended.</td></tr>
       <tr><td><b>4.8 Recommendation cards</b></td><td><span class="pill info">Adoption</span></td><td>Do orgs that enable recommendations see better outcomes — % seeing a GDV lift? And how many dismiss the cards?</td></tr>
     </tbody>
   </table></div>
 </div>
 
-<div class="note good"><b>Two research findings are wired directly into the measurement design.</b> Reporting carries the explicit instruction that <b>low My Reports traffic means workflow avoidance, not low need</b> — the same interpretation the <a href="#/interviews" data-jump="interviews">interview synthesis</a> reached from the other direction. And exports are treated as an ambiguous signal: they can mean healthy downstream usage <i>or</i> "the platform can't answer my question natively." The instruction is to <b>track it, don't valorize it</b>, which is the difference between a metric and a vanity metric.</div>
+<div class="note good"><b>Two research findings are wired into the measurement design.</b> Reporting carries the instruction that <b>low My Reports traffic means workflow avoidance rather than low need</b>, matching what the <a href="#/interviews" data-jump="interviews">interview synthesis</a> found from the other direction. Exports are treated as an ambiguous signal: they can mean healthy downstream usage, or that the platform cannot answer the question natively. So the instruction is to <b>track exports without treating them as success</b>.</div>
 
-<div class="note"><b>One hypothesis is named as a hypothesis.</b> The integrations-drive-stickiness idea is flagged in the doc as Gordon's own, "testable and worth testing properly", and 4.6 is designed to be able to kill it. Building a retention strategy on an untested correlation is the expensive version of this mistake.</div>
+<div class="note"><b>Integrations-drive-stickiness is a hypothesis, and 4.6 is designed to kill it.</b> It is worth testing, and building a retention strategy on the untested correlation would be expensive.</div>
 
 <h2>What it does not cover</h2>
 <div class="card reveal">
-  <div class="sk"><h3>Nobody has confirmed the tiers are measurable</h3><p>The first open question is whether A1/A2/A3 match what is actually distinguishable in mParticle events today, or whether new events are needed to separate A2 from A3. This is load-bearing: if A2 and A3 cannot be told apart in the event stream, the definitions section is a proposal rather than a spec, and most of Layer 1 cannot be computed.</p></div>
-  <div class="sk"><h3>The persona proxies are unvalidated</h3><p>Whether they can be built from Cerberus role assignments plus behavior — and at what confidence — is an open question. The framework is honest that Adam (Agency) is "largely invisible today" because of shared logins, which also means agency-served orgs are systematically misattributed across every admin-level metric.</p></div>
-  <div class="sk"><h3>Shared logins will pollute admin-level metrics either way</h3><p>Flagged explicitly: a known-agency flag may be needed. Until then, any admin-level figure for an agency-managed org is measuring a login, not a person.</p></div>
-  <div class="sk"><h3>Cohort hygiene is unresolved for migrated orgs</h3><p>Orgs migrated from Classy and net-new orgs have different "day 0", which breaks every time-to-X metric in the activation section if they are pooled. No decision yet on how to handle it.</p></div>
-  <div class="sk"><h3>The instrumented-versus-not audit has not been done</h3><p>Which of these already exist in the Hex v1 dashboard and which need net-new events is an open item owned by Stephen. So the doc cannot yet say what any of it costs to build — which is normally the first question asked of a metrics proposal.</p></div>
-  <div class="sk"><h3>No retention denominator has been chosen</h3><p>Org, admin, or both dashboards — still open. It changes the headline number materially, and picking it late invites two teams to quote different retention figures.</p></div>
-  <div class="sk"><h3>No targets, and no prioritization</h3><p>This defines what to measure and why it matters. It does not say what good looks like for any metric, and does not rank the eight workflow areas — so the reader cannot tell whether processor setup or reporting gets instrumented first. That ordering is where the real cost sits.</p></div>
+  <div class="sk"><h3>Nobody has confirmed the tiers are measurable</h3><p>Whether A1/A2/A3 match what is distinguishable in mParticle events today is the first open question, and it is load-bearing. If A2 and A3 cannot be told apart in the event stream, the definitions are a proposal rather than a spec and most of Layer 1 cannot be computed.</p></div>
+  <div class="sk"><h3>The persona proxies are unvalidated</h3><p>Whether they can be built from Cerberus role assignments plus behaviour, and at what confidence, is open. Adam (Agency) is "largely invisible today" because of shared logins, which also means agency-served orgs are misattributed across every admin-level metric.</p></div>
+  <div class="sk"><h3>Shared logins will pollute admin-level metrics</h3><p>A known-agency flag may be needed. Until there is one, any admin-level figure for an agency-managed org measures a login rather than a person.</p></div>
+  <div class="sk"><h3>Cohort hygiene is unresolved for migrated orgs</h3><p>Classy-migrated and net-new orgs have different day zeros, which breaks every time-to-X metric in the activation section if they are pooled. No decision yet.</p></div>
+  <div class="sk"><h3>The instrumented-versus-not audit is outstanding</h3><p>Which metrics already exist in the Hex v1 dashboard and which need net-new events is open, owned by Stephen. Until it lands the proposal has no cost attached.</p></div>
+  <div class="sk"><h3>No retention denominator has been chosen</h3><p>Org, admin, or both. It changes the headline number materially, and deciding late invites two teams to quote different retention figures.</p></div>
+  <div class="sk"><h3>No targets, and no prioritisation</h3><p>This defines what to measure and why it matters. It does not say what good looks like for any metric, and it does not rank the eight workflow areas, so it is silent on whether processor setup or reporting gets instrumented first. That ordering is where the cost sits.</p></div>
 </div>
 
 <h2>Pick this up next</h2>
 <p class="sub">The six open questions from the doc, in the order that unblocks the most work.</p>
 <div class="acts reveal">
   <div class="act"><span class="num">1</span><div><div class="t">Confirm A2 versus A3 is distinguishable in mParticle</div><div class="m">Everything else depends on this. If it needs net-new events, that is the first engineering ask and it should be scoped before anything is promised on a dashboard.</div></div></div>
-  <div class="act"><span class="num">2</span><div><div class="t">Finish the instrumented-versus-not audit with Stephen</div><div class="m">Which metrics already exist in Hex v1 and which are net-new. Until this lands the proposal has no cost attached, and a metrics doc without a cost is a wish list.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Finish the instrumented-versus-not audit with Stephen</div><div class="m">Which metrics already exist in Hex v1 and which are net-new. Until this lands, the proposal has no cost attached to it.</div></div></div>
   <div class="act"><span class="num">3</span><div><div class="t">Settle the retention denominator and cohort hygiene</div><div class="m">Org versus admin, and how Classy-migrated orgs get a day 0. Both are cheap to decide now and expensive to re-cut later.</div></div></div>
   <div class="act"><span class="num">4</span><div><div class="t">Add a known-agency flag</div><div class="m">It fixes Adam's invisibility, unblocks the shared-login question in 4.5, and stops agency logins quietly distorting admin-level metrics everywhere else.</div></div></div>
   <div class="act"><span class="num">5</span><div><div class="t">Pick the first workflow to instrument, and set targets</div><div class="m">Processor setup is the strongest candidate on the doc's own logic — no processor, no donations — and it is a clean funnel, which makes it the cheapest place to prove the framework works.</div></div></div>

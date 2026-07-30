@@ -1,37 +1,36 @@
-<!-- Guides group page. Short by design: it frames why the guides exist and
-     points at them. The content lives on the child pages. -->
+<!-- Guides group page. Short by design: frames why the guides exist and points
+     at them. The content lives on the child pages. -->
 
 <h2>Why these exist</h2>
-<p class="sub">Everything else in this portfolio is analysis — a question asked and answered. These two are different: they are attempts to make something <b>reusable by someone who was not here</b>. An analysis ages into a historical record. A guide either stays useful or it does not, and that depends almost entirely on whether it is honest about how much it knows.</p>
-<p class="sub">The test each one has to pass: could a new product manager, on their first week, get a useful answer out of this without asking anybody — and without being confidently misled?</p>
+<p class="sub">Everything else in this portfolio is analysis: a question asked and answered. These two are reference material, written to be <b>reusable by someone who was not here</b>. The test is whether a new product manager, in their first week, can get a useful answer out of one without asking anybody and without being confidently misled.</p>
 
 <div class="cardgrid reveal">
   <a class="pcard" href="#/guide-dataarch" data-jump="guide-dataarch">
     <span class="sp live"><i aria-hidden="true"></i>Live</span>
     <div class="nm">Data arch repo guide</div>
-    <div class="bl">1,202 repositories mapped into ten clusters, with four journeys traced end to end, a decision tree for "where do I look?", and a triage tool for "what broke?". Built from GitHub metadata, and explicit about it.</div>
+    <div class="bl">1,202 repositories mapped into ten clusters, four journeys traced end to end, a decision tree for "where do I look?", and a triage tool for "what broke?". Built from GitHub metadata, and explicit about it.</div>
     <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
   </a>
   <a class="pcard" href="#/guide-nonfunc" data-jump="guide-nonfunc">
     <span class="sp live"><i aria-hidden="true"></i>Live</span>
     <div class="nm">Non-functional guide</div>
-    <div class="bl">The 24 requirements that decide whether a release survives production, each turned into a plain definition, the questions to ask engineering, and the spec language — plus a 53-item release-readiness process and a Release Lead role.</div>
+    <div class="bl">The 24 requirements that decide whether a release survives production, each with a plain definition, the questions to ask engineering, and the spec language. Plus a 53-item release-readiness process and a Release Lead role.</div>
     <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
   </a>
 </div>
 
-<h2>The thing both have to get right</h2>
+<h2>What makes a handover guide work</h2>
 <div class="card reveal">
   <div class="sk">
-    <h3>State your confidence, per claim, on the page</h3>
-    <p style="color:var(--ink-2)">The repo guide's most valuable feature is not the map — it is that ownership is labelled <b>documented</b>, <b>inferred</b> or <b>contested</b>, and that 271 repos it could not classify are shown as unclassified rather than forced into a cluster. A guide that hides its uncertainty gets trusted during an incident and sends someone to the wrong place. One bad answer costs more credibility than ten missing ones.</p>
+    <h3>State your confidence on every claim</h3>
+    <p style="color:var(--ink-2)">In the repo guide, ownership is labelled <b>documented</b>, <b>inferred</b> or <b>contested</b>, and the 271 repos it could not classify are shown as unclassified rather than forced into a cluster. A guide that hides its uncertainty gets trusted during an incident and sends someone to the wrong place.</p>
   </div>
   <div class="sk">
     <h3>Teach the question, not just the answer</h3>
-    <p style="color:var(--ink-2)">Both guides are built so the reader leaves able to ask something useful. The non-functional guide gives every requirement <b>the questions to ask engineering</b> and the spec language to write down; the repo guide's wayfinder walks you down the path a patient senior engineer would. Neither tries to make the reader an expert — they try to make the next conversation a competent one, which is a much more achievable goal.</p>
+    <p style="color:var(--ink-2)">The non-functional guide gives every requirement <b>the questions to ask engineering</b> and the spec language to write down. The repo guide's wayfinder walks the same path a patient senior engineer would. Neither aims to make the reader an expert, only to make the next conversation a competent one.</p>
   </div>
   <div class="sk">
-    <h3>A guide with no home is not a guide</h3>
-    <p style="color:var(--ink-2)">Both are single self-contained HTML files, which is exactly why they work offline and exactly why they disappear at handover. The same risk showed up in the <a href="#/utm" data-jump="utm">UTM</a> tickets, where one referenced Confluence page sits in a personal space. Hosting is not an afterthought here — for a handover artifact it is most of the value, and it is the first action on both pages.</p>
+    <h3>Hosting is most of the value</h3>
+    <p style="color:var(--ink-2)">Both are single self-contained HTML files, which is why they work offline and why they can disappear at handover. The same risk shows up in the <a href="#/utm" data-jump="utm">UTM</a> tickets, where a referenced Confluence page sits in a personal space. Finding both guides a permanent home is the first action on each page.</p>
   </div>
 </div>

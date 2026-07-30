@@ -1,22 +1,21 @@
-<!-- Acquire better donors. "Better" gets an operational definition here — likely
-     to return — and the timing finding is the deliverable: the window is three
+<!-- Acquire better donors. "Better" gets an operational definition — likely to
+     return — and the timing finding is the deliverable: the window is three
      weeks, not a year. -->
 
 <div class="stats reveal">
   <div class="stat"><div class="k">90-day repeat rate</div><div class="v">12.3%</div><div class="d">the number to move</div></div>
-  <div class="stat accent"><div class="k">Median time to next gift</div><div class="v">23 days</div><div class="d">not six months</div></div>
+  <div class="stat accent"><div class="k">Median time to next gift</div><div class="v">23 days</div><div class="d">half return inside 3 weeks</div></div>
   <div class="stat"><div class="k">Mean</div><div class="v">29 days</div><div class="d">the tail is short too</div></div>
   <div class="stat"><div class="k">Worth 1 point of lift</div><div class="v">~$36M</div><div class="d">per year, approximate</div></div>
 </div>
 
 <h2>The problem</h2>
-<p class="sub">"Acquire better donors" is not actionable until <b>better</b> has a definition. It could mean larger gifts, higher retention, more referrals, or greater lifetime value — and those point at different acquisition channels and different creative.</p>
-<div class="note"><b>The definition this analysis adopts: a better donor is one who gives again.</b> That follows from the <a href="#/gdv" data-jump="gdv">GDV concentration work</a> — a second gift takes a donor from $94.63 to $179.00 of annual value, and frequency, not gift size, is what separates the bands. It also has the advantage of being measurable within 90 days rather than requiring a year to evaluate.</div>
-<p class="sub">Note the tension this creates with a gift-size definition: average gift <i>falls</i> as frequency rises, from $94.63 at one gift to $77.27 at five. Optimising for return visits and optimising for gift size are not the same objective, and a strategy has to pick.</p>
+<p class="sub">"Acquire better donors" needs a definition of <b>better</b> before it can be acted on. Larger gifts, higher retention, more referrals and greater lifetime value point at different channels and different creative.</p>
+<div class="note"><b>A better donor is one who gives again.</b> A second gift takes a donor from $94.63 to $179.00 of annual value, and frequency rather than gift size is what separates the bands in the <a href="#/gdv" data-jump="gdv">GDV work</a>. It can also be measured in 90 days instead of a year.</div>
+<p class="sub">This trades off against a gift-size definition. Average gift <i>falls</i> as frequency rises, from $94.63 at one gift to $77.27 at five, so optimising for return visits and optimising for gift size are different objectives.</p>
 
 <h2>What was done</h2>
-<p class="sub">A two-step funnel on <code>eCommerce - Purchase</code> → <code>eCommerce - Purchase</code> with a 90-day conversion window, over the last 6 months of consumer donation events, measuring what share of donors give again and how long it takes.</p>
-<div class="note bad"><b>One earlier attempt was discarded rather than reported.</b> A retention query returned a first-period figure of 2.6%, which cannot be reconciled with the frequency data — roughly 20% of annual donors give 2+ times, so a 2.6% repeat rate is not credible. Rather than publish a number that failed a sanity check, the construct was replaced with the funnel, whose 12.3% <i>does</i> reconcile with the annual figure. The retention result is excluded, and this note is here so nobody rediscovers it and assumes it was overlooked.</div>
+<p class="sub">A two-step funnel on <code>eCommerce - Purchase</code> → <code>eCommerce - Purchase</code> with a 90-day conversion window, over the last six months of consumer donation events, measuring what share of donors give again and how long they take.</p>
 
 <h2>What came out of it</h2>
 
@@ -24,48 +23,49 @@
 <div class="card reveal attrib">
   <div class="attribnum">
     <div class="an">23</div>
-    <div class="al"><b>Median days from a gift to the next gift.</b> Mean 29 days. Of donors who give again inside 90 days, half have done it within a little over three weeks.</div>
-    <div class="aq">The decision to come back is made in the first month, not the eleventh.</div>
+    <div class="al"><b>Median days from one gift to the next.</b> Mean 29 days. Of donors who give again inside 90 days, half do it within a little over three weeks.</div>
+    <div class="aq">Any programme to win a second gift has a one-month window to work in.</div>
   </div>
   <ul class="blist" style="margin-top:4px">
-    <li><b>12.3% of donors give again within 90 days</b> — 2.49M of 20.2M. That is the baseline any programme has to beat.</li>
-    <li>It reconciles with the annual picture: ~20% of donors reach 2+ gifts over 365 days, so 12.3% at 90 days is the right order of magnitude.</li>
+    <li><b>12.3% of donors give again within 90 days</b>, 2.49M of 20.2M. That is the baseline to beat.</li>
+    <li>It squares with the annual picture: about 20% of donors reach 2+ gifts over 365 days, so 12.3% at 90 days is the right order of magnitude.</li>
   </ul>
 </div>
 
-<div class="note warn"><b>This retires one of the proposed mechanics as a conversion tool.</b> An annual giving recap — Giving Wrapped — lands in December for a decision that was made in February. It is a legitimate <i>identity and retention</i> play for donors who already came back, and it may well be worth building. It is not a 1→2 conversion lever, and funding it as one would be a category error. The conversion lever is a three-week post-donation window.</div>
+<div class="note warn"><b>Giving Wrapped is a retention play, not a conversion lever.</b> An annual recap lands in December for a decision made in February. It is worth building for donors who already came back, and it will not move the 1→2 rate. That job belongs to the three-week window.</div>
 
-<h3>Which acquisition sources produce returners</h3>
-<p class="sub tight">The full channel breakdown lives on <a href="#/gdv-cool" data-jump="gdv-cool">make giving cool</a>, because it bears most directly on that argument. The acquisition-relevant summary:</p>
+<h3>Which sources produce returners</h3>
+<p class="sub tight">The full channel breakdown is on <a href="#/gdv-cool" data-jump="gdv-cool">make giving cool</a>. The acquisition summary:</p>
 <div class="card reveal">
   <div class="tw"><table>
     <thead><tr><th style="width:26%">Channel type</th><th style="width:22%">90-day repeat</th><th>What it means for acquisition</th></tr></thead>
     <tbody>
-      <tr><td><b>Interpersonal</b><br><span class="tsub">chat, copy-link, email, referral</span></td><td><span class="pill good">19–28%</span></td><td>Up to 2.2× baseline. A donor acquired this way is materially more likely to become a super donor — but the channel is probably a marker of an existing relationship, not the cause.</td></tr>
-      <tr><td><b>Broadcast</b><br><span class="tsub">social, organic social, paid</span></td><td><span class="pill bad">10.6–17.7%</span></td><td>Organic social lands <i>below</i> the 12.3% baseline. Broadcast may still be the right tool for first-gift volume; it is the wrong one for building repeat donors.</td></tr>
-      <tr><td><b>Untagged</b><br><span class="tsub">(none), undefined</span></td><td><span class="pill">11.5%</span></td><td><b>41% of all donors.</b> The largest single group is the one nobody can attribute — which caps how well any acquisition strategy can be evaluated.</td></tr>
+      <tr><td><b>Interpersonal</b><br><span class="tsub">chat, copy-link, email, referral</span></td><td><span class="pill good">19–28%</span></td><td>Up to 2.2× baseline. These donors are far more likely to come back, though the channel probably marks an existing relationship rather than creating one.</td></tr>
+      <tr><td><b>Broadcast</b><br><span class="tsub">social, organic social, paid</span></td><td><span class="pill bad">10.6–17.7%</span></td><td>Organic social lands <i>below</i> the 12.3% baseline. Broadcast can still be the right tool for first-gift volume, and it is the wrong one for building repeat donors.</td></tr>
+      <tr><td><b>Untagged</b><br><span class="tsub">(none), undefined</span></td><td><span class="pill">11.5%</span></td><td><b>41% of all donors.</b> The largest single group is the one nobody can attribute, which caps how well any acquisition strategy can be judged.</td></tr>
     </tbody>
   </table></div>
 </div>
 
 <h3>What a point of lift is worth</h3>
-<p class="sub tight">Each additional second gift is worth about <b>$89.50</b> — the average gift in the 2-gift band. Across roughly 40 million donor-anchors a year, one percentage point on the 90-day repeat rate is worth <b>~$36M annually</b>.</p>
-<div class="note"><b>Treat that as an order of magnitude, not a forecast.</b> It counts donor-anchors rather than unique donors, so a frequent donor is counted more than once; and it assumes an incremental gift is worth the band average. It is the right size of number for prioritisation and the wrong one for a business case.</div>
+<p class="sub tight">Each additional second gift is worth about <b>$89.50</b>, the average gift in the 2-gift band. Across roughly 40 million donor-anchors a year, one percentage point on the 90-day repeat rate is worth <b>~$36M annually</b>.</p>
+<div class="note">Treat that as an order of magnitude. It counts donor-anchors rather than unique donors, so a frequent donor is counted more than once, and it assumes an incremental gift is worth the band average. Right size for prioritising, wrong size for a business case.</div>
 
 <h2>What it does not cover</h2>
 <div class="card reveal">
-  <div class="sk"><h3>The funnel measures gift → next gift, not strictly first → second</h3><p>Step one is <i>any</i> gift, so a donor with six gifts contributes multiple anchors. The 12.3% therefore sits slightly above the true first-to-second conversion rate. Isolating genuine first gifts needs an nth-time filter that this analysis did not construct.</p></div>
-  <div class="sk"><h3>90 days is a ceiling imposed by the tool, not the biology</h3><p>Amplitude funnels cap the conversion window at 90 days. Donors who return at 4–12 months are invisible here, and the annual data says they exist — 20% reach 2+ gifts over 365 days against 12.3% at 90. So roughly a third of eventual repeat giving happens outside the window this analysis can see.</p></div>
-  <div class="sk"><h3>Channel comparisons rest on the tagged 59%</h3><p>With 41% of donors carrying no medium, and the medium field polluted by Meta ad-set IDs and case duplicates, the channel table describes instrumented traffic rather than all traffic. Any acquisition decision taken from it inherits that bias.</p></div>
-  <div class="sk"><h3>"Better" excludes the major-gift donor by construction</h3><p>A donor who gives $5,000 once is not a better donor under this definition, and is not in the super donor cohort. If the company's growth answer includes major giving, this framing does not reach it — and the falling average gift size with frequency suggests the two populations may be genuinely different people.</p></div>
-  <div class="sk"><h3>No acquisition cost anywhere in this</h3><p>Repeat rate by channel says nothing about what each channel costs to acquire from. A channel converting at 20% at four times the CPA is worse than one converting at 12%. The ROI comparison — the one an acquisition decision actually needs — is not possible from this data.</p></div>
-  <div class="sk"><h3>Nothing here is causal</h3><p>Same limit as everywhere else in this branch: these are observed differences between populations, not measured effects of any intervention.</p></div>
+  <div class="sk"><h3>The funnel measures gift → next gift, not first → second</h3><p>Step one is <i>any</i> gift, so a donor with six gifts contributes several anchors and the 12.3% sits slightly above the true first-to-second rate. Isolating genuine first gifts needs an nth-time filter this analysis did not build.</p></div>
+  <div class="sk"><h3>90 days is a tool ceiling, not a behavioural one</h3><p>Amplitude funnels cap the conversion window at 90 days. Donors who return at 4–12 months are invisible here, and the annual data says they exist: 20% reach 2+ gifts over 365 days against 12.3% at 90. About a third of eventual repeat giving happens outside this window.</p></div>
+  <div class="sk"><h3>Channel comparisons rest on the tagged 59%</h3><p>With 41% of donors carrying no medium, and the field polluted by Meta ad-set IDs and case duplicates, the channel table describes instrumented traffic rather than all traffic.</p></div>
+  <div class="sk"><h3>The major-gift donor is excluded by construction</h3><p>Someone who gives $5,000 once is not a better donor under this definition and is not in the super donor cohort. If the growth answer includes major giving, this framing does not reach it.</p></div>
+  <div class="sk"><h3>No acquisition cost</h3><p>A channel converting at 20% at four times the CPA is worse than one converting at 12%. The ROI comparison an acquisition decision needs is not possible from this data.</p></div>
+  <div class="sk"><h3>Rolling retention was not used</h3><p>A retention query returned a 2.6% first-period figure that cannot be reconciled with roughly 20% of annual donors reaching 2+ gifts. The funnel construct is the one reported here, and its 12.3% does reconcile.</p></div>
+  <div class="sk"><h3>Nothing here is causal</h3><p>These are observed differences between populations, not measured effects of an intervention.</p></div>
 </div>
 
 <h2>Pick this up next</h2>
 <div class="acts reveal">
-  <div class="act"><span class="num">1</span><div><div class="t">Build the three-week intervention and hold out a control</div><div class="m">The window is known and the baseline is known — 12.3% at 90 days. That is everything needed to run a clean test, and a holdout is what turns the $36M-per-point figure into something defensible.</div></div></div>
-  <div class="act"><span class="num">2</span><div><div class="t">Get acquisition cost next to repeat rate</div><div class="m">Without CPA, the channel table ranks channels on half the equation. This is the single biggest gap between this analysis and an acquisition decision.</div></div></div>
-  <div class="act"><span class="num">3</span><div><div class="t">Extend the window past 90 days</div><div class="m">A third of eventual repeat giving happens outside what the funnel can see. A cohort query in the warehouse rather than Amplitude would close that.</div></div></div>
-  <div class="act"><span class="num">4</span><div><div class="t">Decide whether frequency or gift size is the objective</div><div class="m">They trade off — average gift falls from $94.63 to $77.27 as frequency rises. Picking one is a strategy decision, not an analytics one, and it should be made explicitly rather than by whichever KPI someone happens to report.</div></div></div>
+  <div class="act"><span class="num">1</span><div><div class="t">Build the three-week intervention with a holdout</div><div class="m">The window and the baseline are both known, which is everything a clean test needs. The holdout is what turns $36M per point into a defensible number.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Put acquisition cost next to repeat rate</div><div class="m">Without CPA the channel table ranks channels on half the equation. This is the biggest gap between this analysis and an acquisition decision.</div></div></div>
+  <div class="act"><span class="num">3</span><div><div class="t">Extend the window past 90 days</div><div class="m">A third of eventual repeat giving happens outside what the funnel sees. A warehouse cohort query would close that.</div></div></div>
+  <div class="act"><span class="num">4</span><div><div class="t">Decide whether frequency or gift size is the objective</div><div class="m">Average gift falls from $94.63 to $77.27 as frequency rises. Pick one deliberately rather than by whichever KPI gets reported.</div></div></div>
 </div>
