@@ -11,7 +11,7 @@
       {
         "id": "lifecycle",
         "title": "The product development lifecycle",
-        "blurb": "One project per phase, in the order they happen. Discovery found the gap, prioritisation picked what to build, solution design defined how we would know it worked, and the build shipped it."
+        "blurb": "One project per phase, in the order they happen. Discovery found the gap, prioritization picked what to build, solution design defined how we would know it worked, and the build shipped it."
       },
       {
         "id": "side",
@@ -69,7 +69,7 @@
       "h1": "Which sixteen hackathon projects deserve a roadmap slot?",
       "lede": "A hackathon produces enthusiasm, not a roadmap. This scores all sixteen projects on GDV impact, churn prevention and feasibility, merges the duplicates, collects an estimate from each owner, and sorts them into four to build now, five to validate in Q3, and five to park with a named unlock.",
       "track": "lifecycle",
-      "phase": "Prioritisation"
+      "phase": "Prioritization"
     },
     {
       "id": "ci",
@@ -127,7 +127,7 @@
       "status": "live",
       "blurb": "39 admin interviews across 33 organizations. The unmet need is AI that is controllable, explainable and measurable. Reporting turned out to be the largest pain cluster in the dataset.",
       "h1": "What 39 admins said about AI, reporting and insights",
-      "lede": "Everyone agrees customers want AI. Nobody could say which AI, or why the AI already shipped was not being adopted. This synthesises 39 interviews across 33 organizations, nine workflow personas and all five segments."
+      "lede": "Everyone agrees customers want AI. Nobody could say which AI, or why the AI already shipped was not being adopted. This synthesizes 39 interviews across 33 organizations, nine workflow personas and all five segments."
     },
     {
       "id": "instrumentation",
@@ -147,9 +147,9 @@
       "short": "UTM",
       "order": 40,
       "status": "live",
-      "blurb": "Twelve Jira tickets across two epics, the ten-hop chain UTM has to survive, and every linked Confluence page, Figma file and PR pulled from the tickets. Five ticket statuses had moved since the programme map was drawn.",
+      "blurb": "Twelve Jira tickets across two epics, the ten-hop chain UTM has to survive, and every linked Confluence page, Figma file and PR pulled from the tickets. Five ticket statuses had moved since the program map was drawn.",
       "h1": "Making UTM survive the whole donation stack",
-      "lede": "Marketing attribution was broken end to end: some Studio URLs carried UTMs, nothing persisted them to the transaction, and nothing surfaced them in reporting or the API. This maps the programme with every status verified against Jira rather than the slide.",
+      "lede": "Marketing attribution was broken end to end: some Studio URLs carried UTMs, nothing persisted them to the transaction, and nothing surfaced them in reporting or the API. This maps the program with every status verified against Jira rather than the slide.",
       "track": "lifecycle",
       "phase": "Build",
       "flagship": true
@@ -186,7 +186,7 @@
       "short": "Data arch repo guide",
       "order": 20,
       "status": "live",
-      "blurb": "1,202 repositories mapped into ten clusters, four journeys traced end to end, a decision tree for “where do I look?” and a triage tool for “what broke?”, with ownership labelled documented, inferred or contested.",
+      "blurb": "1,202 repositories mapped into ten clusters, four journeys traced end to end, a decision tree for “where do I look?” and a triage tool for “what broke?”, with ownership labeled documented, inferred or contested.",
       "h1": "Where do I look, in 1,202 repositories?",
       "lede": "A product manager gets told something is broken and faces the whole GitHub org with no map. This is an orientation map built from repository metadata, and it says so on every screen.",
       "embed": "Data_Arch_Guide.html"
@@ -234,9 +234,9 @@
       "short": "Super donor relationships",
       "order": 20,
       "status": "live",
-      "blurb": "Four mechanics aimed at the 2-gift band: an owner, a Braze programme in the 23-day window, the Giving Conference as research, and Giving Wrapped.",
+      "blurb": "Four mechanics aimed at the 2-gift band: an owner, a Braze program in the 23-day window, the Giving Conference as research, and Giving Wrapped.",
       "h1": "How do we build better relationships with super donors?",
-      "lede": "7.1 million people produce 39% of GDV and receive the same experience as a first-time donor. The programme belongs at the second gift, where 4.9M people and $871M already sit."
+      "lede": "7.1 million people produce 39% of GDV and receive the same experience as a first-time donor. The program belongs at the second gift, where 4.9M people and $871M already sit."
     },
     {
       "id": "gdv-cool",

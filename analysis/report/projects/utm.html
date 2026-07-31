@@ -5,7 +5,7 @@
 <div class="card reveal deckcard">
   <div>
     <p class="eyebrow" style="margin-bottom:4px">The deck</p>
-    <div class="dt">End-to-End UTM Support — programme map</div>
+    <div class="dt">End-to-End UTM Support — program map</div>
     <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">Proprietary &amp; confidential — Google Slides, GoFundMe access required. Ticket status below verified against Jira, not the slide.</p>
   </div>
   <div class="dl">
@@ -24,7 +24,7 @@
   <div class="stat"><div class="k">Hops UTM must survive</div><div class="v" data-count="10">10</div><div class="d">through the EG3 SDK chain</div></div>
 </div>
 
-<div class="note warn" style="margin-top:22px"><b>The programme map is out of date.</b> Every ticket status on the slide was checked against Jira, and <b>five of the twelve have moved</b>: both reporting tickets and the reporting epic are now Done, both capture tasks shipped, and the end-to-end test ticket was closed Won't Do. Two of the four open decisions have since been settled. The table below is the current state.</div>
+<div class="note warn" style="margin-top:22px"><b>The program map is out of date.</b> Every ticket status on the slide was checked against Jira, and <b>five of the twelve have moved</b>: both reporting tickets and the reporting epic are now Done, both capture tasks shipped, and the end-to-end test ticket was closed Won't Do. Two of the four open decisions have since been settled. The table below is the current state.</div>
 
 <h2>The problem</h2>
 <p class="sub">The customer evidence was unambiguous: five CFBR feature requests (575, 654, 857, 881, 894) calling native UTM table stakes; enterprise customers unable to attribute revenue to channel, including IRUSA, Stand Up To Cancer, Feed My Starving Children and West Virginia University, plus at-risk accounts FFTP, ACS and Shatterproof. Every major competitor ships it. Agencies were spending hours reconciling Google Analytics against Classy reports with brittle hacks.</p>
@@ -134,7 +134,7 @@
   <div class="sk"><h3>No end-to-end test for the ten-hop chain</h3><p>PRO-5697 specified one: a fixture-driven test asserting all five UTM keys reach the postMessage payload and the <code>/finalize-order</code> wire body across both modal-launch paths, failing with the name of the hop that dropped. It was closed <b>Won't Do</b> once the APIv2 architecture changed the shape of what needed testing, with coverage deferred until the frontend UI ticket lands. Until then, any change to <code>nav.ts</code>, <code>modal.ctrl.ts</code>, <code>modal.view.ts</code> or the modal-app URL parser can silently break EG3 attribution. A jest spec was written and syntax-checked but never pushed.</p></div>
   <div class="sk"><h3>The commerce write path is unfinished, with a named customer</h3><p>UTM lands in a new table commerce does not write to, so the existing passthrough metadata never reaches it. Designations, IRUSA's use case, are the concrete example. Open between Shiran and Tony.</p></div>
   <div class="sk"><h3>Multiple source-tracking-code records, cause unknown</h3><p>Which UTM record to return when several exist is still open, and nothing in the tickets resolves the cause.</p></div>
-  <div class="sk"><h3>Two predecessor tickets are stale rather than closed</h3><p>PRO-2098 sits in To Do although PRO-6771 realised it, and PRO-5251 sits in Backlog although both its child epics have moved past it. Not a delivery risk, but the kind of residue that makes a board unreadable a year later.</p></div>
+  <div class="sk"><h3>Two predecessor tickets are stale rather than closed</h3><p>PRO-2098 sits in To Do although PRO-6771 realized it, and PRO-5251 sits in Backlog although both its child epics have moved past it. Not a delivery risk, but the kind of residue that makes a board unreadable a year later.</p></div>
   <div class="sk"><h3>Phase 1 only: five parameters, no click IDs</h3><p>Scope is the five <code>utm_*</code> parameters. The original epic also wanted <code>gclid</code>, <code>fbclid</code> and other click IDs, which did not make Phase 1. Fundraise (peer-to-peer) was out of scope pending re-assessment.</p></div>
   <div class="sk"><h3>Which reporting build tickets shipped is not visible from here</h3><p>PRO-6748 proposed five child stories: design, Transaction History columns and CSV, filtering, saved reports, empty states. Only design appears on the slide and the epic is now closed, so whether the rest shipped, merged elsewhere or closed with the epic cannot be told from these twelve tickets.</p></div>
   <div class="sk"><h3>No attribution model, and no measurement of adoption</h3><p>This delivers raw parameters on transactions. First-touch versus last-touch, new-versus-existing donor attribution, recurring attribution and cross-domain stickiness are all the future phase. There is also no tagging-adoption tracker, so whether nonprofits tag their links at all remains unknown.</p></div>

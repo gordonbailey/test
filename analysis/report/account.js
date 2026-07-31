@@ -524,7 +524,7 @@ function drawPNG(){
     y += 38;
   });
   g.fillStyle = INK3; g.font = font(500,11.5);
-  g.fillText('Further right is stronger. The centre mark is the typical peer.', BX, y+2);
+  g.fillText('Further right is stronger. The center mark is the typical peer.', BX, y+2);
 
   // right column — recommendations
   g.strokeStyle = LINE; g.beginPath(); g.moveTo(SPLIT-34,128); g.lineTo(SPLIT-34,H-96); g.stroke();
