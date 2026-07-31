@@ -16,7 +16,7 @@
       {
         "id": "side",
         "title": "Side projects",
-        "blurb": "Started out of curiosity rather than a roadmap slot, and both ended up feeding the work above."
+        "blurb": "Started outside the roadmap: one to learn the ground, one out of curiosity. Both ended up feeding the work above."
       }
     ]
   },
@@ -165,7 +165,7 @@
       "h1": "Guides",
       "lede": "Written so the next person does not have to reconstruct any of this from scratch, and honest enough about their own limits to be safe to trust.",
       "track": "side",
-      "phase": "Curiosity"
+      "phase": "Learning"
     },
     {
       "id": "guide-nonfunc",
