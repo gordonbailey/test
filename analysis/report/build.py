@@ -178,7 +178,6 @@ def card(n):
 
 def render_home():
     tops = KIDS.get(None, [])
-    written = sum(1 for n in NODES if n.get('status') == 'live')
     return f'''
 <div class="view" data-view="home">
   <div class="hometop">
@@ -187,15 +186,8 @@ def render_home():
     <p class="homelede">{esc(SITE["lede"])}</p>
   </div>
 
-  <div class="stats reveal" style="margin-top:34px">
-    <div class="stat"><div class="k">Projects</div><div class="v" data-count="{len(tops)}">{len(tops)}</div><div class="d">workstreams</div></div>
-    <div class="stat"><div class="k">Pages</div><div class="v" data-count="{len(NODES)}">{len(NODES)}</div><div class="d">including sub-questions</div></div>
-    <div class="stat accent"><div class="k">Written up</div><div class="v" data-count="{written}">{written}</div><div class="d">the rest are scaffolded</div></div>
-    <div class="stat"><div class="k">Accounts analysed</div><div class="v" data-count="3161">3,161</div><div class="d">in the benchmarking engine</div></div>
-  </div>
-
-  <h2>Projects</h2>
-  <p class="sub">Each page follows the same five headings, so you can skim any project the same way. A page marked <b>Awaiting content</b> is a real page with its questions already laid out — it just has not been filled in yet.</p>
+  <h2 style="margin-top:44px">Projects</h2>
+  <p class="sub">Each page follows the same five headings, so any project can be skimmed the same way.</p>
   <div class="cardgrid reveal">{''.join(card(n) for n in tops)}</div>
 
   <h2>How to keep this going</h2>
