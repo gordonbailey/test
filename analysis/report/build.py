@@ -110,12 +110,17 @@ def rail_rows(parent, lvl):
                  f'aria-controls="kids-{n["id"]}" '
                  f'aria-label="Show sections under {esc(n["title"])}">{CARET}</button>'
                  if kids else '')
+        # Twisty after the label, not before it. On the left it also had to carry
+        # the row's indent, which pushed every parent's text further right than
+        # its childless siblings — so "Hackathon" and "Customer Intelligence" did
+        # not line up. On the right, one padding rule per level aligns every
+        # label and the caret sits at the rail's edge.
         out.append(
             f'<div class="nrow nlvl{lvl}" data-node="{n["id"]}">'
-            f'{twist}'
             f'<a class="nlink" href="#/{n["id"]}" data-go="{n["id"]}">'
             f'<span class="ndot {st}" aria-hidden="true"></span>'
             f'<span class="lbl">{esc(n.get("short", n["title"]))}</span></a>'
+            f'{twist}'
             f'</div>')
         if kids:
             out.append(f'<div class="nkids" id="kids-{n["id"]}" hidden>'

@@ -54,8 +54,10 @@
 .nrow.on .nlink{color:var(--brand-strong)}
 .nlink .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
 .nlink:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+/* Sits at the right end of the row, after the label. Wide enough to be a
+   comfortable target without stealing width from the label beside it. */
 .ntwist{
-  appearance:none;border:none;background:none;cursor:pointer;padding:0 8px 0 4px;
+  appearance:none;border:none;background:none;cursor:pointer;padding:0 10px;
   color:var(--ink-3);display:grid;place-items:center;flex-shrink:0;border-radius:var(--r-sm);
 }
 .ntwist svg{width:13px;height:13px;transition:transform .26s var(--ease)}
@@ -63,13 +65,12 @@
 .ntwist:hover{color:var(--ink)}
 .ntwist:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
 
-/* Depth is expressed as padding so the text column steps in cleanly. */
+/* Depth is expressed as padding on the link alone, so every label at a level
+   starts at the same x whether or not the row has children. */
 .nkids{overflow:hidden}
 .nkids[hidden]{display:none}
-.nlvl1 .nlink{padding-left:31px;font-weight:550;font-size:.85rem}
-.nlvl2 .nlink{padding-left:52px;font-weight:500;font-size:.83rem}
-.nlvl1 .ntwist{padding-left:25px}
-.nlvl2 .ntwist{padding-left:46px}
+.nlvl1 .nlink{padding-left:26px;font-weight:550;font-size:.85rem}
+.nlvl2 .nlink{padding-left:42px;font-weight:500;font-size:.83rem}
 
 /* Status dot. Colour is a hint; the home cards carry the readable label. */
 .ndot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--ink-3);opacity:.45}
