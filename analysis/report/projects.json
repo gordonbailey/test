@@ -6,17 +6,17 @@
     "term": "Summer 2026",
     "owner": "Gordon Bailey",
     "h1": "Internship Portfolio",
-    "lede": "Everything built this summer, in one place. Four projects trace the full product development lifecycle from discovery to build, and the build, end-to-end UTM support, was the main one. Two side projects sit alongside them. Every page follows the same five headings: the problem, what was done, what came out of it, what it does not cover, and what to pick up next.",
+    "lede": "Everything built this summer, in one place. Four separate projects, each sitting at a different phase of the product development lifecycle, plus two side projects. End-to-end UTM support, at the build phase, was the main one. Every page follows the same five headings: the problem, what was done, what came out of it, what it does not cover, and what to pick up next.",
     "tracks": [
       {
         "id": "lifecycle",
         "title": "The product development lifecycle",
-        "blurb": "One project per phase, in the order they happen. Discovery found the gap, prioritization picked what to build, solution design defined how we would know it worked, and the build shipped it."
+        "blurb": "Four separate projects on four different problems. Each one sat at a different phase of the lifecycle, so between them they covered the cycle end to end."
       },
       {
         "id": "side",
         "title": "Side projects",
-        "blurb": "Started outside the roadmap: one to learn the ground, one out of curiosity. Both ended up feeding the work above."
+        "blurb": "Neither had a roadmap slot. One came out of learning the ground, one out of curiosity."
       }
     ]
   },
