@@ -101,9 +101,9 @@ def trail(node):
 
 
 # ---------------------------------------------------------------- rail
-def rail_rows(parent, lvl):
+def rail_rows(parent, lvl, nodes=None):
     out = []
-    for n in KIDS.get(parent, []):
+    for n in (nodes if nodes is not None else KIDS.get(parent, [])):
         kids = KIDS.get(n['id'], [])
         st = n.get('status', 'awaiting')
         twist = (f'<button class="ntwist" data-for="{n["id"]}" aria-expanded="false" '
@@ -119,13 +119,34 @@ def rail_rows(parent, lvl):
             f'<div class="nrow nlvl{lvl}" data-node="{n["id"]}">'
             f'<a class="nlink" href="#/{n["id"]}" data-go="{n["id"]}">'
             f'<span class="ndot {st}" aria-hidden="true"></span>'
-            f'<span class="lbl">{esc(n.get("short", n["title"]))}</span></a>'
+            f'<span class="lbl">{esc(n.get("short", n["title"]))}</span>'
+            + '</a>'
             f'{twist}'
             f'</div>')
         if kids:
             out.append(f'<div class="nkids" id="kids-{n["id"]}" hidden>'
                        + ''.join(rail_rows(n['id'], lvl + 1)) + '</div>')
     return out
+
+
+def render_railnav():
+    """The rail, grouped by track so the sequence is visible in navigation too.
+
+    Groups are label divs rather than list semantics, and rows keep their .nrow
+    class, so the router and every count-based test are unaffected.
+    """
+    out = []
+    for t in TRACKS:
+        nodes = track_nodes(t['id'])
+        if not nodes:
+            continue
+        out.append(f'<div class="railgrp">{esc(t["title"])}</div>')
+        out.extend(rail_rows(None, 0, nodes))
+    stray = [n for n in KIDS.get(None, []) if not n.get('track')]
+    if stray:
+        out.append('<div class="railgrp">Other</div>')
+        out.extend(rail_rows(None, 0, stray))
+    return ''.join(out)
 
 
 def render_rail():
@@ -143,7 +164,7 @@ def render_rail():
     <span class="wm">{esc(SITE["wordmark"])}<span>{esc(SITE["wordmarkSub"])}</span></span>
   </a>
   <div class="railterm"><div class="t">{esc(BYLINE)}</div></div>
-  <nav class="railnav">{''.join(rail_rows(None, 0))}</nav>
+  <nav class="railnav">{render_railnav()}</nav>
   <div class="railfoot">
     <span class="cnt">{live} of {total} pages written</span>
     <button class="themebtn" id="theme-btn" aria-label="Switch theme"></button>
@@ -153,13 +174,21 @@ def render_rail():
 
 
 # ---------------------------------------------------------------- home
-def card(n):
+def card(n, step=None):
     st = n.get('status', 'awaiting')
     kids = KIDS.get(n['id'], [])
     if n.get('blurb'):
         blurb = f'<div class="bl">{esc(n["blurb"])}</div>'
     else:
         blurb = f'<div class="bl need"><b>Needs:</b> {esc(n.get("needs", ""))}</div>'
+    # The phase label carries the hierarchy: on the lifecycle track the step
+    # number and phase say where this project sits in the sequence.
+    phase = ''
+    if n.get('phase'):
+        num = f'<span class="stepn">{step}</span>' if step else ''
+        phase = f'<div class="phase">{num}{esc(n["phase"])}</div>'
+    flag = ('<span class="sp flag"><i aria-hidden="true"></i>Main project</span>'
+            if n.get('flagship') else '')
     chips = ('<div class="kids">' +
              ''.join(f'<span class="kidchip">{esc(k.get("short", k["title"]))}</span>'
                      for k in kids) + '</div>') if kids else ''
@@ -169,15 +198,52 @@ def card(n):
     # The pill sits above the title rather than opposite it. Beside the title it
     # wrapped onto its own line for the longer names and stayed inline for the
     # short ones, so a row of cards disagreed with itself about its own layout.
-    return (f'<a class="pcard" href="#/{n["id"]}" data-jump="{n["id"]}">'
-            f'<span class="sp {st}"><i aria-hidden="true"></i>{STATUS_LABEL[st]}</span>'
+    return (f'<a class="pcard{" flagship" if n.get("flagship") else ""}" '
+            f'href="#/{n["id"]}" data-jump="{n["id"]}">'
+            f'{phase}'
+            f'<div class="cardtop">'
+            f'<span class="sp {st}"><i aria-hidden="true"></i>{STATUS_LABEL[st]}</span>{flag}'
+            f'</div>'
             f'<div class="nm">{esc(n.get("short", n["title"]))}</div>'
             f'{blurb}{chips}'
             f'<div class="go">Open{ARROW}</div></a>')
 
 
+TRACKS = SITE.get('tracks', [])
+
+
+def track_nodes(tid):
+    return [n for n in KIDS.get(None, []) if n.get('track') == tid]
+
+
+def tracks_markup():
+    """Home page project sections, one per track.
+
+    The lifecycle track is a sequence, so its cards are numbered and the phase
+    label leads each one. Anything without a track falls into a trailing
+    "Other projects" section rather than vanishing off the page.
+    """
+    out = []
+    for t in TRACKS:
+        nodes = track_nodes(t['id'])
+        if not nodes:
+            continue
+        numbered = t['id'] == 'lifecycle'
+        out.append(f'<h2 style="margin-top:46px">{esc(t["title"])}</h2>')
+        out.append(f'<p class="sub">{esc(t.get("blurb", ""))}</p>')
+        cls = 'cardgrid reveal' + (' seq' if numbered else '')
+        out.append(f'<div class="{cls}">' + ''.join(
+            card(n, step=(i + 1) if numbered else None)
+            for i, n in enumerate(nodes)) + '</div>')
+    stray = [n for n in KIDS.get(None, []) if not n.get('track')]
+    if stray:
+        out.append('<h2 style="margin-top:46px">Other projects</h2>')
+        out.append('<div class="cardgrid reveal">'
+                   + ''.join(card(n) for n in stray) + '</div>')
+    return '\n  '.join(out)
+
+
 def render_home():
-    tops = KIDS.get(None, [])
     return f'''
 <div class="view" data-view="home">
   <div class="hometop">
@@ -186,9 +252,7 @@ def render_home():
     <p class="homelede">{esc(SITE["lede"])}</p>
   </div>
 
-  <h2 style="margin-top:44px">Projects</h2>
-  <p class="sub">Each page follows the same five headings, so any project can be skimmed the same way.</p>
-  <div class="cardgrid reveal">{''.join(card(n) for n in tops)}</div>
+  {tracks_markup()}
 
   <h2>How to keep this going</h2>
   <div class="card reveal">
@@ -217,10 +281,26 @@ def render_phead(n):
     crumbs.append(f'<span class="cur">{esc(n.get("short", n["title"]))}</span>')
     lede = (f'<p class="lede">{esc(n["lede"])}</p>' if n.get('lede')
             else (f'<p class="lede">{esc(n["blurb"])}</p>' if n.get('blurb') else ''))
+    # A project's phase belongs above its title: it is the one piece of context
+    # the page itself cannot give, and it inherits down to child pages so a
+    # sub-question still shows which part of the lifecycle it sits under.
+    owner = n if n.get('phase') else next((a for a in reversed(trail(n))
+                                           if a.get('phase')), None)
+    eyebrow = ''
+    if owner:
+        t = next((x for x in TRACKS if x['id'] == owner.get('track')), None)
+        bits = [esc(owner['phase'])]
+        if t:
+            bits.append(esc(t['title']))
+        eyebrow = ('<p class="eyebrow phase-eyebrow">'
+                   + ' <span class="dv">·</span> '.join(bits) + '</p>')
     return (f'<div class="phead"><div class="crumb">{"".join(crumbs)}</div>'
+            f'{eyebrow}'
             f'<div class="ptitle"><h1>{esc(n.get("h1", n["title"]))}</h1>'
-            f'<span class="sp {st}"><i aria-hidden="true"></i>{STATUS_LABEL[st]}</span></div>'
-            f'{lede}</div>')
+            f'<span class="sp {st}"><i aria-hidden="true"></i>{STATUS_LABEL[st]}</span>'
+            + ('<span class="sp flag"><i aria-hidden="true"></i>Main project</span>'
+               if n.get('flagship') else '')
+            + f'</div>{lede}</div>')
 
 
 def render_skeleton(n):

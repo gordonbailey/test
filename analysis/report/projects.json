@@ -6,7 +6,19 @@
     "term": "Summer 2026",
     "owner": "Gordon Bailey",
     "h1": "Internship Portfolio",
-    "lede": "Everything built this summer, in one place. Six workstreams, from a peer benchmarking engine sellers can screen-share to the instrumentation and UTM plumbing underneath it. Every page follows the same five headings: the problem, what was done, what came out of it, what it does not cover, and what to pick up next."
+    "lede": "Everything built this summer, in one place. Four projects trace the full product development lifecycle from discovery to build, and the build, end-to-end UTM support, was the main one. Two side projects sit alongside them. Every page follows the same five headings: the problem, what was done, what came out of it, what it does not cover, and what to pick up next.",
+    "tracks": [
+      {
+        "id": "lifecycle",
+        "title": "The product development lifecycle",
+        "blurb": "One project per phase, in the order they happen. Discovery found the gap, prioritisation picked what to build, solution design defined how we would know it worked, and the build shipped it."
+      },
+      {
+        "id": "side",
+        "title": "Side projects",
+        "blurb": "Started out of curiosity rather than a roadmap slot, and both ended up feeding the work above."
+      }
+    ]
   },
   "_comment": [
     "One node per page. `parent` nests it; `order` sorts within a parent.",
@@ -20,7 +32,9 @@
     "build.py renders the standard skeleton from `sections`.",
     "`embed` names a standalone HTML app in guides/ to inline as a",
     "base64 payload and hydrate into a srcdoc iframe on first visit. The",
-    "page body must carry a matching <div class=\"gembed\" data-guide=\"ID\">."
+    "page body must carry a matching <div class=\"gembed\" data-guide=\"ID\">.",
+    "Top-level nodes carry `track` (which of site.tracks they belong to) and",
+    "`phase` (their step in it). `flagship: true` marks the headline project."
   ],
   "sections": [
     [
@@ -49,22 +63,26 @@
       "id": "hackathon",
       "title": "Hackathon",
       "short": "Hackathon",
-      "order": 10,
+      "order": 20,
       "status": "live",
       "blurb": "Sixteen hackathon projects scored on one scale and tiered into build, validate and park, with an effort estimate from whoever wrote the code.",
       "h1": "Which sixteen hackathon projects deserve a roadmap slot?",
-      "lede": "A hackathon produces enthusiasm, not a roadmap. This scores all sixteen projects on GDV impact, churn prevention and feasibility, merges the duplicates, collects an estimate from each owner, and sorts them into four to build now, five to validate in Q3, and five to park with a named unlock."
+      "lede": "A hackathon produces enthusiasm, not a roadmap. This scores all sixteen projects on GDV impact, churn prevention and feasibility, merges the duplicates, collects an estimate from each owner, and sorts them into four to build now, five to validate in Q3, and five to park with a named unlock.",
+      "track": "lifecycle",
+      "phase": "Prioritisation"
     },
     {
       "id": "ci",
       "title": "Customer Intelligence",
       "short": "Customer Intelligence",
-      "order": 20,
+      "order": 10,
       "kind": "group",
       "status": "live",
       "blurb": "Three strands of one question: how do we tell a customer something true about their own fundraising that they could not work out alone? Two ran independently and found the same gap.",
       "h1": "Customer Intelligence",
-      "lede": "What customers said they need, what the market already claims to offer, and a working answer to the gap both pointed at."
+      "lede": "What customers said they need, what the market already claims to offer, and a working answer to the gap both pointed at.",
+      "track": "lifecycle",
+      "phase": "Discovery"
     },
     {
       "id": "benchmarking",
@@ -90,6 +108,17 @@
       "lede": "Every vendor in the category now says “we have AI”, which makes the marketing useless as a signal. This separates what has shipped from what is only announced, dates the landscape onto one timeline, and marks the evidence strength on every cell."
     },
     {
+      "id": "compintel-audit",
+      "parent": "compintel",
+      "title": "Audit & Gap Analysis",
+      "short": "Audit & gap analysis",
+      "order": 10,
+      "status": "live",
+      "blurb": "The claim-by-claim audit behind the competitive scan: nine vendors across six capabilities, every cell graded on its evidence, and the four gaps nobody in the market occupies.",
+      "h1": "What nine vendors claim, and what can be verified",
+      "lede": "The scan's underlying workbook. Every capability is graded shipped, claimed but unverified, or absent from public materials, so a reader can tell a demonstrated feature from a press release."
+    },
+    {
       "id": "interviews",
       "parent": "ci",
       "title": "Customer Interview Synthesis",
@@ -108,7 +137,9 @@
       "status": "live",
       "blurb": "A two-layer measurement framework for Pro admin: a lagging health scoreboard, and leading per-workflow instrumentation across eight areas where every KPI names the decision it informs.",
       "h1": "How would we know if the admin experience got better?",
-      "lede": "Pro had health metrics and almost no early signal on any specific workflow, and no agreed definition of “active admin” — so two people could report different activation numbers from the same database and both be right."
+      "lede": "Pro had health metrics and almost no early signal on any specific workflow, and no agreed definition of “active admin” — so two people could report different activation numbers from the same database and both be right.",
+      "track": "lifecycle",
+      "phase": "Solution design"
     },
     {
       "id": "utm",
@@ -118,18 +149,23 @@
       "status": "live",
       "blurb": "Twelve Jira tickets across two epics, the ten-hop chain UTM has to survive, and every linked Confluence page, Figma file and PR pulled from the tickets. Five ticket statuses had moved since the programme map was drawn.",
       "h1": "Making UTM survive the whole donation stack",
-      "lede": "Marketing attribution was broken end to end: some Studio URLs carried UTMs, nothing persisted them to the transaction, and nothing surfaced them in reporting or the API. This maps the programme with every status verified against Jira rather than the slide."
+      "lede": "Marketing attribution was broken end to end: some Studio URLs carried UTMs, nothing persisted them to the transaction, and nothing surfaced them in reporting or the API. This maps the programme with every status verified against Jira rather than the slide.",
+      "track": "lifecycle",
+      "phase": "Build",
+      "flagship": true
     },
     {
       "id": "guides",
       "title": "Guides",
       "short": "Guides",
-      "order": 50,
+      "order": 10,
       "kind": "group",
       "status": "live",
       "blurb": "Two attempts to make something reusable by someone who was not here: one mapping 1,202 repositories, one turning 24 non-functional requirements into questions a PM can ask.",
       "h1": "Guides",
-      "lede": "Written so the next person does not have to reconstruct any of this from scratch, and honest enough about their own limits to be safe to trust."
+      "lede": "Written so the next person does not have to reconstruct any of this from scratch, and honest enough about their own limits to be safe to trust.",
+      "track": "side",
+      "phase": "Curiosity"
     },
     {
       "id": "guide-nonfunc",
@@ -159,12 +195,14 @@
       "id": "strategy",
       "title": "Corporate Strategy",
       "short": "Corporate Strategy",
-      "order": 60,
+      "order": 20,
       "kind": "group",
       "status": "live",
       "blurb": "Two gaps and five findings that size them, taken to Amplitude rather than accepted on their face.",
       "h1": "Corporate Strategy",
-      "lede": "The growth argument the project work sits underneath. Both gaps are versions of the same problem: the platform monetises moments of generosity but does not build generous people."
+      "lede": "The growth argument the project work sits underneath. Both gaps are versions of the same problem: the platform monetises moments of generosity but does not build generous people.",
+      "track": "side",
+      "phase": "Curiosity"
     },
     {
       "id": "gdv",

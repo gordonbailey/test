@@ -47,6 +47,28 @@ which is the point. Never fill a skeleton with plausible-sounding filler.
 nodes share an id, the view set drifts from the node list, or the markup has an
 unbalanced `</div>`.
 
+Top-level nodes also carry `track` and `phase`. `site.tracks` defines the
+groups — the product development lifecycle, then side projects — and a node's
+`track` places it in one, with `phase` naming its step. That one pair of fields
+drives the rail's group headings and order, the home page's sections, the
+numbered step badges on the lifecycle cards, and the eyebrow above each project
+title (which child pages inherit from their nearest ancestor that has a phase).
+`flagship: true` marks the headline project: a quiet ring on its card and a
+"Main project" pill. A node with no `track` falls into a trailing "Other
+projects" section rather than disappearing.
+
+## QA
+
+`node analysis/report/qa/sweep.js` renders `report.html` at nine widths and
+walks every view discovered from the rail — 189 checks — asserting no
+horizontal overflow, exactly one visible view, that view inside `.wrap`, and no
+text spilling its own box. New projects are covered automatically.
+
+It reads `report.html` directly and prints the number of checks it actually
+ran. Both details matter: the version of this script that lived in `/tmp` read a
+*copy* of the page and reported a hardcoded count, so it kept reporting a clean
+sweep against a build that was hours out of date.
+
 ## Client exports
 
 Two per-account exports, both built in the browser because the page has no

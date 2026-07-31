@@ -1,0 +1,88 @@
+<!-- Competitive audit and gap analysis. The reference layer under the comp
+     intel narrative: the workbook link, the grading scheme, the 9x6 matrix and
+     the gaps nobody occupies. -->
+
+<div class="card reveal deckcard">
+  <div>
+    <p class="eyebrow" style="margin-bottom:4px">The workbook</p>
+    <div class="dt">Competitive capability audit and gap analysis</div>
+    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">Nine vendors, six capabilities, every cell graded on its evidence, plus the gaps nobody occupies. Proprietary &amp; confidential; GoFundMe access required.</p>
+  </div>
+  <div class="dl">
+    <a class="btn primary" href="https://docs.google.com/spreadsheets/d/1P42u4qe8tIiZ7eSiyKNvTJnKkxen4ChpFi4AarALr0k/edit" target="_blank" rel="noopener">
+      Open the audit
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+    </a>
+    <code class="urlbox">docs.google.com/spreadsheets/d/1P42u4qe8tIiZ7eSiyKNvTJnKkxen4ChpFi4AarALr0k</code>
+  </div>
+</div>
+
+<h2>The problem</h2>
+<p class="sub">A competitive matrix with blank cells is unreadable: a reader cannot tell "this vendor does not do it" from "nobody checked". And a matrix with a tick in every cell is worse, because it flattens a shipped, generally-available feature and a line in a press release into the same mark.</p>
+
+<h2>What was done</h2>
+<p class="sub">Every cell gets one of three grades, and the grade is on the page rather than in a footnote.</p>
+<div class="card reveal">
+  <div class="tw"><table>
+    <thead><tr><th style="width:22%">Grade</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill good">Shipped</span></td><td>Generally available and evidenced in public materials, usually with a launch date. Safe to position against.</td></tr>
+      <tr><td><span class="pill warn">Claimed</span></td><td>The vendor says it, and it could not be verified from outside. Blackbaud's up-to-10× capacity claim and Bonterra's 90,000-campaign benchmark depth both sit here.</td></tr>
+      <tr><td><span class="pill">Not found</span></td><td>Absent from public materials as of mid-July 2026. Dated evidence, not proof of absence: it may be shipped and unmarketed, in private beta, or on a roadmap.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<h2>What came out of it</h2>
+
+<h3>The matrix</h3>
+<p class="sub tight">Nine vendors across the six capabilities that come up in deals.</p>
+<details class="disc reveal" open>
+  <summary>
+    <span>Nine vendors across six capabilities <span class="cnt">reference table</span></span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
+  <div class="tw"><table>
+    <thead><tr><th>Company</th><th>Assistant / copilot</th><th>Predictive scoring</th><th>AI ask amounts</th><th>Peer benchmarks</th><th>Autonomous donor outreach</th></tr></thead>
+    <tbody>
+      <tr><td><b>Fundraise Up</b></td><td>None</td><td>Checkout models, in-session</td><td><b>Yes — flagship</b></td><td>Quarterly published only</td><td>Yes — micro-actions at checkout</td></tr>
+      <tr><td><b>Blackbaud</b></td><td>Chat for Blackbaud AI <span class="tsub">10/25</span></td><td>ProspectPoint + wealth screening</td><td>Dynamic asks</td><td>donorCentrics — paid, opt-in, annual</td><td><b>Yes — Development Agent GA 3/26</b></td></tr>
+      <tr><td><b>Bloomerang</b></td><td>Penny <span class="tsub">beta 3/26</span></td><td>Dataro embed <span class="tsub">from 7/26</span></td><td>Smart Amounts</td><td>Annual Signals report</td><td>No — suggest-only posture</td></tr>
+      <tr><td><b>Virtuous</b></td><td>Momentum <span class="tsub">major-gift agent</span></td><td>Insights engine <span class="tsub">8/25</span></td><td>Not found</td><td>Annual report <span class="tsub">771 orgs</span></td><td>Drafts; human sends</td></tr>
+      <tr><td><b>Bonterra</b></td><td>Que <span class="tsub">10/25</span></td><td>DonorTrends lineage; risk models</td><td>Optimized Ask</td><td>Claimed in-product <span class="tsub">90K+ campaigns</span></td><td>Acts in-platform; outreach on '26 roadmap</td></tr>
+      <tr><td><b>Givebutter</b></td><td>Summaries + smart filters <span class="tsub">beta</span></td><td>Not found</td><td>Simple suggested</td><td>Not found</td><td>Not found</td></tr>
+      <tr><td><b>Donorbox</b></td><td>Jay·AI <span class="tsub">paid tiers</span></td><td>Not found</td><td>Not found</td><td>Not found</td><td>Not found</td></tr>
+      <tr><td><b>DonorPerfect</b></td><td>Free AI writing bot</td><td>Via DonorSearch integration</td><td>Not found</td><td>Not found</td><td>Not found</td></tr>
+      <tr><td><b>Funraise</b></td><td>Generative assist <span class="tsub">ChatGPT embed</span></td><td>AI forecasting on own data</td><td>ML ask amounts</td><td>Not found</td><td>Not found</td></tr>
+    </tbody>
+  </table></div>
+  </div>
+</details>
+
+<h3>The four gaps nobody occupies</h3>
+<p class="sub tight">The useful output of a claim audit is not the filled cells, it is the empty columns. Each of these is unclaimed by all nine vendors.</p>
+<div class="card reveal">
+  <div class="tl tlnum">
+    <div class="tli"><span class="tld">1</span><span class="tlt"><b>Verifiable lift.</b> All nine publish trust and explainability language. None offers lift an organization can check in its own numbers, and none publishes a record of misses.</span></div>
+    <div class="tli"><span class="tld">2</span><span class="tlt"><b>Real-time, per-org benchmarking.</b> Peer comparison exists as consultant cohorts, annual studies, quarterly reports and one unverifiable in-product claim. Nobody evidences transaction-level comparison inside the workflow, or an answer for an organization sitting below its peers.</span></div>
+    <div class="tli"><span class="tld">3</span><span class="tlt"><b>The autonomy dial.</b> Vendors have picked fixed postures, from suggest-only to fully autonomous. Nobody sells the control itself: customer-set autonomy by segment, channel and gift size.</span></div>
+    <div class="tli tlhot"><span class="tld">4</span><span class="tlt"><b>Proprietary intelligence.</b> Predictive scoring is being resold through Dataro and DonorSearch, so "we have predictive models" is no longer a claim. What the predictions are trained on is unclaimed ground.</span></div>
+  </div>
+</div>
+<div class="note good">Gap 2 is the one with a working prototype attached: it describes what the <a href="#/benchmarking" data-jump="benchmarking">benchmarking engine</a> already does. Gap 1 is what the <a href="#/interviews" data-jump="interviews">interview research</a> found customers asking for by name.</div>
+
+<h2>What it does not cover</h2>
+<div class="card reveal">
+  <div class="sk"><h3>No claim was checked against a customer</h3><p>Every grade is read off public materials. "Shipped" means evidenced and dated, not observed working in a real deployment. The two claimed figures are exactly the kind that shrink on contact with one.</p></div>
+  <div class="sk"><h3>Six capabilities is a choice</h3><p>They are the ones that come up in deals. Adjacent ground — data hygiene, integrations breadth, service model, pricing flexibility — is out of scope, and a vendor weak on all six could still win on those.</p></div>
+  <div class="sk"><h3>It dates fast</h3><p>Eight tracked launches in twelve months. Any cell could change without notice, and this one has no re-run date.</p></div>
+  <div class="sk"><h3>Gaps are opportunities, not validated demand</h3><p>Nobody occupying a space is not evidence that customers want it filled. Gap 2 has customer evidence behind it from the interviews; the other three have none yet.</p></div>
+</div>
+
+<h2>Pick this up next</h2>
+<div class="acts reveal">
+  <div class="act"><span class="num">1</span><div><div class="t">Set a re-run date and an owner</div><div class="m">Quarterly is enough at eight launches a year. Without one, the matrix silently ages into folklore.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Convert the two claimed figures into checked ones</div><div class="m">A single reference call with a Blackbaud agent customer would settle the 10× capacity claim, which is the loudest number in the category.</div></div></div>
+  <div class="act"><span class="num">3</span><div><div class="t">Test gap 1 with customers before building for it</div><div class="m">Verifiable lift is unclaimed by the whole market and asked for by name in the interviews. That combination is worth a concept test.</div></div></div>
+</div>

@@ -72,6 +72,18 @@
 .nlvl1 .nlink{padding-left:26px;font-weight:550;font-size:.85rem}
 .nlvl2 .nlink{padding-left:42px;font-weight:500;font-size:.83rem}
 
+/* Track headings in the rail. Labels, not list semantics — the rows keep their
+   own structure so the router and the row counts are untouched. */
+.railgrp{
+  font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);padding:16px 10px 6px;
+}
+.railgrp:first-child{padding-top:4px}
+/* No phase chip in the rail: at 286px it competed with the project name for
+   width and won, truncating "Customer Intelligence" to "Customer I...". The
+   group heading carries the track; the phase belongs on the card and the page
+   header, where there is room for it. */
+
 /* Status dot. Colour is a hint; the home cards carry the readable label. */
 .ndot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--ink-3);opacity:.45}
 .ndot.live{background:var(--good);opacity:1}
@@ -135,7 +147,45 @@
 .pcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);
   border-color:color-mix(in srgb,var(--brand) 30%,transparent)}
 .pcard:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
-.pcard>.sp{align-self:flex-start;margin-bottom:1px}
+.cardtop{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+
+/* Phase label. On the lifecycle track it leads the card, with the step number,
+   so the four cards read as a sequence rather than four unrelated projects. */
+.pcard .phase{
+  display:flex;align-items:center;gap:8px;
+  font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--brand);margin-bottom:2px;
+}
+.pcard .stepn{
+  width:19px;height:19px;border-radius:50%;flex-shrink:0;
+  background:var(--brand-tint);color:var(--brand-strong);
+  display:grid;place-items:center;font-size:.68rem;letter-spacing:0;
+}
+
+/* The flagship card. Deliberately quiet — a ring and a label, not a colour
+   inversion, so it reads as "start here" rather than "advertisement". */
+.pcard.flagship{
+  border-color:color-mix(in srgb,var(--brand) 42%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--brand) 26%,transparent),var(--shadow);
+}
+.pcard.flagship:hover{box-shadow:0 0 0 1px color-mix(in srgb,var(--brand) 34%,transparent),var(--shadow-lift)}
+.sp.flag{color:var(--brand-strong);border-color:color-mix(in srgb,var(--brand) 40%,transparent);
+  background:var(--brand-tint)}
+.sp.flag i{background:var(--brand)}
+
+/* The four lifecycle cards hold one row where there is room, so the sequence
+   reads left to right. Below that they wrap like any other grid.
+   No connecting arrows: :not(:last-child) cannot see a row break, so card 3
+   drew an arrow pointing into the margin. The step numbers carry the order at
+   every width, which the arrows never could. */
+/* 1360px is where .wrap hits its 1120px cap, so four columns are ~250px wide.
+   Forcing four any narrower squeezed them to 221px and the blurbs got columnar. */
+@media (min-width:1360px){
+  .cardgrid.seq{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+
+.phase-eyebrow{color:var(--brand);margin-bottom:10px}
+.phase-eyebrow .dv{color:var(--ink-3);font-weight:400}
 .pcard .nm{font-size:1.02rem;font-weight:680;letter-spacing:-.016em;line-height:1.25}
 .pcard .bl{font-size:.87rem;color:var(--ink-2);line-height:1.5;flex:1}
 .pcard .bl.need{color:var(--ink-3)}
