@@ -16,7 +16,25 @@
   <p class="eyebrow">The problem</p>
   <h2 style="margin-top:0">"Raised $180,000" doesn't tell you anything</h2>
   <p class="sub">$180k is a brilliant year for a small animal rescue and a poor one for a hospital foundation. "Good" only means something <b>next to organizations genuinely like you</b>.</p>
-  <p class="sub">So this builds that comparison group, scores each organization inside it, and turns the shortfall into a short list of things to try.</p>
+  <p class="sub">So the question is not "how much did they raise?" but <b>"how much should an organization like this be able to raise, and how close did they get?"</b></p>
+
+  <p class="eyebrow" style="margin-top:34px">The solution</p>
+  <h2 style="margin-top:0">Realistic potential</h2>
+  <p class="sub">The idea underneath everything else here. Instead of judging an organization against its own goal or its conversion rate — both of which move with its donor base, its marketing budget, its staff and its luck — <b>realistic potential measures it against a group of genuine peers, and reads off a lower and an upper bound</b>. Success is how close the organization gets to that band.</p>
+  <p class="sub tight">Everything after this is machinery for producing that band honestly.</p>
+  <div class="card reveal">
+    <div class="tw"><table>
+      <thead><tr><th style="width:22%">Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td><b>Realistic potential</b></td><td>What organizations like this one actually achieve. A range, not a target — the middle half of the peer group, with the median as the reference point.</td></tr>
+        <tr><td><b>Success</b></td><td>How close an organization gets to that range. Read as a position among its peers, not as a percentage of its own goal.</td></tr>
+        <tr><td><b>Peer group</b></td><td>What makes the range mean anything: same cause area, same size, at least 30 organizations in it.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="note good"><b>Why not just ask whether they hit their goal?</b> Because the organization sets the goal, so hitting it measures ambition as much as performance — a cautious goal makes a weak year look excellent. Conversion rate fails the other way: it moves with donor mix, marketing budget and staff, none of which compare across organizations. Only a peer group makes the range defensible, which is why the peer groups get as much attention on this page as the model does.</div>
+  <div class="note warn"><b>What this version does, and what it does not.</b> The range above is worked out <b>per organization, per year</b>. The fuller version of the idea works <b>per campaign</b>, and also reads success from <i>momentum</i> (this week against the peer group's week) and the <i>shape of the donation curve</i>. None of that is possible from this data — it has annual and all-time totals, no campaign records and no weekly figures. The peer-group machinery is the same either way, so campaign data would drop straight into it.</div>
+
 
   <div class="stats reveal" style="margin-top:26px">
     <div class="stat"><div class="k">Accounts reviewed</div><div class="v" data-count="6759">6,759</div><div class="d">from the CRM export</div></div>
@@ -79,21 +97,6 @@
   <p class="sub">A model compares organizations <i>inside</i> each peer group and asks what the ones raising more do differently. Five things an organization can actually change came out as mattering.</p>
   <div class="card reveal"><div class="bars" id="g-levers" style="--lw:214px;--vw:88px"></div></div>
   <p class="sub tight">For one account, each of the five is nudged from where it sits toward where its peers sit, and the model works out what that would be worth. The nudges are capped at something realistic — an early version suggested jumping from the 5th to the 75th percentile in one leap and predicted "+2,560%".</p>
-
-  <h2>Realistic potential</h2>
-  <p class="sub">The idea underneath all of this. Rather than judging an organization against its own goal or a conversion rate — both of which move with donor base, marketing spend, staff and luck — <b>realistic potential normalizes performance against a peer cohort to define a lower and an upper bound</b>. Success is then how close an organization gets to that band.</p>
-  <div class="card reveal">
-    <div class="tw"><table>
-      <thead><tr><th style="width:22%">Term</th><th>Definition</th></tr></thead>
-      <tbody>
-        <tr><td><b>Realistic potential</b></td><td>The performance band a peer cohort actually achieves — not a target, a range. Here, the 25th to 75th percentile of the cohort, with the median as the reference point.</td></tr>
-        <tr><td><b>Success</b></td><td>How close an organization gets to its realistic potential. Expressed as a percentile inside its cohort rather than as percentage-to-goal.</td></tr>
-        <tr><td><b>Peer cohort</b></td><td>The comparison set that makes the bounds meaningful: cause area × revenue size, minimum 30 organizations.</td></tr>
-      </tbody>
-    </table></div>
-  </div>
-  <div class="note good"><b>Why not "did they hit their goal?"</b> Goals are set by the organization, so completion-to-goal measures ambition as much as performance — a cautious goal makes a weak year look excellent. Conversion rate has the same problem from the other direction: it moves with donor mix, marketing spend and staff capability, none of which are comparable across organizations. Normalizing to a peer cohort is what makes a bound defensible, and it is why the cohort definition gets as much attention here as the model does.</div>
-  <div class="note warn"><b>What this build implements, and what it does not.</b> The bounds above are computed <b>per organization, per year</b> — 25th/75th percentile of annual dollars raised within the cohort. The fuller definition of realistic potential is <b>per campaign, per campaign type</b>, with success also read from <i>momentum</i> (week-over-week donations against cohort week-over-week) and the <i>donation curve</i> (growth and decay against cohort curves). None of that is possible from this export: it has no campaign records and no weekly time series, only annual and lifetime totals. The cohort machinery is the same either way — campaign-level data would drop into it without redesign.</div>
 
   <h2>What this can and cannot see</h2>
   <p class="sub">Being clear about the edges matters more than looking complete.</p>
