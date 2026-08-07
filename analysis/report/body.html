@@ -347,11 +347,47 @@
 <div class="panel" id="panel-research" role="tabpanel" aria-labelledby="tab-research" hidden>
   <p class="eyebrow">For marketing and sales</p>
   <h2 style="margin-top:0">Who to interview</h2>
-  <p class="sub">A shortlist of organizations to approach for one-to-one qualitative interviews, built for a thought leadership report. The engine already knows who is ahead and who is behind <i>inside a genuine peer group</i>. That turns "who should we talk to?" into a sampling decision rather than a guess.</p>
+  <p class="sub">Who to approach for one-to-one interviews, for a thought leadership report. In every peer group, the three organizations furthest ahead of their peers and the three furthest behind. Same cause, same size, so the difference between them is what they <b>do</b>.</p>
 
-  <div class="note"><b>Interview them in matched pairs.</b> Picking the best and worst performers <i>within one peer group</i> holds cause area and size constant, so what separates them is much more likely to be what they <i>do</i> — programs, staffing, cadence, tooling — rather than who they are. A national health foundation outraising a local food bank tells you nothing. A food bank outraising six comparable food banks by 4× is a story with a mechanism behind it.</div>
+  <div class="seg hide-in-present" id="rs-mode" role="tablist" aria-label="View">
+    <button class="segbtn on" data-mode="table" aria-selected="true" role="tab">The list</button>
+    <button class="segbtn" data-mode="detail" aria-selected="false" role="tab">One group in detail</button>
+  </div>
 
-  <div class="controls hide-in-present" style="margin-top:22px">
+<!-- ─────────── THE LIST ─────────── -->
+<div id="rs-view-table">
+  <div class="controls hide-in-present" style="margin-top:20px">
+    <div class="fld">
+      <label for="rs-sector">Cause area</label>
+      <select id="rs-sector"><option value="">All cause areas</option></select>
+    </div>
+    <button class="btn" id="rs-copy-all">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+      Copy the list
+    </button>
+  </div>
+
+  <div class="tw" style="margin-top:18px"><table id="rs-table">
+    <thead><tr>
+      <th style="width:20%">Peer group</th>
+      <th style="width:40%">Ahead of their peers — ask what is working</th>
+      <th style="width:40%">Behind their peers — ask what is in the way</th>
+    </tr></thead>
+    <tbody id="rs-tbody"></tbody>
+  </table></div>
+
+  <p class="sub tight" id="rs-table-note"></p>
+
+  <div class="note warn" style="margin-top:18px"><b>Two things to hold onto.</b>
+    Organizations that run only part of their fundraising through the platform, and those that
+    have barely launched, are kept out of the "behind" column — their gap is scope or onboarding,
+    not performance. And nobody agreed to be named a bottom performer: publish the pattern, never
+    the ranking.</div>
+</div>
+
+<!-- ─────────── ONE GROUP IN DETAIL ─────────── -->
+<div id="rs-view-detail" hidden>
+  <div class="controls hide-in-present" style="margin-top:20px">
     <div class="fld">
       <label for="rs-cohort">Peer group</label>
       <select id="rs-cohort"></select>
@@ -393,20 +429,11 @@
     <div id="rs-onboard" class="peers" style="max-height:none"></div>
   </div>
 
-  <h3 style="margin-top:34px">How to run this</h3>
-  <div class="card reveal">
-    <div class="tl tlnum">
-      <div class="tli"><span class="tld">1</span><span class="tlt"><b>Sample within a group, not across the book.</b> Two to three groups gives you 12–18 interviews, which is past saturation for a report of this kind.</span></div>
-      <div class="tli"><span class="tld">2</span><span class="tlt"><b>Ask both sides the same questions.</b> The comparison only holds if the instrument is constant. Differences in the answers are the finding.</span></div>
-      <div class="tli"><span class="tld">3</span><span class="tlt"><b>Lead with the hypothesis, do not confirm it.</b> The divergence below tells you what to probe, not what to conclude. Ask about the practice; do not read the percentile out loud.</span></div>
-      <div class="tli tlhot"><span class="tld">4</span><span class="tlt"><b>Publish the pattern, never the ranking.</b> Nobody agreed to be named as a bottom performer. Aggregate the findings and quote by permission only.</span></div>
-    </div>
-  </div>
-
-  <div class="note warn" style="margin-top:20px"><b>Three cautions before anyone gets a calendar invite.</b>
-    <br><br><b>1.</b> A low percentile is not proof of a struggling organization. Accounts that run only part of their fundraising through the platform are excluded from the bottom list by default, because roughly half of their measured gap is money we never see rather than weaker performance.
-    <br><b>2.</b> Organizations that have barely started are also excluded from the bottom list. "Why are you behind your peers" is the wrong question for someone who has not launched. They appear separately, where the useful question is about onboarding.
-    <br><b>3.</b> Top performers tagged <b>Different model</b> beat their group through a model rather than a practice — a mass-market program with a small average gift, or a single very large campaign. Interview them for contrast, not for transferable advice.</div>
+  <div class="note warn" style="margin-top:22px"><b>Before anyone gets a calendar invite.</b>
+    Ask both sides the same questions — the comparison only holds if the instrument does.
+    Probe the hypothesis above, do not read the percentile out loud. And publish the pattern,
+    never the ranking.</div>
+</div>
 </div>
 
 <!-- ══════════════════════════ METHODOLOGY ══════════════════════════ -->

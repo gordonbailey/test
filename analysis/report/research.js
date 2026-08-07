@@ -226,13 +226,89 @@ function rsShortlistText(){
   ].filter(x => x !== null).join('\n');
 }
 
-document.getElementById('rs-copy').addEventListener('click', async e => {
-  const btn = e.currentTarget, label = btn.querySelector('svg').nextSibling;
-  const prev = label.textContent;
-  try { await navigator.clipboard.writeText(rsShortlistText()); label.textContent = ' Copied'; }
-  catch (_) { label.textContent = ' Press Ctrl+C'; }
-  setTimeout(() => { label.textContent = prev; }, 1600);
+/* ── The list ───────────────────────────────────────────────────────────────
+   Every peer group on one screen, three names either side. The deep dive
+   answers "what should I ask this group?"; this answers "who do I call?",
+   which is the question someone actually opens the tab with. */
+const rsSectorEl = document.getElementById('rs-sector'),
+      rsTbodyEl = document.getElementById('rs-tbody'),
+      rsTableNote = document.getElementById('rs-table-note');
+
+/* Sector comes off the cohort, not off a member account: where the cause cell
+   was too thin the group falls back to size-only, and every member still
+   carries its own sector while the group has none. */
+const rsSector = g => L.cohorts[g.c].sector || 'Matched on size only';
+rsSectorEl.innerHTML += [...new Set(rsGroups.map(rsSector))].sort()
+  .map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+
+const rsTableRows = () => rsGroups
+  .filter(g => !rsSectorEl.value || rsSector(g) === rsSectorEl.value)
+  .map(g => ({g, ...rsPartition(g, 3)}));
+
+function renderTable(){
+  const rows = rsTableRows();
+  const cell = (list, mark, tone) => list.length
+    ? `<div class="rsl">${list.map(r => `<button data-i="${r.i}" title="${esc(r.a.n)}">
+        <span class="nm">${esc(r.a.n)}</span>
+        <span class="mk" style="color:${tone}">${mark(r)}</span></button>`).join('')}</div>`
+    : '<div class="none">— none eligible</div>';
+
+  rsTbodyEl.innerHTML = rows.map(({g, top, bot}) => `<tr>
+    <td><div class="gname">${esc(rsSector(g))}</div>
+        <div class="gmeta">${esc(L.cohorts[g.c].band)} · ${g.n} orgs</div></td>
+    <td>${cell(top, r => `${rsRatio(r.a.cr)}`, 'var(--good-ink)')}</td>
+    <td>${cell(bot, r => `${money(r.a.gap)} behind`, 'var(--warn-ink)')}</td>
+  </tr>`).join('');
+
+  const listed = rows.reduce((n, r) => n + r.top.length + r.bot.length, 0);
+  rsTableNote.textContent = `${listed} organizations across ${rows.length} peer groups. `
+    + 'Click any name to open its full profile. Groups smaller than 12 are not shown — '
+    + 'their top and bottom are the same handful of organizations.';
+
+  rsTbodyEl.querySelectorAll('button[data-i]').forEach(b =>
+    b.addEventListener('click', () => openAccount(+b.dataset.i)));
+}
+
+function rsTableText(){
+  return rsTableRows().flatMap(({g, top, bot}) => [
+    `${g.label} (${g.n} orgs, median ${money(L.cohorts[g.c].med)})`,
+    '  Ahead — ask what is working:',
+    ...(top.length ? top.map(r => `    - ${r.a.n} (${rsRatio(r.a.cr)})`) : ['    - none eligible']),
+    '  Behind — ask what is getting in the way:',
+    ...(bot.length ? bot.map(r => `    - ${r.a.n} (${money(r.a.gap)} behind median)`) : ['    - none eligible']),
+    '',
+  ]).concat([
+    'Ask both sides the same questions. Do not read percentiles out to participants,',
+    'and publish the pattern rather than the ranking.',
+  ]).join('\n');
+}
+
+/* ── wiring ─────────────────────────────────────────────────────────────── */
+function rsCopy(btn, text){
+  const label = btn.querySelector('svg').nextSibling, prev = label.textContent;
+  navigator.clipboard.writeText(text)
+    .then(() => { label.textContent = ' Copied'; })
+    .catch(() => { label.textContent = ' Press Ctrl+C'; })
+    .finally(() => setTimeout(() => { label.textContent = prev; }, 1600));
+}
+document.getElementById('rs-copy').addEventListener('click',
+  e => rsCopy(e.currentTarget, rsShortlistText()));
+document.getElementById('rs-copy-all').addEventListener('click',
+  e => rsCopy(e.currentTarget, rsTableText()));
+
+document.getElementById('rs-mode').addEventListener('click', e => {
+  const b = e.target.closest('.segbtn');
+  if (!b) return;
+  document.querySelectorAll('#rs-mode .segbtn').forEach(x => {
+    const on = x === b;
+    x.classList.toggle('on', on);
+    x.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.getElementById('rs-view-table').hidden = b.dataset.mode !== 'table';
+  document.getElementById('rs-view-detail').hidden = b.dataset.mode !== 'detail';
 });
 
+rsSectorEl.addEventListener('change', renderTable);
 [rsCohortEl, rsNEl].forEach(el => el.addEventListener('change', renderResearch));
 renderResearch();
+renderTable();

@@ -144,6 +144,34 @@
 .pr .s2{font-size:.73rem;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pr .v2{font-size:.82rem;font-variant-numeric:tabular-nums;text-align:right}
 .pr .v2 small{display:block;color:var(--ink-3);font-size:.7rem}
+/* ---- research targets ---- */
+/* A local view switch. Deliberately not .tab: app.js collects every .tab on the
+   page into one roving-tabindex group, and a nested pair would join it. */
+.seg{display:inline-flex;gap:2px;padding:3px;background:var(--track);border-radius:11px;
+  box-shadow:0 0 0 1px var(--hair);margin-top:6px}
+.segbtn{appearance:none;border:none;background:none;font:inherit;font-size:.85rem;font-weight:600;
+  color:var(--ink-2);padding:7px 15px;border-radius:9px;cursor:pointer;white-space:nowrap;
+  transition:color .2s var(--ease),background .2s var(--ease),box-shadow .2s var(--ease)}
+.segbtn:hover{color:var(--ink)}
+.segbtn.on{background:var(--card);color:var(--brand-strong);box-shadow:0 1px 3px rgba(0,0,0,.09)}
+
+/* The list. One row per peer group, three names either side — the whole
+   sampling frame on one screen instead of 38 dropdown selections. */
+/* Fixed layout, or the longest organization name in the book sets the column
+   width and pushes the third column off the side of the page. */
+#rs-table{table-layout:fixed;width:100%}
+#rs-table td{vertical-align:top}
+#rs-table .gname{font-weight:600}
+#rs-table .gmeta{font-size:.76rem;color:var(--ink-3);margin-top:2px}
+.rsl{display:flex;flex-direction:column;gap:5px}
+.rsl button{appearance:none;border:none;background:none;font:inherit;text-align:left;cursor:pointer;
+  padding:3px 6px;margin:-3px -6px;border-radius:var(--r-sm);color:var(--ink);display:flex;
+  align-items:baseline;gap:8px;min-width:0;width:100%}
+.rsl button:hover{background:var(--line-2)}
+.rsl .nm{font-size:.85rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.rsl .mk{font-size:.73rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rsl .none{font-size:.82rem;color:var(--ink-3);padding:3px 0}
+
 /* Research shortlist rows carry a tag column. 176px is set by the longest
    label the tags produce ("$614K below median"), measured rather than guessed —
    a nowrap pill overruns its track silently, with no scrollbar and no clipping
