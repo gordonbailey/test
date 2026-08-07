@@ -4,7 +4,7 @@
 <div class="tabs" role="tablist" aria-label="Benchmarking sections">
   <button class="tab" id="tab-guide" role="tab" aria-selected="true" aria-controls="panel-guide">How it works</button>
   <button class="tab" id="tab-find" role="tab" aria-selected="false" aria-controls="panel-find">Findings</button>
-  <button class="tab" id="tab-cohorts" role="tab" aria-selected="false" aria-controls="panel-cohorts">Cohorts</button>
+  <button class="tab" id="tab-cohorts" role="tab" aria-selected="false" aria-controls="panel-cohorts">Peer groups</button>
   <button class="tab" id="tab-acct" role="tab" aria-selected="false" aria-controls="panel-acct">Account</button>
   <button class="tab" id="tab-research" role="tab" aria-selected="false" aria-controls="panel-research">Research targets</button>
   <button class="tab" id="tab-method" role="tab" aria-selected="false" aria-controls="panel-method">Methodology</button>
@@ -15,8 +15,8 @@
 
   <p class="eyebrow">The problem</p>
   <h2 style="margin-top:0">"Raised $180,000" doesn't tell you anything</h2>
-  <p class="sub">A $180k year is outstanding for a small animal rescue and disappointing for a hospital foundation. Every organization has different donors, a different cause, different staff, a different budget. "Good" only means something <b>relative to organizations genuinely like you</b>.</p>
-  <p class="sub">So this builds that comparison group, scores each organization inside it, and turns the shortfall into a ranked list of things to actually do.</p>
+  <p class="sub">$180k is a brilliant year for a small animal rescue and a poor one for a hospital foundation. "Good" only means something <b>next to organizations genuinely like you</b>.</p>
+  <p class="sub">So this builds that comparison group, scores each organization inside it, and turns the shortfall into a short list of things to try.</p>
 
   <div class="stats reveal" style="margin-top:26px">
     <div class="stat"><div class="k">Accounts reviewed</div><div class="v" data-count="6759">6,759</div><div class="d">from the CRM export</div></div>
@@ -29,48 +29,56 @@
   <div class="card reveal"><div class="bars" id="g-steps" style="--lw:34px;--vw:0px;--lwm:28px;--vwm:0px"></div></div>
 
   <h2>Step 1 — Agree what the words mean</h2>
-  <p class="sub">Three ideas each had more than one answer in the data. Each had to be reduced to one before any analysis could run.</p>
-  <div class="card reveal">
+  <p class="sub">Three things each had more than one answer in the data. Each had to be settled before anything else could run.</p>
+  <details class="disc reveal">
+  <summary>
+    <span>Three definitions that each had more than one answer</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
+<div class="card reveal">
     <div class="tw"><table>
       <thead><tr><th style="width:19%">Idea</th><th style="width:39%">The problem</th><th>What was decided</th></tr></thead>
       <tbody>
-        <tr><td><b>Cause area</b></td><td>The category label was written two different ways for the same category.</td><td>Rebuild it from the official IRS code letter. Accounts with no code are excluded rather than pooled into a fake "unknown" group.</td></tr>
-        <tr><td><b>Organization size</b></td><td>Three revenue fields disagreed. One was typed by hand: 86 accounts said exactly $10,000,000, 29 said exactly $1,000,000,000, 12 said exactly $1.</td><td>Discard the hand-typed field. Use the figure from the organization's IRS filing.</td></tr>
-        <tr><td><b>"Raised"</b></td><td>Some columns meant <i>last 12 months</i>, others <i>everything since they joined</i>. They look identical side by side.</td><td>Judge performance on the last 12 months only. Anything all-time is labelled and never mixed in.</td></tr>
+        <tr><td><b>Cause area</b></td><td>The category label was written two different ways for the same category.</td><td>Rebuild it from the official IRS code. Accounts with no code are left out rather than dumped into a fake "unknown" group.</td></tr>
+        <tr><td><b>Organization size</b></td><td>Three revenue fields disagreed. One was typed by hand: 86 accounts said exactly $10,000,000, 29 said exactly $1,000,000,000, 12 said exactly $1.</td><td>Throw away the hand-typed field. Use the figure from the IRS filing.</td></tr>
+        <tr><td><b>"Raised"</b></td><td>Some columns meant <i>last 12 months</i>, others <i>everything since they joined</i>. They look identical side by side.</td><td>Judge everyone on the last 12 months only. Anything all-time is labeled and never mixed in.</td></tr>
       </tbody>
     </table></div>
   </div>
-  <div class="note"><b>Why this gets its own step.</b> Getting it wrong produces no error message — just confident, wrong answers. Comparing one organization's last 12 months against another's lifetime total would flatter whoever had been on the platform longest, and nothing in the output would look amiss.</div>
+  </div>
+</details>
+  <div class="note"><b>Why this gets its own step.</b> Getting it wrong produces no error message, just confident wrong answers. Comparing one organization's last 12 months against another's lifetime total would flatter whoever had been here longest, and nothing on screen would look wrong.</div>
 
   <h2>Step 2 — Decide who can be measured</h2>
-  <p class="sub">An organization can only be compared if we know its cause, its size and its results. Just over half the book was missing at least one.</p>
+  <p class="sub">You can only compare an organization if you know its cause, its size and its results. Just over half were missing at least one.</p>
   <div class="card reveal"><div class="bars" id="g-funnel" style="--lw:214px"></div></div>
-  <div class="note warn"><b>The two big losses are fixable.</b> 1,589 accounts have no IRS cause code and 901 have no filed revenue. Both are public information available by tax ID. Backfilling them would widen coverage more than any change to the analysis itself.</div>
+  <div class="note warn"><b>The two big losses are fixable.</b> 1,589 accounts have no cause code and 901 have no revenue figure. Both are public information you can look up by tax ID. Filling them in would widen coverage more than any change to the analysis.</div>
 
   <h2>Step 3 — Build the peer groups</h2>
-  <p class="sub">Each organization is grouped with others sharing its cause area and its revenue size. Size brackets step up in multiples, not fixed amounts, because fundraising capacity scales that way — $1M to $5M is a similar kind of leap as $100M to $500M.</p>
+  <p class="sub">Each organization is grouped with others of the same cause and the same size. The size brackets multiply rather than add, because fundraising scales that way: $1M to $5M is a similar leap to $100M to $500M.</p>
   <div class="card reveal"><div class="bars" id="g-bands" style="--lw:130px"></div></div>
-  <p class="sub tight">A group needs at least <b>30 organizations</b>. In a group of four, one unusual member drags everyone's score around. Where a cause-and-size cell is too small, the organization is compared against every organization of its size instead — giving up the cause match rather than reporting a number built on five peers.</p>
-  <div class="note bad"><b>A mistake worth showing.</b> The largest bracket was originally just "over $25M" with no ceiling. That put NewYork-Presbyterian, at $6.7 <i>billion</i> in revenue, in the same peer group as $26M foundations — a 322-fold spread. Its scores computed correctly and were still misleading: it looked like it was raising 23× its peer median when the honest figure against organizations its own size is 6×. Brackets were split, and a test now fails if an open-ended one is ever reintroduced.</div>
+  <p class="sub tight">A group needs at least <b>30 organizations</b>. In a group of four, one odd member drags everyone's score around. Where there are too few of a given cause and size, the organization is compared against everyone of its size instead — giving up the cause match rather than reporting a number built on five peers.</p>
+  <div class="note bad"><b>A mistake worth showing.</b> The top bracket was originally "over $25M" with no ceiling, which put NewYork-Presbyterian at $6.7 <i>billion</i> in the same group as $26M foundations. The maths was right and the answer was misleading: it looked like it was raising 23× its peers when the honest figure against organizations its own size is 6×. The brackets were split, and a test now fails if anyone reintroduces an open-ended one.</div>
 
   <h2>Step 4 — Score everyone against their group</h2>
-  <p class="sub">Everyone gets a percentile. 50 is exactly mid-pack; 90 means only one in ten peers did better. Because the group is already matched on size, no further adjustment is needed — the comparison is size-fair by construction.</p>
+  <p class="sub">Everyone gets a percentile. 50 is exactly mid-pack; 90 means only one peer in ten did better. Because the group is already matched on size, nothing further needs adjusting.</p>
   <div class="card reveal"><div class="bars" id="g-status" style="--lw:206px"></div></div>
   <div class="grid2" style="margin-top:18px">
     <div class="card reveal">
       <h3 style="margin-top:0">Not everyone at the bottom is underperforming</h3>
-      <p class="sub" style="margin:0">The very largest gaps belonged to organizations that had <b>barely started using the platform</b> — one raised $23,000 against a peer median of $777,000. That is not a fundraising problem; nothing has launched yet. <b>268 accounts</b> are flagged for onboarding instead and get no lever advice.</p>
+      <p class="sub" style="margin:0">The biggest gaps belonged to organizations that had <b>barely started using the platform</b>. One raised $23,000 against a peer median of $777,000. That is not a fundraising problem — nothing has launched yet. <b>268 accounts</b> are flagged for onboarding instead, and get no advice.</p>
     </div>
     <div class="card reveal">
       <h3 style="margin-top:0">Not everyone at the top needs advice</h3>
-      <p class="sub" style="margin:0">The biggest fundraiser in the book has a <b>$26</b> average gift — near the bottom of its group — because it runs a mass-market model with 698,792 monthly donors. Told to raise that gift, the model projected <b>+$413M</b>: nonsense, and advice to abandon what works. <b>374 accounts</b> get a scorecard but no recommendations.</p>
+      <p class="sub" style="margin:0">The biggest fundraiser here has a <b>$26</b> average gift, near the bottom of its group, because it runs a mass-market model with 698,792 monthly donors. Told to raise that average, the model predicted <b>+$413M</b> — nonsense, and advice to abandon the thing that works. <b>374 accounts</b> get a scorecard and no recommendations.</p>
     </div>
   </div>
 
   <h2>Step 5 — Work out which actions matter</h2>
-  <p class="sub">A model compares organizations <i>within</i> each peer group and asks which operating differences go with raising more. Five things an organization can actually change came out significant.</p>
+  <p class="sub">A model compares organizations <i>inside</i> each peer group and asks what the ones raising more do differently. Five things an organization can actually change came out as mattering.</p>
   <div class="card reveal"><div class="bars" id="g-levers" style="--lw:214px;--vw:88px"></div></div>
-  <p class="sub tight">For one account, each lever is nudged from where it sits toward where its peers sit, and the model converts that into an expected change. Moves are capped at a realistic step — an early version advised jumping from the 5th to the 75th percentile in one go and projected "+2,560%".</p>
+  <p class="sub tight">For one account, each of the five is nudged from where it sits toward where its peers sit, and the model works out what that would be worth. The nudges are capped at something realistic — an early version suggested jumping from the 5th to the 75th percentile in one leap and predicted "+2,560%".</p>
 
   <h2>Realistic potential</h2>
   <p class="sub">The idea underneath all of this. Rather than judging an organization against its own goal or a conversion rate — both of which move with donor base, marketing spend, staff and luck — <b>realistic potential normalizes performance against a peer cohort to define a lower and an upper bound</b>. Success is then how close an organization gets to that band.</p>
@@ -87,45 +95,53 @@
   <div class="note good"><b>Why not "did they hit their goal?"</b> Goals are set by the organization, so completion-to-goal measures ambition as much as performance — a cautious goal makes a weak year look excellent. Conversion rate has the same problem from the other direction: it moves with donor mix, marketing spend and staff capability, none of which are comparable across organizations. Normalizing to a peer cohort is what makes a bound defensible, and it is why the cohort definition gets as much attention here as the model does.</div>
   <div class="note warn"><b>What this build implements, and what it does not.</b> The bounds above are computed <b>per organization, per year</b> — 25th/75th percentile of annual dollars raised within the cohort. The fuller definition of realistic potential is <b>per campaign, per campaign type</b>, with success also read from <i>momentum</i> (week-over-week donations against cohort week-over-week) and the <i>donation curve</i> (growth and decay against cohort curves). None of that is possible from this export: it has no campaign records and no weekly time series, only annual and lifetime totals. The cohort machinery is the same either way — campaign-level data would drop into it without redesign.</div>
 
-  <h2>What is and is not accounted for</h2>
-  <p class="sub">Being explicit matters more than looking complete, so here is the boundary in full.</p>
-  <div class="card reveal">
+  <h2>What this can and cannot see</h2>
+  <p class="sub">Being clear about the edges matters more than looking complete.</p>
+  <details class="disc reveal">
+  <summary>
+    <span>Every dimension, and whether it is covered</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
+<div class="card reveal">
     <div class="tw"><table>
       <thead><tr><th style="width:30%">Dimension</th><th style="width:14%">Status</th><th>Detail</th></tr></thead>
       <tbody id="scope-table"></tbody>
     </table></div>
   </div>
-  <div class="note bad"><b>The most important gap: we only see the campaigns an organization runs with us.</b> An organization that runs its peer-to-peer with GoFundMe Pro and its direct giving somewhere else shows a small number here and is <i>not</i> underperforming — most of its programme is invisible to this analysis. There is no wallet-share field in the data, so this cannot be corrected, only flagged. <b>Footprint is now counted in campaign types (of three), not report columns</b> — an organization using two page builders for the same direct-giving programme is running one campaign type, not two.</div>
-  <div class="card reveal">
-    <h3 style="margin-top:0">How big is that effect? Measured, not assumed.</h3>
-    <p class="sub tight">Accounts running a single campaign type raise about <b>one eleventh</b> of what accounts running all three raise. Splitting that gap:</p>
-    <div class="bars" id="g-footprint" style="--lw:250px"></div>
-    <p class="sub" style="margin-top:14px;margin-bottom:0"><b>So roughly half of the apparent shortfall of a narrow-footprint organization is a measurement artifact</b> — channels we never record — and roughly half is genuinely lower activity on the channels we do see. That is why the flag is a scope warning rather than a correction: the honest statement is "part of this gap is not real, and we cannot tell you which part for any single organization."</p>
   </div>
-  <div class="note warn"><b>Who this affects.</b> <b>1,149 of 3,161 accounts (36%)</b> carry a narrow footprint — one campaign type, or 90%+ of dollars concentrated in one — including <b>195 of the 484 "coachable gap" accounts (40%)</b>, or <b>$22.5M of the $60.0M</b> aggregate gap. Those accounts show a scope warning on their scorecard, and a seller should confirm what the organization runs elsewhere before treating any shortfall as real. It also makes "run another campaign type" a partly circular recommendation: it may be advising an organization to move a programme it deliberately runs elsewhere.</div>
+</details>
+  <div class="note bad"><b>The biggest gap: we only see the fundraising they do with us.</b> An organization that runs its events here and its everyday giving somewhere else looks small in this data and is <i>not</i> underperforming — most of what they do is invisible. Nothing in the data says how much of their fundraising we handle, so this can be flagged but never corrected.</div>
+  <div class="card reveal">
+    <h3 style="margin-top:0">How big is that effect? Measured, not guessed.</h3>
+    <p class="sub tight">Accounts doing one kind of fundraising here raise about <b>a eleventh</b> of what accounts doing all three raise. Splitting that gap:</p>
+    <div class="bars" id="g-footprint" style="--lw:250px"></div>
+    <p class="sub" style="margin-top:14px;margin-bottom:0"><b>So about half of the apparent shortfall is money we simply never see</b>, and about half is genuinely doing less. That is why this is a warning rather than a correction: part of the gap is not real, and for any single organization we cannot say which part.</p>
+  </div>
+  <div class="note warn"><b>Who this affects.</b> <b>1,149 of 3,161 accounts</b> do only one kind of fundraising with us, including <b>195 of the 484</b> accounts we would otherwise coach — <b>$22.5M of the $60.0M</b> total gap. Those accounts carry a warning on their scorecard. Ask what they run elsewhere before treating any shortfall as real.</div>
 
   <h2>What to trust, and what not to</h2>
   <div class="grid2">
     <div class="card reveal">
       <h3 style="margin-top:0;color:var(--good-ink)">Trust these</h3>
       <ul class="sub" style="margin:0;padding-left:20px">
-        <li><b>Percentile position</b> — where an organization sits among genuinely comparable peers.</li>
-        <li><b>The order of the actions</b> — which lever is likeliest to matter most.</li>
-        <li><b>The three-way split</b> — whether this is an onboarding, coaching, or leave-well-alone conversation.</li>
-        <li><b>Who the peers are</b> — the full comparison set is listed by name.</li>
+        <li><b>Where they rank</b> among genuinely comparable peers.</li>
+        <li><b>The order of the suggestions</b> — which one is likeliest to matter most.</li>
+        <li><b>Which conversation to have</b> — onboarding, coaching, or leave them alone.</li>
+        <li><b>Who the peers are</b> — every one is listed by name.</li>
       </ul>
     </div>
     <div class="card reveal">
       <h3 style="margin-top:0;color:var(--crit)">Don't trust these</h3>
       <ul class="sub" style="margin:0;padding-left:20px">
-        <li><b>Exact dollar projections</b> — individually off by roughly a factor of two. Never a target.</li>
-        <li><b>Cause and effect</b> — organizations with a CRM raise more, but the kind that installs one was often already ahead.</li>
-        <li><b>"Should be at the median"</b> — about 80% of the variation is <i>inside</i> peer groups, not between them.</li>
-        <li><b>Campaign-level questions</b> — the data is per organization; there are no individual campaign records.</li>
+        <li><b>The exact dollar figures</b> — individually off by around a factor of two. Never use one as a target.</li>
+        <li><b>Cause and effect</b> — organizations with better tools raise more, but the kind that buys them was often already ahead.</li>
+        <li><b>"They should be at the median"</b> — most of the variation is <i>inside</i> peer groups, not between them.</li>
+        <li><b>Anything about a single campaign</b> — this data is per organization, not per campaign.</li>
       </ul>
     </div>
   </div>
-  <div class="note"><b>In one line:</b> this tells you where an organization stands against real peers and gives a sensibly ordered list of what to try. It does not tell you what will happen if they do it.</div>
+  <div class="note"><b>In one line:</b> this tells you where an organization stands against real peers, and what to try first. It does not tell you what will happen if they do it.</div>
 </div>
 
 <!-- ══════════════════════════ FINDINGS ══════════════════════════ -->
@@ -133,7 +149,7 @@
 
   <p class="eyebrow">Findings</p>
   <h2 style="margin-top:0">Six things the data says</h2>
-  <p class="sub">Headline patterns across the 3,161 comparable accounts. Details of how any of this was derived live in the Methodology tab.</p>
+  <p class="sub">The main patterns across all 3,161 accounts. How any of it was worked out is in the Methodology tab.</p>
 
   <div class="stats reveal">
     <div class="stat"><div class="k">Raised, trailing year</div><div class="v">$2.67B</div><div class="d">across the whole book</div></div>
@@ -143,46 +159,46 @@
   </div>
 
   <h2><span style="color:var(--ink-3);font-weight:600">01</span> &nbsp;Fundraising is extraordinarily concentrated</h2>
-  <p class="sub">Share of all trailing-year dollars raised, by the top slice of accounts. The top 1% raise nearly half of everything.</p>
+  <p class="sub">Share of everything raised last year, by the top slice of accounts.</p>
   <div class="card reveal"><div class="bars" id="f-conc" style="--lw:150px"></div></div>
-  <div class="note"><b>What follows from it.</b> A flat per-account coverage model wastes effort. Half the money sits with about 30 organizations, and the median account raises $122,000 — those two facts call for different playbooks, not one.</div>
+  <div class="note"><b>What follows.</b> Treating every account the same wastes effort. Half the money sits with about 30 organizations, and the typical account raises $122,000. Those two need different playbooks.</div>
 
   <h2><span style="color:var(--ink-3);font-weight:600">02</span> &nbsp;Almost everyone scales on volume, not gift size</h2>
-  <p class="sub">Of the 317 accounts in the top tenth of fundraisers, how did they get there — a bigger average gift, or more gifts?</p>
+  <p class="sub">Of the 317 accounts in the top tenth, how did they get there — bigger gifts, or more of them?</p>
   <div class="card reveal"><div class="bars" id="f-paths" style="--lw:196px"></div></div>
-  <div class="note good"><b>The most useful single finding here.</b> Volume-led outnumbers gift-led <b>13 to 1</b>. Growing the number of donors — especially recurring ones — is how nearly every top performer got there, and it matches what the model finds independently: recurring donors is the most robust lever of the five. When in doubt, that is the advice.</div>
+  <div class="note good"><b>The most useful finding on this page.</b> More donors beats bigger gifts, <b>13 to 1</b>. Growing the number of donors, especially monthly ones, is how nearly every top performer got there — and the model finds the same thing on its own. When in doubt, that is the advice.</div>
 
   <h2><span style="color:var(--ink-3);font-weight:600">03</span> &nbsp;Direct giving is three quarters of everything</h2>
-  <p class="sub">Lifetime dollars by campaign type, with the underlying report columns shown beneath each. <b>Donation Page and Campaign Studio are not two channels</b> — a donation page is where direct-giving traffic lands, and Campaign Studio is one way to build one. The reporting splits a dollar by which surface it came through, so counting columns overstates how many genuinely different things an organization runs.</p>
+  <p class="sub">All-time dollars by kind of fundraising. <b>Donation Page and Campaign Studio are not two different things</b> — one is a page, the other is a way to build that page. Our reporting splits them, which makes organizations look like they do more kinds of fundraising than they really do.</p>
   <div class="card reveal"><div class="bars" id="f-chan" style="--lw:150px"></div></div>
-  <div class="note"><b>Why this correction mattered.</b> 60% of accounts show dollars in both Donation Page and Campaign Studio, with Studio a median 13% of their direct-giving total — the signature of a builder, not a separate channel. Rolling the seven columns into three campaign types <b>improved the model</b> (cross-validated R² 0.7325 → 0.7365), and with both breadth measures in, campaign-type breadth dominates (+0.28, p≈3e-26) while channel breadth collapses (+0.06). The "diversify" lever now means <i>run a campaign type you do not run with us</i> rather than <i>use a second page builder</i>.</div>
-  <div class="note warn"><b>The type mapping is inferred, not documented.</b> Direct giving = Donation Page + Campaign Studio + Crowdfunding; peer-to-peer = Peer to Peer + Registration&nbsp;with&nbsp;Fundraising; hosted event = Ticketed + Registration. That comes from the column names and the stated product taxonomy, not from product documentation — <code>CAMPAIGN_TYPES</code> in the engine is one dict, so a correction is a one-line change. Worth confirming, particularly RwF and Crowdfunding.</div>
+  <div class="note"><b>Why fixing this mattered.</b> 60% of accounts have money in both, with Studio typically 13% of their direct giving — the signature of a page builder, not a separate channel. Rolling seven report columns into three real kinds of fundraising <b>made the model better</b>, and it changed what the advice means: "diversify" now means <i>try a kind of fundraising you do not do with us</i>, not <i>use a second page builder</i>.</div>
+  <div class="note warn"><b>That grouping is my inference, not documentation.</b> I worked it out from the column names, not from a product spec. It is one line of code to change if someone who knows tells me it is wrong. Worth confirming.</div>
 
   <h2><span style="color:var(--ink-3);font-weight:600">04</span> &nbsp;Matched peers still differ enormously</h2>
-  <p class="sub">Within the largest peer groups — already matched on both cause and size — the 10th to 90th percentile range of trailing-year raised.</p>
+  <p class="sub">Inside the biggest peer groups — already matched on cause and size — how far apart the members still are.</p>
   <div class="card reveal">
     <div class="legend"><span><i style="background:var(--track)"></i>10th–90th percentile</span><span><i style="background:var(--ink-3);width:2px;height:13px;border-radius:1px"></i>median</span></div>
     <div id="f-spread"></div>
   </div>
-  <div class="note warn"><b>Read percentiles, not targets.</b> In Human Services · $1M–$5M the 10th percentile raises $18k and the 90th raises $562k — a 30× spread among organizations of the same cause and size. Cohorting makes the comparison fair; it does not make peers alike. "You should be at the median" is not a claim this data supports.</div>
+  <div class="note warn"><b>Read the ranking, not a target.</b> In Human Services at $1M–$5M, the bottom end raises $18k and the top end raises $562k — thirty times apart, among organizations of the same cause and the same size. Matching peers makes the comparison fair. It does not make them alike. "You should be at the median" is not something this data supports.</div>
 
   <h2><span style="color:var(--ink-3);font-weight:600">05</span> &nbsp;Some causes produce far more breakaway leaders</h2>
-  <p class="sub">Share of each sector's accounts raising at least 5× their own peer-group median. Because the comparison is within-cohort, this is not a size effect.</p>
+  <p class="sub">Share of each cause area raising at least 5× their own peer group's median. Since everyone is compared within their own group, this is not just big organizations.</p>
   <div class="card reveal"><div class="bars" id="f-sector" style="--lw:196px"></div></div>
-  <div class="note"><b>Where the playbooks are.</b> Religion Related produces standouts at 2–3× the rate of most sectors — congregational giving concentrates in a way other causes do not. Those are the accounts worth interviewing for what they do differently.</div>
+  <div class="note"><b>Where the playbooks are.</b> Religious organizations produce standouts at two to three times the rate of other causes. Congregational giving concentrates in a way nothing else does. Those are the accounts worth interviewing.</div>
 
   <h2><span style="color:var(--ink-3);font-weight:600">06</span> &nbsp;What actually moves fundraising</h2>
-  <p class="sub">Effect of each lever on annual raised, holding peer group, organization scale and fundraising history constant.</p>
+  <p class="sub">What each one is worth, after holding peer group, size and fundraising history steady.</p>
   <div class="card reveal"><div class="bars" id="f-levers" style="--lw:196px;--vw:96px"></div></div>
-  <div class="note"><b>Association, not proof.</b> These come from comparing organizations, not from running an experiment. Organizations that already fundraise well are likelier to have installed a CRM in the first place, so each number blends "this helps" with "the kind of organization that does this was already ahead."</div>
+  <div class="note"><b>These are associations, not proof.</b> They come from comparing organizations, not from running an experiment. Organizations that already fundraise well are more likely to have bought good tools in the first place, so every number here mixes "this helps" with "the kind of organization that does this was already ahead".</div>
 
 </div>
 
 <!-- ══════════════════════════ COHORTS ══════════════════════════ -->
 <div class="panel" id="panel-cohorts" role="tabpanel" aria-labelledby="tab-cohorts" hidden>
-  <p class="eyebrow">Cohorts</p>
+  <p class="eyebrow">Peer groups</p>
   <h2 style="margin-top:0">The 38 peer groups</h2>
-  <p class="sub">A cohort is a cause area crossed with a revenue size band — the set an organization is actually measured against. Filter, re-sort, switch the metric, and select any group to see its distribution, benchmarks and members.</p>
+  <p class="sub">A peer group is one cause area at one size — the organizations any given account is actually measured against. Pick one to see its spread and its members.</p>
   <div class="card reveal">
     <div class="controls" style="margin-bottom:14px">
       <div class="fld"><label for="c-sector">Sector</label><select id="c-sector"></select></div>

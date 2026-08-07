@@ -6,7 +6,7 @@
   <div>
     <p class="eyebrow" style="margin-bottom:4px">The deck</p>
     <div class="dt">End-to-End UTM Support — program map</div>
-    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">Proprietary &amp; confidential — Google Slides, GoFundMe access required. Ticket status below verified against Jira, not the slide.</p>
+    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">Proprietary &amp; confidential; GoFundMe access required. The statuses below come from Jira, not from this slide.</p>
   </div>
   <div class="dl">
     <a class="btn primary" href="https://docs.google.com/presentation/d/1CnOI6Q-UrNNMnnAK2g1ctkixHqzIFGNb24Dfp1HWJkA/edit?usp=sharing" target="_blank" rel="noopener">
@@ -20,130 +20,153 @@
 <div class="stats reveal" style="margin-top:26px">
   <div class="stat"><div class="k">Jira tickets mapped</div><div class="v" data-count="12">12</div><div class="d">across 2 active epics</div></div>
   <div class="stat accent"><div class="k">Now closed</div><div class="v" data-count="7">7</div><div class="d">of the 12</div></div>
-  <div class="stat"><div class="k">UTM parameters</div><div class="v" data-count="5">5</div><div class="d">source, medium, campaign, content, term</div></div>
-  <div class="stat"><div class="k">Hops UTM must survive</div><div class="v" data-count="10">10</div><div class="d">through the EG3 SDK chain</div></div>
+  <div class="stat"><div class="k">Tags per link</div><div class="v" data-count="5">5</div><div class="d">source, medium, campaign, content, term</div></div>
+  <div class="stat"><div class="k">Handoffs a tag must survive</div><div class="v" data-count="10">10</div><div class="d">on embedded donation forms</div></div>
 </div>
 
-<div class="note warn" style="margin-top:22px"><b>The program map is out of date.</b> Every ticket status on the slide was checked against Jira, and <b>five of the twelve have moved</b>: both reporting tickets and the reporting epic are now Done, both capture tasks shipped, and the end-to-end test ticket was closed Won't Do. Two of the four open decisions have since been settled. The table below is the current state.</div>
+<div class="note warn" style="margin-top:22px"><b>The slide is out of date.</b> Every ticket on it was checked against Jira, and <b>five of the twelve have moved since it was drawn</b>. Both fixes shipped, the reporting work is done, and one test ticket was closed without being built. The table below is the real state.</div>
 
 <h2>The problem</h2>
-<p class="sub">The customer evidence was unambiguous: five CFBR feature requests (575, 654, 857, 881, 894) calling native UTM table stakes; enterprise customers unable to attribute revenue to channel, including IRUSA, Stand Up To Cancer, Feed My Starving Children and West Virginia University, plus at-risk accounts FFTP, ACS and Shatterproof. Every major competitor ships it. Agencies were spending hours reconciling Google Analytics against Classy reports with brittle hacks.</p>
-<div class="note good"><b>Research found the same thing independently.</b> The <a href="#/interviews" data-jump="interviews">interview synthesis</a> found FMSC unable to export the UTM parameters in its own tracking links, source codes dropping during P2P setup and at site boundaries, and 96% of Salvation Army transactions carrying no referral data. Both agency consultations, Community Boost and Blue State, named the same unlock: UTM in self-serve reporting plus CSV off first-party data.</div>
+<p class="sub">A UTM tag is the label a marketer puts on a link so they can tell which ad or email brought in a donation. GoFundMe Pro dropped them. Some pages captured the tags, nothing saved them onto the donation, and nothing showed them in reporting — so a nonprofit could not tell which campaign raised the money.</p>
+<p class="sub">Customers said so five times in feature requests. IRUSA, Stand Up To Cancer, Feed My Starving Children and West Virginia University all asked for it. Every major competitor already has it. Agencies were hand-matching Google Analytics against our reports to fill the gap.</p>
+<div class="note good"><b>The research found the same thing on its own.</b> The <a href="#/interviews" data-jump="interviews">interviews</a> turned up Feed My Starving Children unable to export the tags in its own links, tags dropping during peer-to-peer setup, and 96% of Salvation Army donations arriving with no source at all.</div>
 
 <h2>What was done</h2>
-<p class="sub">The original all-in-one epic (PRO-5251) was too big to schedule, so it was split along the natural team boundary: <b>capture and persist</b> in one epic, <b>surface in reporting</b> in another. A spike ran first to replace a static code audit with runtime proof.</p>
+<p class="sub">The original ticket covered everything at once and no team could schedule it. It was split in two: <b>catch and save the tags</b>, then <b>show them in reporting</b>. Before either, someone had to prove where the tags were actually being lost.</p>
 
 <div class="card reveal">
   <div class="bars" style="--lw:34px;--vw:0px;--lwm:28px;--vwm:0px">
-    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">1</div><div><div style="font-weight:650">Split the unschedulable epic</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-5251 → PRO-5397 (capture + persist, Studio + EG3) and PRO-6748 (Pro Reporting)</div></div></div>
-    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">2</div><div><div style="font-weight:650">Validate the static audit at runtime</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-5398 walked real donations with UTM query strings and captured the network bodies — found both drop points</div></div></div>
-    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">3</div><div><div style="font-weight:650">Fix the two capture gaps</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-5695 (Studio charge-intent body) and PRO-5696 (EG3 BFF → APIv2) — both shipped</div></div></div>
-    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">4</div><div><div style="font-weight:650">Design the backend data flow</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-6771 — new related tracking model, Search indexing, public API exposure</div></div></div>
-    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">5</div><div><div style="font-weight:650">Design the admin surface</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-6775 — Transaction History columns, filtering, CSV, empty states, grounded in the two agency interviews</div></div></div>
+    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">1</div><div><div style="font-weight:650">Split the unschedulable epic</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-5251 became PRO-5397 (catch and save) and PRO-6748 (reporting)</div></div></div>
+    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">2</div><div><div style="font-weight:650">Find where the tags were being lost</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-5398 put real donations through with tags attached and watched what the browser sent. Found both leaks.</div></div></div>
+    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">3</div><div><div style="font-weight:650">Fix both leaks</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-5695 and PRO-5696. Both shipped.</div></div></div>
+    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">4</div><div><div style="font-weight:650">Design where the tags get stored</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-6771 — a new table, search indexing, and the public API</div></div></div>
+    <div class="bar"><div class="l" style="text-align:center;color:var(--brand);font-weight:700">5</div><div><div style="font-weight:650">Design what admins see</div><div style="font-size:.82rem;color:var(--ink-3)">PRO-6775 — new columns, filtering and CSV export, shaped by the two agency interviews</div></div></div>
   </div>
 </div>
 
-<h3>What the spike found</h3>
-<p class="sub tight">The static audit said UTMs were missing from one submission body and present in the other. The spike loaded real checkouts with <code>?utm_source=test&amp;utm_medium=cpc&amp;utm_campaign=spike</code> and confirmed both drop points in the network tab.</p>
+<h3>Where the tags were being lost</h3>
+<p class="sub tight">Reading the code suggested one leak. Running real donations through with test tags attached found two.</p>
 <div class="grid2 reveal">
   <div class="card">
-    <h3 style="margin-top:0">Studio — the drop point</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">UTMs were captured at landing, persisted across the multi-step flow in sessionStorage, and reached mParticle as <code>campaign_*</code> properties, but were <b>not</b> in the donation submission payload. <code>FinalizeOrderArgs</code> omitted them. Every UTM reached analytics and none reached the transaction record.</p>
+    <h3 style="margin-top:0">Studio</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">The tags were caught on arrival and carried through every step of the donation form. Then the final submission left them out. <b>Every tag reached analytics and none reached the donation record</b> — which is why this looked fine from the outside.</p>
   </div>
   <div class="card">
-    <h3 style="margin-top:0">EG3 — the ten-hop chain</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">Parent URL → <code>nav._getAllParams</code> → iframe <code>src=</code> → <code>DONATION_PARAMS_UPDATE</code> postMessage → modal-app Redux → wire body. Every hop worked at runtime, including the inline-grid launcher whose implementation had been described as "hacky", which is what put it in scope.</p>
+    <h3 style="margin-top:0">Embedded donation forms</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">When the form is embedded in a nonprofit's own website, a tag has to survive ten handoffs between the page, the frame and the app. All ten worked, including the one an engineer had called "hacky" — which is what put it on the list to check.</p>
   </div>
 </div>
 
 <h2>What came out of it</h2>
 
-<h3>Reality check — the slide against Jira</h3>
-<p class="sub tight">Verified live. Rows where the two disagree are marked.</p>
+<h3>The slide against Jira</h3>
+<p class="sub tight">Checked live. Rows where the two disagree are shaded.</p>
+<details class="disc reveal">
+  <summary>
+    <span>All twelve tickets, slide against Jira</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <div class="card reveal">
   <div class="tw"><table>
     <thead><tr><th style="width:15%">Ticket</th><th style="width:30%">Summary</th><th style="width:16%">Slide said</th><th style="width:16%">Jira says now</th><th>Note</th></tr></thead>
     <tbody>
-      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-5251" target="_blank" rel="noopener"><b>PRO-5251</b></a><br><span class="tsub">Epic</span></td><td>UTM parameter capture, persistence, and reporting (Studio + Embedded Studio)</td><td>To Do</td><td><span class="pill">Backlog</span></td><td>Split into 5397 + 6748. Still open although both children have progressed past it.</td></tr>
-      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-2098" target="_blank" rel="noopener"><b>PRO-2098</b></a><br><span class="tsub">Story · parent PRO-2234</span></td><td>Persist UTM Data on Transactions</td><td>To Do</td><td><span class="pill">To Do</span></td><td>Realized by PRO-6771, which is Done — so this looks closeable.</td></tr>
-      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-872" target="_blank" rel="noopener"><b>PRO-872</b></a><br><span class="tsub">Story · parent PRO-785</span></td><td>APIv2 | Add source_tracking_code to Transaction endpoint(s)</td><td>Done</td><td><span class="pill good">Done</span></td><td>The parity base the public-API shape was built against.</td></tr>
-      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-2099" target="_blank" rel="noopener"><b>PRO-2099</b></a><br><span class="tsub">Spike · parent PRO-2234</span></td><td>Investigate Event Driven + Flexible Embedded SDK</td><td>To Do</td><td><span class="pill">To Do</span></td><td>Seeds the future cross-domain phase.</td></tr>
-      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-5397" target="_blank" rel="noopener"><b>PRO-5397</b></a><br><span class="tsub">Epic</span></td><td>End-to-End UTM Support — Studio + EG3</td><td>In Progress</td><td><span class="pill info">In Progress</span></td><td>Phase 1 of two. Cross-team umbrella: Donate, Pre-Donate, Integrations, Create, Admin.</td></tr>
-      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-5398" target="_blank" rel="noopener"><b>PRO-5398</b></a><br><span class="tsub">Spike</span></td><td>UTM attribution end-to-end validation across Studio + EG3</td><td>Done</td><td><span class="pill good">Done</span></td><td>Runtime validation. Write-up in Confluence, linked below.</td></tr>
-      <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-5695" target="_blank" rel="noopener"><b>PRO-5695</b></a><br><span class="tsub">Task</span></td><td>Studio: include tracking.utm in /charge-intent donation submission body</td><td>Tech Review</td><td><span class="pill good">Done</span></td><td><b>Moved.</b> Shipped.</td></tr>
-      <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-5696" target="_blank" rel="noopener"><b>PRO-5696</b></a><br><span class="tsub">Task</span></td><td>EG3: forward tracking.utm from BFF to APIv2 source-tracking-codes endpoint</td><td>Tech Review</td><td><span class="pill good">Done</span></td><td><b>Moved.</b> Shipped.</td></tr>
-      <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-5697" target="_blank" rel="noopener"><b>PRO-5697</b></a><br><span class="tsub">Task</span></td><td>EG3 SDK: end-to-end test coverage for UTM survival through the 10-hop chain</td><td>To Do</td><td><span class="pill bad">Won't Do</span></td><td><b>Closed, not delivered.</b> See the gap called out below.</td></tr>
+      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-5251" target="_blank" rel="noopener"><b>PRO-5251</b></a><br><span class="tsub">Epic</span></td><td>UTM parameter capture, persistence, and reporting (Studio + Embedded Studio)</td><td>To Do</td><td><span class="pill">Backlog</span></td><td>Split in two. Still open even though both halves have moved past it.</td></tr>
+      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-2098" target="_blank" rel="noopener"><b>PRO-2098</b></a><br><span class="tsub">Story · parent PRO-2234</span></td><td>Persist UTM Data on Transactions</td><td>To Do</td><td><span class="pill">To Do</span></td><td>PRO-6771 did this work and is Done, so this can probably be closed.</td></tr>
+      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-872" target="_blank" rel="noopener"><b>PRO-872</b></a><br><span class="tsub">Story · parent PRO-785</span></td><td>APIv2 | Add source_tracking_code to Transaction endpoint(s)</td><td>Done</td><td><span class="pill good">Done</span></td><td>The existing pattern the new API was matched to.</td></tr>
+      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-2099" target="_blank" rel="noopener"><b>PRO-2099</b></a><br><span class="tsub">Spike · parent PRO-2234</span></td><td>Investigate Event Driven + Flexible Embedded SDK</td><td>To Do</td><td><span class="pill">To Do</span></td><td>Groundwork for the next phase.</td></tr>
+      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-5397" target="_blank" rel="noopener"><b>PRO-5397</b></a><br><span class="tsub">Epic</span></td><td>End-to-End UTM Support — Studio + EG3</td><td>In Progress</td><td><span class="pill info">In Progress</span></td><td>Phase 1 of two, across five teams.</td></tr>
+      <tr><td><a href="https://gofundme.atlassian.net/browse/PRO-5398" target="_blank" rel="noopener"><b>PRO-5398</b></a><br><span class="tsub">Spike</span></td><td>UTM attribution end-to-end validation across Studio + EG3</td><td>Done</td><td><span class="pill good">Done</span></td><td>The investigation. Write-up linked below.</td></tr>
+      <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-5695" target="_blank" rel="noopener"><b>PRO-5695</b></a><br><span class="tsub">Task</span></td><td>Studio: put the tags in the donation submission</td><td>Tech Review</td><td><span class="pill good">Done</span></td><td><b>Moved.</b> Shipped.</td></tr>
+      <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-5696" target="_blank" rel="noopener"><b>PRO-5696</b></a><br><span class="tsub">Task</span></td><td>Embedded forms: pass the tags through to the API</td><td>Tech Review</td><td><span class="pill good">Done</span></td><td><b>Moved.</b> Shipped.</td></tr>
+      <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-5697" target="_blank" rel="noopener"><b>PRO-5697</b></a><br><span class="tsub">Task</span></td><td>Embedded forms: a test that the tags survive all ten handoffs</td><td>To Do</td><td><span class="pill bad">Won't Do</span></td><td><b>Closed without being built.</b> See below.</td></tr>
       <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-6748" target="_blank" rel="noopener"><b>PRO-6748</b></a><br><span class="tsub">Epic</span></td><td>UTM Support in Pro Reporting</td><td>In Progress</td><td><span class="pill good">Done</span></td><td><b>Moved.</b> Epic closed.</td></tr>
-      <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-6771" target="_blank" rel="noopener"><b>PRO-6771</b></a><br><span class="tsub">Story <i>(slide says Task)</i></span></td><td>Backend | UTM Data-Flow Architecture</td><td>In Progress</td><td><span class="pill good">Implemented</span></td><td><b>Moved.</b> APIv2 <a href="https://github.com/gofundme/apiv2/pull/1484" target="_blank" rel="noopener">PR #1484</a> verified against the deployed dev API.</td></tr>
+      <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-6771" target="_blank" rel="noopener"><b>PRO-6771</b></a><br><span class="tsub">Story <i>(slide says Task)</i></span></td><td>Backend | UTM Data-Flow Architecture</td><td>In Progress</td><td><span class="pill good">Implemented</span></td><td><b>Moved.</b> <a href="https://github.com/gofundme/apiv2/pull/1484" target="_blank" rel="noopener">PR #1484</a>, checked against the running dev API.</td></tr>
       <tr class="chg"><td><a href="https://gofundme.atlassian.net/browse/PRO-6775" target="_blank" rel="noopener"><b>PRO-6775</b></a><br><span class="tsub">Design Story</span></td><td>Design | UTM Reporting UI</td><td>To Do</td><td><span class="pill good">Implemented</span></td><td><b>Moved.</b> Figma prototype linked below.</td></tr>
     </tbody>
   </table></div>
 </div>
+  </div>
+</details>
 
-<h3>The architecture decision worth knowing</h3>
-<div class="note"><b>UTM does not live on the transactions table.</b> It persists in a <b>new related tracking model</b> on APIv2 — a separate table with five UTM fields and a foreign key to the transaction. The transactions table is too large to alter: a schema migration would have blocked the database for roughly <b>48 hours</b>. That one constraint shapes everything downstream, including the commerce write path, which does not reach the new table through its existing "as-is" passthrough metadata and therefore needs explicit work.</div>
+<h3>The decision worth knowing</h3>
+<div class="note"><b>The tags are not stored on the donations table.</b> They live in a new separate table that points at each donation. The donations table is too big to change — adding columns would have locked the database for around <b>48 hours</b>. That one constraint shapes everything after it, including the unfinished commerce path below, which writes to the old table and so never reaches the new one.</div>
 
 <h3>Two open decisions have since been settled</h3>
 <div class="grid2 reveal">
   <div class="card">
     <span class="pill good">Resolved</span>
-    <h3 style="margin-top:11px">Public API for V1 — yes, opt-in</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">Read-only UTM exposure shipped in <a href="https://github.com/gofundme/apiv2/pull/1484" target="_blank" rel="noopener">PR #1484</a>, verified against the deployed dev API and cross-checked against the dev DB. Delivery is <b>opt-in</b>, because auto-including the <code>utm</code> object would force a join on every transaction read. It piggybacks on the existing <code>?with=source_tracking_codes</code> request and returns a stable five-key shape with nulls for anything not captured. Signed off by Mai in <code>#proj_e2e_utm_support_gfmpro</code>.</p>
+    <h3 style="margin-top:11px">Yes to the public API, but you have to ask for it</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">Shipped in <a href="https://github.com/gofundme/apiv2/pull/1484" target="_blank" rel="noopener">PR #1484</a>. Developers have to request the tags rather than getting them by default, because including them automatically would slow down every single donation lookup. Signed off by Mai.</p>
   </div>
   <div class="card">
     <span class="pill good">Resolved</span>
-    <h3 style="margin-top:11px">Reporting design — deliberately plain</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">Both agencies were explicit that GoFundMe should be a <b>clean data source rather than a charting tool</b>. So "UTM Parameters" sits under Property → Marketing beneath the existing Source Parameters group. Columns are <b>select-only and off by default</b>, ordered after the legacy Source Code and Referrer columns so the two coexist. Free-text "contains" matching as well as selection, and CSV and saved reports both inherit the selection. Most donations are untagged, so empty states were designed so reports do not look broken.</p>
+    <h3 style="margin-top:11px">Keep the reporting plain</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">Both agencies said the same thing: they want GoFundMe to be <b>clean data they can export, not another charting tool</b>. So the tags are optional columns, off by default, sitting alongside the old source fields rather than replacing them. Most donations have no tags, so the empty state was designed carefully — otherwise the report looks broken.</p>
   </div>
 </div>
 
-<h3>The system these tickets build</h3>
+<h3>How a tag travels, end to end</h3>
+<details class="disc reveal">
+  <summary>
+    <span>Every step, and the ticket that built it</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <div class="card reveal">
   <div class="tw"><table>
-    <thead><tr><th style="width:26%">Stage</th><th style="width:18%">Ticket</th><th>What happens</th></tr></thead>
+    <thead><tr><th style="width:30%">Step</th><th style="width:18%">Ticket</th><th>What happens</th></tr></thead>
     <tbody>
-      <tr><td><b>Donor lands with utm_*</b></td><td><span class="tsub">—</span></td><td>Inbound campaign URL carries the five parameters in the query string.</td></tr>
-      <tr><td><b>Studio capture</b></td><td>PRO-5695</td><td>Redux → charge-intent submission body.</td></tr>
-      <tr><td><b>EG3 capture</b></td><td>PRO-5696</td><td>BFF forwards <code>tracking.utm</code> to the APIv2 source-tracking-codes endpoint.</td></tr>
-      <tr><td><b>APIv2 tracking table</b></td><td>PRO-6771</td><td>New related model: five UTM fields, FK to transaction.</td></tr>
-      <tr><td><b>Search index</b></td><td>PRO-6771</td><td>Indexed for filtering. Path already existed.</td></tr>
-      <tr><td><b>Transaction History + CSV</b></td><td>PRO-6775 design</td><td>Selectable columns per the design spec; CSV inherits the selection.</td></tr>
-      <tr><td><b>Public API</b></td><td>PRO-6771 / PRO-872</td><td>Nested parity with <code>source_tracking_codes</code>, opt-in via <code>?with=</code>.</td></tr>
-      <tr><td><b>Commerce write path</b></td><td><span class="pill warn">open</span></td><td>Designations (IRUSA). Does not reach the new table today — needs explicit exposure.</td></tr>
+      <tr><td><b>A donor clicks a tagged link</b></td><td><span class="tsub">—</span></td><td>The five tags ride along in the web address.</td></tr>
+      <tr><td><b>The donation form catches them</b></td><td>PRO-5695</td><td>Tags go into the donation submission.</td></tr>
+      <tr><td><b>Embedded forms pass them on</b></td><td>PRO-5696</td><td>Same, for forms embedded on a nonprofit's own site.</td></tr>
+      <tr><td><b>They get saved</b></td><td>PRO-6771</td><td>A new table holding the five tags, linked to the donation.</td></tr>
+      <tr><td><b>They become searchable</b></td><td>PRO-6771</td><td>Indexed so reports can filter on them.</td></tr>
+      <tr><td><b>They show up in reporting</b></td><td>PRO-6775</td><td>Optional columns; CSV export carries whatever is selected.</td></tr>
+      <tr><td><b>They reach the public API</b></td><td>PRO-6771</td><td>Available on request, not by default.</td></tr>
+      <tr><td><b>Designations still miss them</b></td><td><span class="pill warn">open</span></td><td>This path writes to the old table, so tags never arrive. IRUSA is the customer waiting.</td></tr>
     </tbody>
   </table></div>
 </div>
+  </div>
+</details>
 
 <h3>Linked artifacts</h3>
-<p class="sub tight">Pulled from the Jira ticket bodies and comments, so these are the references the work was actually done against.</p>
+<p class="sub tight">Pulled from the tickets themselves, so these are what the work was done against.</p>
+<details class="disc reveal">
+  <summary>
+    <span>Eight linked documents, designs and pull requests</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <div class="card reveal">
   <div class="lnks">
-    <div class="lnk"><span class="lk">Figma</span><div><a href="https://www.figma.com/design/9ZtCukOnP4epVRAc6Wk8kh/UTM-Prototype?node-id=0-1" target="_blank" rel="noopener">UTM Prototype</a><span class="lm">Reporting UI design — referenced from PRO-6775 and PRO-6748</span></div></div>
-    <div class="lnk"><span class="lk">Confluence</span><div><a href="https://gofundme.atlassian.net/wiki/spaces/gpnct/pages/6330122270" target="_blank" rel="noopener">UTM Attribution Across the Checkout Stack — Industry Gap and Frontend Scope (PRO-5398)</a><span class="lm">The spike write-up. Referenced from PRO-5398, 5695, 5696 and 5697</span></div></div>
-    <div class="lnk"><span class="lk">Drawing</span><div><a href="https://docs.google.com/drawings/d/1j0jUFmiRjZZgtc98s-d1C5hRpBFpnlqRcUVb2_mOvoE/edit" target="_blank" rel="noopener">UTM data-flow design</a><span class="lm">The canonical persist → index → report diagram. Referenced from PRO-5695, 5696, 6748 and 6771</span></div></div>
-    <div class="lnk"><span class="lk">GitHub</span><div><a href="https://github.com/gofundme/apiv2/pull/1484" target="_blank" rel="noopener">gofundme/apiv2 · PR #1484</a><span class="lm">Read-only UTM exposure on the transaction API</span></div></div>
-    <div class="lnk"><span class="lk">Doc</span><div><a href="https://docs.google.com/document/d/1R-Zr0EXdaALqB01JSUrGrp7-eTAbhG_HitpR46KkQ-c/edit" target="_blank" rel="noopener">Reporting epic working doc</a><span class="lm">Referenced from PRO-6748</span></div></div>
-    <div class="lnk"><span class="lk">Flag</span><div><a href="https://app.optimizely.com/v2/projects/5661530973274112/flags/manage/npo_utm_attribution/rules/lab" target="_blank" rel="noopener">Optimizely · npo_utm_attribution</a><span class="lm">The rollout flag. Referenced from PRO-6748</span></div></div>
-    <div class="lnk"><span class="lk">Slack</span><div><a href="https://gofundme.enterprise.slack.com/archives/C0B3J46KSJJ" target="_blank" rel="noopener">#proj_e2e_utm_support_gfmpro</a><span class="lm">Where the API delivery decision was signed off</span></div></div>
-    <div class="lnk"><span class="lk">Confluence</span><div><a href="https://gofundme.atlassian.net/wiki/spaces/~55705873bbe25f81ca4389b5530104e98d81af/pages/6279299084" target="_blank" rel="noopener">Personal-space working page</a><span class="lm">Referenced from PRO-5251. In a personal space, so it will not be discoverable after handover — worth moving</span></div></div>
+    <div class="lnk"><span class="lk">Figma</span><div><a href="https://www.figma.com/design/9ZtCukOnP4epVRAc6Wk8kh/UTM-Prototype?node-id=0-1" target="_blank" rel="noopener">UTM Prototype</a><span class="lm">The reporting screens</span></div></div>
+    <div class="lnk"><span class="lk">Confluence</span><div><a href="https://gofundme.atlassian.net/wiki/spaces/gpnct/pages/6330122270" target="_blank" rel="noopener">UTM Attribution Across the Checkout Stack — Industry Gap and Frontend Scope (PRO-5398)</a><span class="lm">The write-up of where the tags were being lost</span></div></div>
+    <div class="lnk"><span class="lk">Drawing</span><div><a href="https://docs.google.com/drawings/d/1j0jUFmiRjZZgtc98s-d1C5hRpBFpnlqRcUVb2_mOvoE/edit" target="_blank" rel="noopener">UTM data-flow design</a><span class="lm">The save, index and report diagram</span></div></div>
+    <div class="lnk"><span class="lk">GitHub</span><div><a href="https://github.com/gofundme/apiv2/pull/1484" target="_blank" rel="noopener">gofundme/apiv2 · PR #1484</a><span class="lm">Tags on the public donation API</span></div></div>
+    <div class="lnk"><span class="lk">Doc</span><div><a href="https://docs.google.com/document/d/1R-Zr0EXdaALqB01JSUrGrp7-eTAbhG_HitpR46KkQ-c/edit" target="_blank" rel="noopener">Reporting epic working doc</a><span class="lm">The reporting working doc</span></div></div>
+    <div class="lnk"><span class="lk">Flag</span><div><a href="https://app.optimizely.com/v2/projects/5661530973274112/flags/manage/npo_utm_attribution/rules/lab" target="_blank" rel="noopener">Optimizely · npo_utm_attribution</a><span class="lm">The rollout switch</span></div></div>
+    <div class="lnk"><span class="lk">Slack</span><div><a href="https://gofundme.enterprise.slack.com/archives/C0B3J46KSJJ" target="_blank" rel="noopener">#proj_e2e_utm_support_gfmpro</a><span class="lm">Where the API decision was signed off</span></div></div>
+    <div class="lnk"><span class="lk">Confluence</span><div><a href="https://gofundme.atlassian.net/wiki/spaces/~55705873bbe25f81ca4389b5530104e98d81af/pages/6279299084" target="_blank" rel="noopener">Personal-space working page</a><span class="lm">In a personal space, so nobody will find it after handover. Worth moving.</span></div></div>
   </div>
 </div>
+  </div>
+</details>
 
 <h2>What it does not cover</h2>
 <div class="card reveal">
-  <div class="sk"><h3>No end-to-end test for the ten-hop chain</h3><p>PRO-5697 specified one: a fixture-driven test asserting all five UTM keys reach the postMessage payload and the <code>/finalize-order</code> wire body across both modal-launch paths, failing with the name of the hop that dropped. It was closed <b>Won't Do</b> once the APIv2 architecture changed the shape of what needed testing, with coverage deferred until the frontend UI ticket lands. Until then, any change to <code>nav.ts</code>, <code>modal.ctrl.ts</code>, <code>modal.view.ts</code> or the modal-app URL parser can silently break EG3 attribution. A jest spec was written and syntax-checked but never pushed.</p></div>
-  <div class="sk"><h3>The commerce write path is unfinished, with a named customer</h3><p>UTM lands in a new table commerce does not write to, so the existing passthrough metadata never reaches it. Designations, IRUSA's use case, are the concrete example. Open between Shiran and Tony.</p></div>
-  <div class="sk"><h3>Multiple source-tracking-code records, cause unknown</h3><p>Which UTM record to return when several exist is still open, and nothing in the tickets resolves the cause.</p></div>
-  <div class="sk"><h3>Two predecessor tickets are stale rather than closed</h3><p>PRO-2098 sits in To Do although PRO-6771 realized it, and PRO-5251 sits in Backlog although both its child epics have moved past it. Not a delivery risk, but the kind of residue that makes a board unreadable a year later.</p></div>
-  <div class="sk"><h3>Phase 1 only: five parameters, no click IDs</h3><p>Scope is the five <code>utm_*</code> parameters. The original epic also wanted <code>gclid</code>, <code>fbclid</code> and other click IDs, which did not make Phase 1. Fundraise (peer-to-peer) was out of scope pending re-assessment.</p></div>
-  <div class="sk"><h3>Which reporting build tickets shipped is not visible from here</h3><p>PRO-6748 proposed five child stories: design, Transaction History columns and CSV, filtering, saved reports, empty states. Only design appears on the slide and the epic is now closed, so whether the rest shipped, merged elsewhere or closed with the epic cannot be told from these twelve tickets.</p></div>
-  <div class="sk"><h3>No attribution model, and no measurement of adoption</h3><p>This delivers raw parameters on transactions. First-touch versus last-touch, new-versus-existing donor attribution, recurring attribution and cross-domain stickiness are all the future phase. There is also no tagging-adoption tracker, so whether nonprofits tag their links at all remains unknown.</p></div>
+  <div class="sk"><h3>Nothing tests that the tags survive embedded forms</h3><p>A test was specified — put a donation through and check all five tags come out the other end, naming whichever handoff dropped them. It was closed without being built when the storage design changed. Until it exists, four files can be edited in ways that silently break attribution on embedded forms. The test was written and syntax-checked but never pushed.</p></div>
+  <div class="sk"><h3>One donation path still loses the tags, and a customer is waiting</h3><p>Designations write to the old table, so the tags never reach the new one. IRUSA is the named customer. Open between Shiran and Tony.</p></div>
+  <div class="sk"><h3>Two old tickets are stale rather than closed</h3><p>PRO-2098 and PRO-5251 both sit open although the work moved past them. Not a delivery risk, but the kind of thing that makes a board unreadable a year later.</p></div>
+  <div class="sk"><h3>Five tags only, and no attribution model</h3><p>This delivers the raw tags on each donation. It does not decide which one gets the credit when a donor arrives twice, and it does not cover Google or Facebook click IDs. Peer-to-peer is out of scope for now.</p></div>
+  <div class="sk"><h3>Nobody is measuring whether customers tag their links at all</h3><p>The whole feature is worthless to a nonprofit that never tags anything, and there is no tracker for that.</p></div>
 </div>
 
 <h2>Pick this up next</h2>
 <div class="acts reveal">
-  <div class="act"><span class="num">1</span><div><div class="t">Land the deferred E2E coverage</div><div class="m">The frontend UI ticket was the stated condition for reviving PRO-5697's scope, and a prepared spec already exists. Until it lands, UTM attribution across EG3 has no regression protection.</div></div></div>
-  <div class="act"><span class="num">2</span><div><div class="t">Close the commerce write path with Shiran and Tony</div><div class="m">It has a named customer (IRUSA, designations) and it is the one gap that leaves a real donation surface unattributed.</div></div></div>
-  <div class="act"><span class="num">3</span><div><div class="t">Tidy the board and move the personal-space page</div><div class="m">Close PRO-2098 and PRO-5251 if they are genuinely superseded, and relocate the Confluence page out of a personal space so it survives the handover.</div></div></div>
-  <div class="act"><span class="num">4</span><div><div class="t">Instrument tagging adoption before scoping Phase 2</div><div class="m">Supporter-level attribution, CRM delivery via Omatic, cross-domain capture and custom params are all queued. How many customers tag their links at all is the number that should decide the order.</div></div></div>
+  <div class="act"><span class="num">1</span><div><div class="t">Build the test that was skipped</div><div class="m">A spec already exists. Until it runs, nothing catches a change that breaks tag tracking on embedded forms.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Close the designations gap with Shiran and Tony</div><div class="m">It has a customer waiting and it is the last place a real donation loses its tags.</div></div></div>
+  <div class="act"><span class="num">3</span><div><div class="t">Tidy up before handover</div><div class="m">Close the two stale tickets, and move the Confluence page out of a personal space so the next person can find it.</div></div></div>
+  <div class="act"><span class="num">4</span><div><div class="t">Measure whether customers tag their links, before scoping Phase 2</div><div class="m">Four things are queued for the next phase. How many customers tag anything at all should decide the order.</div></div></div>
 </div>

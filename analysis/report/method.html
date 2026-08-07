@@ -16,21 +16,35 @@
 </div>
 
 <h2 id="m1">1 · Specification</h2>
+<details class="disc reveal">
+  <summary>
+    <span>What was measured, over what window, against which definition</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <div class="card reveal">
   <div class="tw"><table>
     <tbody>
       <tr><th style="width:30%">Unit of analysis</th><td>Organization (account). <b>Not campaign</b> — the export has no per-campaign rows.</td></tr>
       <tr><th>Outcome</th><td><code>raised_365</code> = <code>Txn - Last 365</code>, trailing-twelve-month dollars raised. Modelled as <code>log(raised_365)</code>.</td></tr>
-      <tr><th>Estimator</th><td>OLS with cohort fixed effects (37 dummies, one dropped), HC3 heteroskedasticity-robust covariance.</td></tr>
+      <tr><th>Estimator</th><td>OLS with cohort fixed effects (37 dummies, one dropped), HC3 heteroskedasticity-stable covariance.</td></tr>
       <tr><th>Sample</th><td>n = 3,161 of 6,759 (46.8%), complete-case on four required fields plus two activity floors.</td></tr>
       <tr><th>Fit</th><td id="m-fit"></td></tr>
       <tr><th>Reference date</th><td><code>AS_OF_DATE = 2026-07-28</code>, passed explicitly rather than read from the clock so re-runs are deterministic.</td></tr>
     </tbody>
   </table></div>
 </div>
-<div class="note warn"><b>Heteroskedasticity is not incidental.</b> Breusch–Pagan p ≈ 1e-50 — residual variance rises with scale, as fundraising residuals do. HC3 rather than HC1 because several cohorts are small (n = 31 at the top band) and HC3's leverage correction matters there.</div>
+<div class="note warn"><b>Heteroskedasticity is not incidental.</b> Breusch–Pagan p ≈ 1e-50 — residual variance rises with scale, as fundraising residuals do. HC3 rather than HC1 because several cohorts are small (n = 31 at the top band) and HC3's use correction matters there.</div>
+  </div>
+</details>
 
 <h2 id="m2">2 · Field canonicalization</h2>
+<details class="disc reveal">
+  <summary>
+    <span>How three disagreeing revenue fields and two cause labels were reduced to one each</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <p class="sub">Three concepts had multiple conflicting sources. Resolutions and the evidence for each:</p>
 <div class="card reveal">
   <div class="tw"><table>
@@ -54,14 +68,30 @@
     </tbody>
   </table></div>
 </div>
+  </div>
+</details>
 
 <h2 id="m3">3 · Eligibility and selection bias</h2>
+<details class="disc reveal">
+  <summary>
+    <span>Who was excluded, and which way that biases the result</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <div class="card reveal"><div class="bars" id="m-funnel" style="--lw:236px"></div></div>
 <p class="sub" style="margin-top:16px">Gates: <code>sector</code> non-null · <code>org_revenue</code> &gt; 0 · <code>raised_365</code> non-null · <code>avg_gift</code> computable · <code>raised_365 ≥ $1,000</code> · <code>gifts_lifetime ≥ 25</code>.</p>
 <div class="note bad"><b>The selection is not random, and this is the largest single threat to external validity.</b> Excluded accounts skew smaller, newer and less engaged: the two binding gates are missing NTEE code (1,589) and missing IRS revenue (901), both of which correlate with being a small self-serve account. Every finding describes the <i>benchmarkable half</i> of the book. Nothing here should be extrapolated to the other 3,598 accounts, and the $60.0M "coachable gap" is a floor on the book-wide figure, not an estimate of it.</div>
 <p class="sub"><code>Paid Fundraising Staff</code> (50% coverage) and <code>#&nbsp;Individual&nbsp;Donors</code> (61% among eligible) are carried as optional enrichment rather than gates — requiring them would have cut n to a few hundred. Where used as model terms they are cohort-median imputed with an imputation indicator retained.</p>
+  </div>
+</details>
 
 <h2 id="m4">4 · Cohort construction</h2>
+<details class="disc reveal">
+  <summary>
+    <span>How peer groups were built, and the minimum size rule</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <p class="sub">Cohort = sector × size band. Bands on <code>org_revenue</code>, cut at 100k / 250k / 1M / 5M / 25M / 100M / 1B. Minimum cell size 30; thin cells back off to the size band.</p>
 <div class="card reveal">
   <div class="tw"><table>
@@ -71,8 +101,16 @@
 </div>
 <div class="note"><b>Identity vs reference population are separate columns on purpose.</b> A backed-off account is <i>labelled</i> <code>All sectors | &lt;band&gt;</code> but is <i>scored against</i> every account in that band — <code>ref_dimension</code> selects which. The first implementation conflated them and scored 61 accounts against only each other while claiming an all-sector comparison; a from-scratch recomputation of band ranks is now asserted in the test suite.</div>
 <div class="note warn"><b>Residual within-band size signal remains.</b> Spearman(org_revenue, raised_365) inside bands runs +0.05 to +0.22, so a percentile carries a little size information on top of performance. The worst offender is <code>$250k–$1M</code> at +0.222 despite spanning only 0.60 dex — narrowing bands further will not fix it, because that correlation is a real capacity effect rather than a banding artifact.</div>
+  </div>
+</details>
 
 <h2 id="m5">5 · Model specification and diagnostics</h2>
+<details class="disc reveal">
+  <summary>
+    <span>The model, its assumptions, and where they hold</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <div class="card reveal">
   <div class="tw"><table>
     <thead><tr><th>Term</th><th class="n">Coef</th><th class="n">p</th><th class="n">VIF</th><th>Role</th></tr></thead>
@@ -81,8 +119,16 @@
 </div>
 <p class="sub" style="margin-top:14px">Max VIF 4.1. Residual skew 0.13, excess kurtosis 1.05 — near-symmetric in logs, which is the reason for the log link. Cohort fixed effects absorb all time-invariant cohort characteristics, so lever coefficients are within-peer-group.</p>
 <div class="note bad"><b>Every lever coefficient fell when history was added, and the drop is the interesting part.</b> Average gift 0.640 → 0.432, recurring donors 0.474 → 0.340, active campaigns <b>0.256 → 0.063</b>. The earlier specification was attributing "this organization was already a large fundraiser" to the levers. Campaign cadence in particular was mostly a scale proxy: it survives at p = 0.005 but with roughly a quarter of its former effect, and should be presented as a weak lever.</div>
+  </div>
+</details>
 
 <h2 id="m6">6 · Fit ladder and what was rejected</h2>
+<details class="disc reveal">
+  <summary>
+    <span>Everything tried and rejected, and why</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <div class="card reveal"><div class="bars" id="m-ladder" style="--lw:250px;--vw:104px"></div></div>
 <h3>Rejected predictors</h3>
 <div class="card reveal">
@@ -98,8 +144,16 @@
   </table></div>
 </div>
 <div class="note"><b>Ceiling check.</b> HistGradientBoosting on the identical feature set reaches CV R² 0.786–0.791. The ~0.05 gap to the shipped OLS is the price of keeping interpretable coefficients, which the recommendation layer requires. Nothing tried approached 0.9, and it is unlikely anything would: a viral campaign or a disaster-response spike is not predictable from firmographics.</div>
+  </div>
+</details>
 
 <h2 id="m7">7 · Recommendation mechanics</h2>
+<details class="disc reveal">
+  <summary>
+    <span>How a gap becomes a ranked list of suggestions</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <p class="sub">For account <i>i</i> and lever <i>k</i>: target = quantile of cohort peers at min(75, current percentile + 25). Projected effect = <code>raised · exp(β_k · Δ_k)</code>, with bounds from the coefficient's 95% CI. Levers where the account already leads are dropped rather than shown as negative advice.</p>
 <div class="card reveal">
   <div class="tw"><table>
@@ -112,8 +166,16 @@
   </table></div>
 </div>
 <div class="note"><b>642 accounts (20%) get a scorecard but no ranked advice</b> — both tails, by design. The model carries cohort fixed effects but no lever × position interaction, so it applies one elasticity to a cohort's median member and to an outlier three orders of magnitude above it alike. Suppression is the honest response to that limitation; interactions would be the fix, and they are not shipped.</div>
+  </div>
+</details>
 
 <h2 id="m7b">7b · Scope of measurement: partial platform use</h2>
+<details class="disc reveal">
+  <summary>
+    <span>The partial-platform confound, measured rather than assumed</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <p class="sub">The outcome is dollars raised <b>through this platform</b>, not the organization's total fundraising. Nothing in the export identifies wallet share, so an organization that runs only its peer-to-peer with GoFundMe Pro is indistinguishable from one that runs everything and raises less.</p>
 <div class="card reveal">
   <div class="tw"><table>
@@ -158,6 +220,8 @@
   </table></div>
 </div>
 <div class="note warn"><b>The mapping is inferred and needs product confirmation.</b> Direct giving = Donation Page + Campaign Studio + Crowdfunding; peer-to-peer = Peer to Peer + RwF; hosted event = Ticketed + Registration. Derived from column names plus the stated taxonomy, not from documentation. <code>RwF</code> is assigned to peer-to-peer on the assumption that "Registration with Fundraising" carries a fundraising component, and <code>Crowdfunding</code> to direct giving; both are the assignments most likely to be wrong. <code>CAMPAIGN_TYPES</code> is a single dict and a test asserts every column maps exactly once, so a correction is one line and cannot silently drop or duplicate dollars.</div>
+  </div>
+</details>
 
 <h2 id="m8">8 · Done well</h2>
 <div class="card reveal">

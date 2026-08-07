@@ -7,7 +7,7 @@
   <div>
     <p class="eyebrow" style="margin-bottom:4px">The doc</p>
     <div class="dt">Proposed Metrics for Admin Experience</div>
-    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">Proprietary &amp; confidential — Google Doc, GoFundMe access required. Pending review with Gene; Stephen owns the instrumented-versus-not audit.</p>
+    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">Proprietary &amp; confidential; GoFundMe access required. Awaiting review with Gene.</p>
   </div>
   <div class="dl">
     <a class="btn primary" href="https://docs.google.com/document/d/1W8XhGwqpEHhUhgE3K7ckhYcDaYHMawfyh53p3WWZGbE/edit?usp=sharing" target="_blank" rel="noopener">
@@ -19,129 +19,164 @@
 </div>
 
 <div class="stats reveal" style="margin-top:26px">
-  <div class="stat"><div class="k">Layers</div><div class="v" data-count="2">2</div><div class="d">lagging + leading</div></div>
-  <div class="stat"><div class="k">Health metrics</div><div class="v" data-count="13">13</div><div class="d">Layer 1 questions</div></div>
-  <div class="stat accent"><div class="k">Workflow areas</div><div class="v" data-count="8">8</div><div class="d">Layer 2, each with KPIs</div></div>
-  <div class="stat"><div class="k">Open questions</div><div class="v" data-count="6">6</div><div class="d">for the review with Gene</div></div>
+  <div class="stat"><div class="k">Layers</div><div class="v" data-count="2">2</div><div class="d">scoreboard + early warning</div></div>
+  <div class="stat"><div class="k">Scoreboard questions</div><div class="v" data-count="13">13</div><div class="d">is Pro healthy?</div></div>
+  <div class="stat accent"><div class="k">Product areas</div><div class="v" data-count="8">8</div><div class="d">where problems show early</div></div>
+  <div class="stat"><div class="k">Open questions</div><div class="v" data-count="6">6</div><div class="d">before any of it is built</div></div>
 </div>
 
 <h2>The problem</h2>
-<p class="sub">The existing metrics were logins, orgs and revenue: a scoreboard with no game film.</p>
-<p class="sub">There are two ways to design the replacement badly. Measuring clicks produces dashboards nobody acts on. Measuring only outcomes says the campaign-creation funnel is broken without saying which step to fix.</p>
+<p class="sub">Pro measured logins, organizations and revenue. That tells you the score at the end of the month. It does not tell you which part of the product is going wrong while there is still time to fix it.</p>
+<p class="sub">There was also no agreed definition of an "active admin", so two people could pull activation numbers from the same database and both be right.</p>
+<p class="sub">Measuring clicks would give dashboards nobody acts on. Measuring only outcomes tells you campaign creation is broken without telling you which step to fix. This needed both.</p>
 
 <h2>What was done</h2>
 <div class="grid2 reveal">
   <div class="card">
     <span class="pill info">Layer 1</span>
-    <h3 style="margin-top:11px">Health monitoring — lagging indicators</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">Org- and admin-level activation, engagement and retention. Tells you whether Pro is healthy overall and whether a launch moved the needle. Explicitly framed as <b>the scoreboard, not the game film</b> — it gives no early signal and is not meant to.</p>
+    <h3 style="margin-top:11px">The scoreboard</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">Thirteen measures of whether Pro is healthy: how fast new organizations get going, how many come back, how many quietly stop showing up. Good for telling you whether a launch worked. Useless as an early warning, and not meant to be.</p>
   </div>
   <div class="card">
     <span class="pill good">Layer 2</span>
-    <h3 style="margin-top:11px">Core workflow instrumentation — leading indicators</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">Per-workflow questions and KPIs across eight areas. This is where early signal lives and where most product decisions actually get made. Every KPI is paired with <b>the decision it informs</b> — a metric with no decision attached does not earn a row.</p>
+    <h3 style="margin-top:11px">The early warning</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">Eight parts of the product, each measured in a way that shows a problem while it is still small. Every measure names <b>the decision it would change</b>. A measure that changes no decision does not get a row.</p>
   </div>
 </div>
 
-<h3>First, define "active admin" — three tiers</h3>
-<p class="sub tight">Each tier subsumes the one below, so the ladder is cumulative rather than exclusive.</p>
+<h3>First, define "active admin"</h3>
+<p class="sub tight">Three levels. Each one includes everyone below it.</p>
 <div class="card reveal">
   <div class="tw"><table>
     <thead><tr><th style="width:11%">Tier</th><th style="width:19%">Name</th><th>Qualifying behavior</th></tr></thead>
     <tbody>
-      <tr><td><b>A1</b></td><td><b>Present</b></td><td>Logged in / session started.</td></tr>
-      <tr><td><b>A2</b></td><td><b>Working</b></td><td>Performed at least one core action — viewed a report or campaign insights, searched or viewed a transaction or supporter, opened the campaign builder or editor.</td></tr>
-      <tr><td><b>A3</b></td><td><b>Value-creating</b></td><td>Performed at least one value action — published a campaign, exported/shared/saved a report, processed a refund or offline donation, modified a recurring plan, invited an admin, connected an integration, edited org settings.</td></tr>
+      <tr><td><b>1</b></td><td><b>Present</b></td><td>Logged in.</td></tr>
+      <tr><td><b>2</b></td><td><b>Working</b></td><td>Did something real: opened a report, looked up a donation or a supporter, opened the campaign builder.</td></tr>
+      <tr><td><b>3</b></td><td><b>Producing</b></td><td>Finished something: published a campaign, exported a report, processed a refund, invited a colleague, connected another system.</td></tr>
     </tbody>
   </table></div>
-  <p class="sub" style="margin:16px 0 0;font-size:.88rem"><b>Active org</b> = an org with at least one A2+ admin in the period. <b>MANPO</b> (monthly active nonprofits, per the GFM Channel ask) = A2+ at org level. A <b>ramped customer</b> requires both A3 status <i>and</i> ≥90 days as a customer — so anyone at A1–A2, or at A3 for under 90 days, is by definition not ramped.</p>
+  <p class="sub" style="margin:16px 0 0;font-size:.88rem">An <b>active organization</b> has at least one admin at level 2 or above. A <b>ramped customer</b> needs level 3 <i>and</i> ninety days on the platform, so nobody counts as ramped in their first quarter.</p>
 </div>
-<div class="note"><b>"Active users" is the number most often quoted and least often defined.</b> A1 counts someone who logged in and bounced; A3 counts someone who published a campaign. Reporting them as one figure is how a product looks healthy while nobody does anything in it.</div>
+<div class="note"><b>Why this matters more than it sounds.</b> Level 1 counts someone who logged in and left. Level 3 counts someone who published a campaign. Report those as one "active users" number and the product looks healthy while nobody does anything in it.</div>
 
 <h3>Then work out who is doing the work</h3>
-<p class="sub tight">Surveying every admin is not practical, so role assignments plus behavior approximate the personas.</p>
-<div class="note good" style="margin-top:0"><b>These are the same nine personas from the interview research</b>, reused so a qualitative finding becomes a measurable one. All nine were coded from the 39 interviews in the <a href="#/interviews" data-jump="interviews">interview synthesis</a>.</div>
+<p class="sub tight">You cannot survey every admin, so their job title and what they click stand in for it. These are the same nine people types found in the <a href="#/interviews" data-jump="interviews">39 interviews</a>, so a research finding becomes something you can count.</p>
+<details class="disc reveal">
+  <summary>
+    <span>Nine types of user, and how to spot them in the data</span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
 <div class="card reveal">
   <div class="tw"><table>
-    <thead><tr><th style="width:30%">Persona</th><th>Behavioral / role proxy</th></tr></thead>
+    <thead><tr><th style="width:30%">Persona</th><th>How you spot them in the data</th></tr></thead>
     <tbody>
-      <tr><td><b>Fay</b> — Director</td><td>Views reports and insights, rarely edits; often Viewer or no-build roles; low frequency.</td></tr>
-      <tr><td><b>Donna / Penny</b> — Domain Owner, P2P</td><td>Creates and edits campaigns, views insights; Campaign Creator / Publisher roles.</td></tr>
-      <tr><td><b>Billy</b> — Builder</td><td>High builder time, Campaign Designer role, edits far outnumber publishes.</td></tr>
-      <tr><td><b>Oscar</b> — Ops</td><td>Daily transaction history, refunds, offline donations, recurring plan edits.</td></tr>
-      <tr><td><b>David</b> — Data</td><td>Exports, API clients, integration management, saved reports.</td></tr>
-      <tr><td><b>Sally / Grace</b> — Solo</td><td>Only admin in the org; touches everything (Sally) or barely anything yet (Grace).</td></tr>
-      <tr><td><b>Adam</b> — Agency</td><td><b>Largely invisible today</b> — shared logins.</td></tr>
+      <tr><td><b>Fay</b> — Director</td><td>Reads reports, rarely edits anything, does not log in often.</td></tr>
+      <tr><td><b>Donna / Penny</b> — Domain Owner, P2P</td><td>Creates and edits campaigns, checks how they are doing.</td></tr>
+      <tr><td><b>Billy</b> — Builder</td><td>Lives in the campaign builder. Edits far more often than publishes.</td></tr>
+      <tr><td><b>Oscar</b> — Ops</td><td>In the donation records every day: refunds, offline gifts, monthly plans.</td></tr>
+      <tr><td><b>David</b> — Data</td><td>Exports, saved reports, and connections to other systems.</td></tr>
+      <tr><td><b>Sally / Grace</b> — Solo</td><td>The only admin there. Either does everything, or has barely started.</td></tr>
+      <tr><td><b>Adam</b> — Agency</td><td><b>Almost invisible right now</b>, because agencies share one login.</td></tr>
     </tbody>
   </table></div>
 </div>
+  </div>
+</details>
 
 <h2>What came out of it</h2>
 
-<h3>Layer 1 — the health scoreboard</h3>
+<h3>The scoreboard: thirteen questions</h3>
+<p class="sub tight">Four of them do most of the work. The full list is below.</p>
+<div class="grid2 reveal">
+  <div class="card">
+    <span class="pill bad">The gate</span>
+    <h3 style="margin-top:11px">How long until a new organization can take a donation at all?</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">Nothing else can happen until the payment processor is switched on. Every other activation number sits behind this one.</p>
+  </div>
+  <div class="card">
+    <span class="pill good">The candidate headline</span>
+    <h3 style="margin-top:11px">Is the organization building a habit?</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">The share active in at least three of the last four weeks. This is what retention looks like before retention happens.</p>
+  </div>
+  <div class="card">
+    <span class="pill warn">The early warning</span>
+    <h3 style="margin-top:11px">Are we losing people quietly?</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">Smaller customers with no activity for 30 days. They leave without complaining, and it costs them nothing to switch.</p>
+  </div>
+  <div class="card">
+    <span class="pill info">The depth check</span>
+    <h3 style="margin-top:11px">How much of the product does one organization use?</h3>
+    <p class="sub" style="margin:0;font-size:.89rem">The best signal that Pro is the system they run on rather than a form builder they visit.</p>
+  </div>
+</div>
+
+<details class="disc reveal" style="margin-top:18px">
+  <summary>
+    <span>All thirteen scoreboard questions <span class="cnt">activation · engagement · retention · speed</span></span>
+    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+  </summary>
+  <div class="discbody">
+  <div class="tw"><table>
+    <thead><tr><th style="width:45%">The question</th><th>What you measure</th></tr></thead>
+    <tbody>
+      <tr><td colspan="2" class="grp">Getting started</td></tr>
+      <tr><td>How long until a new organization can accept a donation?</td><td>Time from signing up to switching on a payment processor.</td></tr>
+      <tr><td>How long until they get something out of it?</td><td>Time to first campaign published, and to first donation received.</td></tr>
+      <tr><td>How many finish setting up in the first week or month?</td><td>Share with a processor on, a campaign live, and a report opened.</td></tr>
+      <tr><td>How many bring in a second person?</td><td>Share inviting another admin.</td></tr>
+      <tr><td colspan="2" class="grp">Using it</td></tr>
+      <tr><td>How many organizations and admins are actually working in Pro?</td><td>Level 2 and 3 counts, daily, weekly and monthly.</td></tr>
+      <tr><td>How much of the product does one organization use?</td><td>How many different areas they touch per month.</td></tr>
+      <tr class="hot"><td>Is the organization building a habit?</td><td>Share active in at least three of the last four weeks.</td></tr>
+      <tr><td>How many campaigns are set up to raise well?</td><td>Share with a goal, a progress bar and the recommended settings on.</td></tr>
+      <tr><td colspan="2" class="grp">Coming back</td></tr>
+      <tr><td>Do organizations return?</td><td>Return rates at 30, 60 and 90 days.</td></tr>
+      <tr><td>When does the habit form?</td><td>Where the return-rate curve flattens out.</td></tr>
+      <tr><td>Are we losing people quietly?</td><td>Smaller customers with no activity for 30 days or more.</td></tr>
+      <tr><td>Are they getting value?</td><td>Share growing year on year and hitting their campaign goals.</td></tr>
+      <tr><td colspan="2" class="grp">Speed and trust</td></tr>
+      <tr><td>Are the screens admins live in fast and correct?</td><td>Load times and error rates. Also the activity feed, which posts when money lands rather than when a gift is made, so admins ignore it.</td></tr>
+    </tbody>
+  </table></div>
+  </div>
+</details>
+
+<h3>The early warning: eight parts of the product</h3>
+<p class="sub tight">Each one names the sharpest question in it, and the decision that question would change.</p>
 <div class="card reveal">
   <div class="tw"><table>
-    <thead><tr><th style="width:9%">Q</th><th style="width:40%">The question</th><th>The metric</th></tr></thead>
+    <thead><tr><th style="width:26%">Where</th><th>The question worth asking</th></tr></thead>
     <tbody>
-      <tr><td colspan="3" class="grp">Activation</td></tr>
-      <tr><td>1.1</td><td>How long after signup until an org can actually accept a donation?</td><td>Median time from org creation to payment processor enabled — "time to able-to-fundraise". <b>The activation gate for everything else.</b></td></tr>
-      <tr><td>1.2</td><td>How long until the org gets its first real value?</td><td>Median time to first campaign published; median time to first donation received.</td></tr>
-      <tr><td>1.3</td><td>What share of new orgs completes the core setup bundle by Day 7 / 30?</td><td>% of new orgs with processor enabled + first campaign published + ≥1 report viewed.</td></tr>
-      <tr><td>1.4</td><td>How many orgs invite a second admin?</td><td>% inviting a second admin within X days of first login, by admin hierarchical type.</td></tr>
-      <tr><td colspan="3" class="grp">Engagement</td></tr>
-      <tr><td>1.5</td><td>How many orgs and admins are actively working in Pro?</td><td>A2/A3 active orgs and admins (D/W/M); stickiness ratio (WAO/MAO).</td></tr>
-      <tr><td>1.6</td><td>How broad is engagement inside an org?</td><td>Median number of core workflow areas touched per org per month; A2+ admins per org. <b>Breadth is the best proxy for "Pro is the operating system, not just a form builder."</b></td></tr>
-      <tr><td class="hot">1.7</td><td class="hot">Is the org building habits?</td><td class="hot">% of orgs A2-active in ≥3 of the last 4 weeks — "habitual orgs". <b>The candidate north-star: it is what retention looks like before retention happens.</b></td></tr>
-      <tr><td>1.8</td><td>What percent of campaigns are Yield Ready?</td><td>% with campaign scoring, goal set, IAA and progress bar enabled. Definition agreed between Product, GGTM and CX.</td></tr>
-      <tr><td colspan="3" class="grp">Retention</td></tr>
-      <tr><td>1.9</td><td>Do orgs come back?</td><td>30/60/90-day org retention (≥1 A2 admin returning), cohorted by signup month and segment.</td></tr>
-      <tr><td>1.10</td><td>How does stickiness evolve from Day 1 → 30 → 90?</td><td>Admin-level retention curves by tenure cohort. Where the curve flattens is the "habit formed" point.</td></tr>
-      <tr><td>1.11</td><td>Are we losing the silent churners?</td><td>% of Self-Serve/Essentials orgs with zero A2 activity for 30+ days. <b>The competitive early-warning metric</b> — Grace-level departures happen silently and switching cost is roughly zero.</td></tr>
-      <tr><td>1.12</td><td>Are orgs getting value?</td><td>% of orgs with positive YoY growth that consistently meet campaign goals, p50/p90.</td></tr>
-      <tr><td colspan="3" class="grp">Speed, reliability, trust</td></tr>
-      <tr><td>1.13</td><td>Are the surfaces admins live in fast and correct?</td><td>p50/p90 load time for reports and campaign insights; error rate in core workflows; activity-feed lag versus transaction history — the feed posts on payout rather than gift initiation, so admins bypass it.</td></tr>
+      <tr><td><b>Payment setup</b><br><span class="tsub">everyone, day one</span></td><td><b>The most important funnel in the product: no processor, no donations.</b> Where do organizations get stuck, and how many are sitting in verification limbo?</td></tr>
+      <tr><td><b>Building a campaign</b><br><span class="tsub">most admins</span></td><td>How many start from a template versus copying an old campaign? <b>Copying wins today because templates break when a page has custom code, so the copy rate really measures whether templates work.</b></td></tr>
+      <tr><td><b>Reporting</b><br><span class="tsub">data and director types</span></td><td>Is exporting replacing analysis in the product? Watch the ratio, and how many export the same report three times a month.</td></tr>
+      <tr><td><b>Day-to-day donation admin</b><br><span class="tsub">the highest-value group</span></td><td>How long, and how many clicks, to do a refund or fix a monthly gift. This turns "reduce clicks" into something you can measure.</td></tr>
+      <tr><td><b>Team and permissions</b></td><td>Are agencies sharing one login? One account, many devices. <b>An agency asked for this directly, and it is also a security problem.</b></td></tr>
+      <tr><td><b>Connections to other systems</b></td><td>Do connected organizations stay longer? <b>Everyone believes they do. This is designed to test it rather than assume it.</b></td></tr>
+      <tr><td><b>The GoFundMe channel</b></td><td>Is it bringing in money that would not have arrived anyway?</td></tr>
+      <tr><td><b>Recommendation cards</b></td><td>Do organizations that turn them on raise more? And how many people dismiss them?</td></tr>
     </tbody>
   </table></div>
 </div>
 
-<h3>Layer 2 — eight workflows, each with the decision it informs</h3>
-<div class="card reveal">
-  <div class="tw"><table>
-    <thead><tr><th style="width:22%">Workflow</th><th style="width:14%">Shape</th><th>The sharpest question in it</th></tr></thead>
-    <tbody>
-      <tr><td><b>4.1 Payment processor setup</b><br><span class="tsub">everyone at day 0</span></td><td><span class="pill bad">Funnel</span></td><td><b>The most load-bearing funnel in the product: no processor, no donations.</b> Where do orgs stall, and what share sit in verification states?</td></tr>
-      <tr><td><b>4.2 Campaign creation &amp; launch</b><br><span class="tsub">Donna, Billy, Penny, Sally</span></td><td><span class="pill warn">Hybrid</span></td><td>Template versus duplicate versus from-scratch rate. <b>Duplication far exceeds templates because templates break with custom code, so the duplicate rate measures whether templates work.</b></td></tr>
-      <tr><td><b>4.3 Reporting</b><br><span class="tsub">David, Fay, Oscar; Adam via clients</span></td><td><span class="pill info">Engagement</span></td><td>Is export replacing in-platform analysis? Export-to-view ratio trended; % of orgs exporting the same report 3+ times a month.</td></tr>
-      <tr><td><b>4.4 Transactions &amp; supporter ops</b><br><span class="tsub">Oscar — highest-ROI persona</span></td><td><span class="pill info">Efficiency</span></td><td>Median time and steps to complete a refund, offline donation, recurring plan change or receipt resend, so "reduce clicks" becomes measurable.</td></tr>
-      <tr><td><b>4.5 Team &amp; administration</b><br><span class="tsub">Fay, Donna</span></td><td><span class="pill warn">Funnel + adoption</span></td><td>Are agencies sharing logins? Orgs with one login but multi-device session patterns. <b>Adam's explicit ask, and a security issue.</b></td></tr>
-      <tr><td><b>4.6 Integrations &amp; API</b><br><span class="tsub">David, Sally</span></td><td><span class="pill bad">Funnel + retention</span></td><td>Do integrated orgs retain better? 90-day retention, integrated versus not, controlled by segment. <b>Validates or kills the integrations-equal-stickiness thesis.</b></td></tr>
-      <tr><td><b>4.7 GFM Channel</b><br><span class="tsub">PTFY25-3633 scope</span></td><td><span class="pill warn">Activation + engagement</span></td><td>Is the channel additive? MANPO, and % of org GDV via the GFM channel, trended.</td></tr>
-      <tr><td><b>4.8 Recommendation cards</b></td><td><span class="pill info">Adoption</span></td><td>Do orgs that enable recommendations see better outcomes — % seeing a GDV lift? And how many dismiss the cards?</td></tr>
-    </tbody>
-  </table></div>
-</div>
-
-<div class="note good"><b>Two research findings are wired into the measurement design.</b> Reporting carries the instruction that <b>low My Reports traffic means workflow avoidance rather than low need</b>, matching what the <a href="#/interviews" data-jump="interviews">interview synthesis</a> found from the other direction. Exports are treated as an ambiguous signal: they can mean healthy downstream usage, or that the platform cannot answer the question natively. So the instruction is to <b>track exports without treating them as success</b>.</div>
-
-<div class="note"><b>Integrations-drive-stickiness is a hypothesis, and 4.6 is designed to kill it.</b> It is worth testing, and building a retention strategy on the untested correlation would be expensive.</div>
+<div class="note good"><b>Two research findings are built into the design.</b> First, low traffic to the reports page means people are avoiding it, not that they do not need reports — which is what the <a href="#/interviews" data-jump="interviews">interviews</a> found from the other direction. Second, an export can mean healthy use or it can mean the product could not answer the question, so exports get counted but never treated as a win.</div>
 
 <h2>What it does not cover</h2>
 <div class="card reveal">
-  <div class="sk"><h3>Nobody has confirmed the tiers are measurable</h3><p>Whether A1/A2/A3 match what is distinguishable in mParticle events today is the first open question, and it is load-bearing. If A2 and A3 cannot be told apart in the event stream, the definitions are a proposal rather than a spec and most of Layer 1 cannot be computed.</p></div>
-  <div class="sk"><h3>The persona proxies are unvalidated</h3><p>Whether they can be built from Cerberus role assignments plus behavior, and at what confidence, is open. Adam (Agency) is "largely invisible today" because of shared logins, which also means agency-served orgs are misattributed across every admin-level metric.</p></div>
-  <div class="sk"><h3>Shared logins will pollute admin-level metrics</h3><p>A known-agency flag may be needed. Until there is one, any admin-level figure for an agency-managed org measures a login rather than a person.</p></div>
-  <div class="sk"><h3>Cohort hygiene is unresolved for migrated orgs</h3><p>Classy-migrated and net-new orgs have different day zeros, which breaks every time-to-X metric in the activation section if they are pooled. No decision yet.</p></div>
-  <div class="sk"><h3>The instrumented-versus-not audit is outstanding</h3><p>Which metrics already exist in the Hex v1 dashboard and which need net-new events is open, owned by Stephen. Until it lands the proposal has no cost attached.</p></div>
-  <div class="sk"><h3>No retention denominator has been chosen</h3><p>Org, admin, or both. It changes the headline number materially, and deciding late invites two teams to quote different retention figures.</p></div>
-  <div class="sk"><h3>No targets, and no prioritization</h3><p>This defines what to measure and why it matters. It does not say what good looks like for any metric, and it does not rank the eight workflow areas, so it is silent on whether processor setup or reporting gets instrumented first. That ordering is where the cost sits.</p></div>
+  <div class="sk"><h3>Nobody has confirmed the three levels can actually be measured</h3><p>Whether our analytics can tell level 2 from level 3 today is the first open question, and everything rests on it. If it cannot, these definitions are a proposal rather than a spec and most of the scoreboard cannot be calculated.</p></div>
+  <div class="sk"><h3>Shared agency logins will distort every per-person number</h3><p>Agencies log in as one account, so the agency persona is nearly invisible and any per-admin figure for an agency-run organization counts a login rather than a person. It needs a flag.</p></div>
+  <div class="sk"><h3>Migrated customers have a different starting line</h3><p>Organizations that came over from Classy and brand-new ones have different day zeros. Pool them and every "time to first X" number breaks. Not yet decided.</p></div>
+  <div class="sk"><h3>Nobody has counted what already exists</h3><p>Which of these can be built from data we already collect, and which need new tracking, is still open and owned by Stephen. Until that lands, the proposal has no price on it.</p></div>
+  <div class="sk"><h3>No targets, and no order</h3><p>This says what to measure and why. It does not say what good looks like for any of it, and it does not say which of the eight to build first. That ordering is where the cost sits.</p></div>
 </div>
 
 <h2>Pick this up next</h2>
-<p class="sub">The six open questions from the doc, in the order that unblocks the most work.</p>
+<p class="sub">In the order that unblocks the most work.</p>
 <div class="acts reveal">
-  <div class="act"><span class="num">1</span><div><div class="t">Confirm A2 versus A3 is distinguishable in mParticle</div><div class="m">Everything else depends on this. If it needs net-new events, that is the first engineering ask and it should be scoped before anything is promised on a dashboard.</div></div></div>
-  <div class="act"><span class="num">2</span><div><div class="t">Finish the instrumented-versus-not audit with Stephen</div><div class="m">Which metrics already exist in Hex v1 and which are net-new. Until this lands, the proposal has no cost attached to it.</div></div></div>
-  <div class="act"><span class="num">3</span><div><div class="t">Settle the retention denominator and cohort hygiene</div><div class="m">Org versus admin, and how Classy-migrated orgs get a day 0. Both are cheap to decide now and expensive to re-cut later.</div></div></div>
-  <div class="act"><span class="num">4</span><div><div class="t">Add a known-agency flag</div><div class="m">It fixes Adam's invisibility, unblocks the shared-login question in 4.5, and stops agency logins quietly distorting admin-level metrics everywhere else.</div></div></div>
-  <div class="act"><span class="num">5</span><div><div class="t">Pick the first workflow to instrument, and set targets</div><div class="m">Processor setup is the strongest candidate on the doc's own logic — no processor, no donations — and it is a clean funnel, which makes it the cheapest place to prove the framework works.</div></div></div>
+  <div class="act"><span class="num">1</span><div><div class="t">Check the analytics can tell level 2 from level 3</div><div class="m">Everything depends on this. If it needs new tracking, that is the first thing to ask engineering for, and it should be costed before anyone promises a dashboard.</div></div></div>
+  <div class="act"><span class="num">2</span><div><div class="t">Finish counting what we already collect, with Stephen</div><div class="m">Until that lands, nobody knows what this costs to build.</div></div></div>
+  <div class="act"><span class="num">3</span><div><div class="t">Decide two definitions now</div><div class="m">Whether retention counts organizations or people, and when the clock starts for migrated customers. Cheap to settle today, expensive to redo later.</div></div></div>
+  <div class="act"><span class="num">4</span><div><div class="t">Flag which accounts are agencies</div><div class="m">One change fixes three problems: agencies become visible, the shared-login question becomes answerable, and agency logins stop quietly skewing every per-person number.</div></div></div>
+  <div class="act"><span class="num">5</span><div><div class="t">Pick the first area to build, and set targets</div><div class="m">Payment setup is the obvious one: no processor, no donations, and it is a simple funnel — the cheapest place to prove this works.</div></div></div>
 </div>

@@ -6,17 +6,17 @@
     "term": "Summer 2026",
     "owner": "Gordon Bailey",
     "h1": "Internship Portfolio",
-    "lede": "Everything built this summer, in one place. Four separate projects, each sitting at a different phase of the product development lifecycle, plus two side projects. End-to-end UTM support, at the build phase, was the main one. Every page follows the same five headings: the problem, what was done, what came out of it, what it does not cover, and what to pick up next.",
+    "lede": "Everything built this summer, in one place. Four separate projects, one at each phase of the product development lifecycle, plus two side projects. UTM was the main one. Every page answers the same five questions: what the problem was, what I did, what came out of it, what it does not cover, and what to do next.",
     "tracks": [
       {
         "id": "lifecycle",
         "title": "The product development lifecycle",
-        "blurb": "Four separate projects on four different problems. Each one sat at a different phase of the lifecycle, so between them they covered the cycle end to end."
+        "blurb": "Four different problems, four separate projects. Each sat at a different phase, so between them they cover the whole cycle."
       },
       {
         "id": "side",
         "title": "Side projects",
-        "blurb": "Neither had a roadmap slot. One came out of learning the ground, one out of curiosity."
+        "blurb": "Neither was on anyone's roadmap. One came out of finding my feet, one out of curiosity."
       }
     ]
   },
@@ -65,9 +65,9 @@
       "short": "Hackathon",
       "order": 20,
       "status": "live",
-      "blurb": "Sixteen hackathon projects scored on one scale and tiered into build, validate and park, with an effort estimate from whoever wrote the code.",
+      "blurb": "Sixteen hackathon projects scored on the same scale and sorted into build, test and park — each with an estimate from the person who wrote the code.",
       "h1": "Which sixteen hackathon projects deserve a roadmap slot?",
-      "lede": "A hackathon produces enthusiasm, not a roadmap. This scores all sixteen projects on GDV impact, churn prevention and feasibility, merges the duplicates, collects an estimate from each owner, and sorts them into four to build now, five to validate in Q3, and five to park with a named unlock.",
+      "lede": "A hackathon produces enthusiasm, not a roadmap. This scores all sixteen on the same three things, merges the ones that were really the same idea, gets an estimate from each owner, and sorts them into four to build now, five to test first, and five to park with a way back.",
       "track": "lifecycle",
       "phase": "Prioritization"
     },
@@ -78,9 +78,9 @@
       "order": 10,
       "kind": "group",
       "status": "live",
-      "blurb": "Three strands of one question: how do we tell a customer something true about their own fundraising that they could not work out alone? Two ran independently and found the same gap.",
+      "blurb": "Three projects, one question: how do we tell a customer something true about their own fundraising that they could not work out alone? Two of them ran separately and found the same gap.",
       "h1": "Customer Intelligence",
-      "lede": "What customers said they need, what the market already claims to offer, and a working answer to the gap both pointed at.",
+      "lede": "What customers said they need, what the market already claims to sell, and a working answer to the gap both pointed at.",
       "track": "lifecycle",
       "phase": "Discovery"
     },
@@ -91,9 +91,9 @@
       "short": "Benchmarking",
       "order": 10,
       "status": "live",
-      "blurb": "Groups every eligible nonprofit with organizations genuinely like it — same cause, same size — scores it inside that group, and turns the shortfall into a ranked list of levers. 3,161 accounts, 38 peer groups, 73% of variation explained.",
+      "blurb": "Puts every nonprofit next to organizations genuinely like it — same cause, same size — scores it, and turns the shortfall into a short list of things to try. 3,161 accounts, 38 peer groups.",
       "h1": "How is this organization really doing?",
-      "lede": "Every nonprofit raises a different amount for different reasons. This compares each one against organizations genuinely like it — same cause, same size — and turns the difference into a short list of what to try next.",
+      "lede": "Every nonprofit raises a different amount for different reasons. This compares each one against organizations genuinely like it, then turns the difference into a short list of what to try next.",
       "body": "__BENCHMARKING__"
     },
     {
@@ -103,9 +103,9 @@
       "short": "Competitive intelligence",
       "order": 20,
       "status": "live",
-      "blurb": "Nine vendors, eight AI launches in twelve months, every claim graded on its evidence. Trust language has converged across the market; verifiability is unclaimed by all nine.",
+      "blurb": "Nine competitors, eight AI launches in twelve months, every claim graded on its evidence. All nine now promise trust. Not one offers proof.",
       "h1": "What nine competitors ship, claim, and never mention",
-      "lede": "Every vendor in the category now says “we have AI”, which makes the marketing useless as a signal. This separates what has shipped from what is only announced, dates the landscape onto one timeline, and marks the evidence strength on every cell."
+      "lede": "Every vendor now says it has AI, so the marketing tells you nothing. This separates what has actually shipped from what was only announced, puts every launch on one timeline, and grades the evidence behind each claim."
     },
     {
       "id": "compintel-audit",
@@ -114,9 +114,9 @@
       "short": "Audit & gap analysis",
       "order": 10,
       "status": "live",
-      "blurb": "The claim-by-claim audit behind the competitive scan: nine vendors across six capabilities, every cell graded on its evidence, and the four gaps nobody in the market occupies.",
+      "blurb": "The claim-by-claim audit behind the scan: nine vendors, six capabilities, every cell graded, and the four gaps nobody has taken.",
       "h1": "What nine vendors claim, and what can be verified",
-      "lede": "The scan's underlying workbook. Every capability is graded shipped, claimed but unverified, or absent from public materials, so a reader can tell a demonstrated feature from a press release."
+      "lede": "The workbook behind the scan. Every capability is graded shipped, claimed but unproven, or nowhere to be found — so you can tell a real feature from a press release."
     },
     {
       "id": "interviews",
@@ -125,9 +125,9 @@
       "short": "Interview synthesis",
       "order": 30,
       "status": "live",
-      "blurb": "39 admin interviews across 33 organizations. The unmet need is AI that is controllable, explainable and measurable. Reporting turned out to be the largest pain cluster in the dataset.",
+      "blurb": "39 interviews across 33 organizations. They do not want more AI — they want AI they can control, understand and check. Reporting turned out to be the biggest source of pain.",
       "h1": "What 39 admins said about AI, reporting and insights",
-      "lede": "Everyone agrees customers want AI. Nobody could say which AI, or why the AI already shipped was not being adopted. This synthesizes 39 interviews across 33 organizations, nine workflow personas and all five segments."
+      "lede": "Everyone agreed customers want AI. Nobody could say which AI, or why the AI we had already shipped was going unused. This pulls 39 interviews into one place and looks for what repeats."
     },
     {
       "id": "instrumentation",
@@ -135,9 +135,9 @@
       "short": "Instrumentation",
       "order": 30,
       "status": "live",
-      "blurb": "A two-layer measurement framework for Pro admin: a lagging health scoreboard, and leading per-workflow instrumentation across eight areas where every KPI names the decision it informs.",
+      "blurb": "Two layers of measurement: a scoreboard for whether Pro is healthy, and an early-warning layer across eight parts of the product where every measure names the decision it would change.",
       "h1": "How would we know if the admin experience got better?",
-      "lede": "Pro had health metrics and almost no early signal on any specific workflow, and no agreed definition of “active admin” — so two people could report different activation numbers from the same database and both be right.",
+      "lede": "Pro measured logins and revenue, which tells you the score after the month ends. There was also no agreed definition of an “active admin”, so two people could pull activation numbers from the same database and both be right.",
       "track": "lifecycle",
       "phase": "Solution design"
     },
@@ -147,9 +147,9 @@
       "short": "UTM",
       "order": 40,
       "status": "live",
-      "blurb": "Twelve Jira tickets across two epics, the ten-hop chain UTM has to survive, and every linked Confluence page, Figma file and PR pulled from the tickets. Five ticket statuses had moved since the program map was drawn.",
+      "blurb": "Marketing tags were being dropped between the ad and the donation, so nonprofits could not tell which campaign raised the money. Twelve tickets, two leaks found and fixed, and five statuses that had moved since the slide was drawn.",
       "h1": "Making UTM survive the whole donation stack",
-      "lede": "Marketing attribution was broken end to end: some Studio URLs carried UTMs, nothing persisted them to the transaction, and nothing surfaced them in reporting or the API. This maps the program with every status verified against Jira rather than the slide.",
+      "lede": "A UTM tag is the label a marketer puts on a link so they can tell which ad brought in a donation. GoFundMe Pro was losing them. This maps the whole programme, with every ticket status checked against Jira rather than copied off the slide.",
       "track": "lifecycle",
       "phase": "Build",
       "flagship": true
@@ -161,9 +161,9 @@
       "order": 10,
       "kind": "group",
       "status": "live",
-      "blurb": "Two attempts to make something reusable by someone who was not here: one mapping 1,202 repositories, one turning 24 non-functional requirements into questions a PM can ask.",
+      "blurb": "Two attempts to leave something behind that works without me: one maps 1,202 code repositories, one turns 24 engineering requirements into questions a product manager can ask.",
       "h1": "Guides",
-      "lede": "Written so the next person does not have to reconstruct any of this from scratch, and honest enough about their own limits to be safe to trust.",
+      "lede": "Written so the next person does not have to work all this out again, and honest enough about their own limits to be safe to trust.",
       "track": "side",
       "phase": "Learning"
     },
@@ -174,9 +174,9 @@
       "short": "Non-functional guide",
       "order": 10,
       "status": "live",
-      "blurb": "The 24 requirements that decide whether a release survives production, each with the questions to ask engineering and the spec language to write down, plus a 53-item release-readiness process and a rotating Release Lead role.",
+      "blurb": "The 24 things that decide whether a release survives real users, each with the questions to ask engineering and the wording to put in the spec. Plus a 53-item launch checklist.",
       "h1": "The qualities that decide whether a release survives production",
-      "lede": "A working feature answers “what does it do?” Everything that decides whether it holds up — speed, reliability, safety, and the cost of changing it later — sits in a vocabulary most product managers were never taught. This is the translation layer.",
+      "lede": "A working feature answers “what does it do?” Everything that decides whether it holds up — speed, reliability, safety, and how expensive it is to change later — sits in a vocabulary most product managers were never taught. This is the translation.",
       "embed": "NFR_Guide.html"
     },
     {
@@ -186,9 +186,9 @@
       "short": "Data arch repo guide",
       "order": 20,
       "status": "live",
-      "blurb": "1,202 repositories mapped into ten clusters, four journeys traced end to end, a decision tree for “where do I look?” and a triage tool for “what broke?”, with ownership labeled documented, inferred or contested.",
+      "blurb": "1,202 code repositories sorted into ten groups, four journeys traced end to end, and a tool for “something broke, where do I look?” Every owner labeled documented, guessed or disputed.",
       "h1": "Where do I look, in 1,202 repositories?",
-      "lede": "A product manager gets told something is broken and faces the whole GitHub org with no map. This is an orientation map built from repository metadata, and it says so on every screen.",
+      "lede": "A product manager gets told something is broken and faces 1,202 repositories with no map. This is that map. It is built from repository data rather than from anyone's knowledge, and it says so on every screen.",
       "embed": "Data_Arch_Guide.html"
     },
     {
@@ -198,9 +198,9 @@
       "order": 20,
       "kind": "group",
       "status": "live",
-      "blurb": "Two gaps and five findings that size them, taken to Amplitude rather than accepted on their face.",
+      "blurb": "Two gaps in how GoFundMe grows, and five findings that size them — checked against the data rather than taken on faith.",
       "h1": "Corporate Strategy",
-      "lede": "The growth argument the project work sits underneath. Both gaps are versions of the same problem: the platform monetises moments of generosity but does not build generous people.",
+      "lede": "The growth argument underneath everything else here. Both gaps are the same problem: the platform is good at collecting from moments of generosity and bad at creating generous people.",
       "track": "side",
       "phase": "Curiosity"
     },
@@ -212,9 +212,9 @@
       "order": 10,
       "kind": "group",
       "status": "live",
-      "blurb": "20% of donors produce 39% of GDV, and half of that sits in the 2-gift band rather than the loyal tail. The concentration analysis, the per-donor slope, and what one more gift is worth.",
+      "blurb": "20% of donors give 39% of the money, and half of that comes from people who gave exactly twice — not from the loyal regulars. Plus what one more gift is worth.",
       "h1": "How do we grow GDV?",
-      "lede": "Repeat donors are 20% of donors producing 39% of GDV, a 1.9× over-index. The money sits in the shallow end of the frequency curve, not the tail."
+      "lede": "Repeat donors are 20% of donors and 39% of the money. Most of that sits with people who gave twice, not with the loyal few."
     },
     {
       "id": "gdv-donors",
@@ -223,9 +223,9 @@
       "short": "Acquire better donors",
       "order": 10,
       "status": "live",
-      "blurb": "“Better” defined as likely to return, then measured: a 12.3% baseline repeat rate, a median 23-day window, and roughly $36M a year per percentage point of lift.",
+      "blurb": "A better donor is one who gives again. Today 12.3% do, within about 23 days — and each extra percentage point is worth roughly $36M a year.",
       "h1": "How do we acquire better donors?",
-      "lede": "A better donor is one who gives again, because a second gift nearly doubles annual value and can be measured in 90 days rather than a year."
+      "lede": "A better donor is one who gives again. A second gift nearly doubles what they are worth in a year, and you can measure it in 90 days instead of waiting twelve months."
     },
     {
       "id": "gdv-super",
@@ -234,9 +234,9 @@
       "short": "Super donor relationships",
       "order": 20,
       "status": "live",
-      "blurb": "Four mechanics aimed at the 2-gift band: an owner, a Braze program in the 23-day window, the Giving Conference as research, and Giving Wrapped.",
+      "blurb": "Four ideas aimed at the second gift: give the group an owner, email them in the three weeks that matter, get some of them in a room, and give them a yearly recap.",
       "h1": "How do we build better relationships with super donors?",
-      "lede": "7.1 million people produce 39% of GDV and receive the same experience as a first-time donor. The program belongs at the second gift, where 4.9M people and $871M already sit."
+      "lede": "7.1 million people give 39% of the money and get exactly the same experience as a first-time donor. The programme belongs at the second gift, where 4.9 million people and $871M already sit."
     },
     {
       "id": "gdv-cool",
@@ -245,9 +245,9 @@
       "short": "Make giving cool",
       "order": 30,
       "status": "live",
-      "blurb": "Chat and copy-link referrals return at 27–28%; organic social returns at 10.6%, below platform average. The answer is in-person community events with the donation captured in the room.",
+      "blurb": "Donors who arrive through a message or a shared link come back at 27–28%. Donors who arrive through a social post come back at 10.6%, below average. The answer is getting people in a room together.",
       "h1": "How do we make giving cool?",
-      "lede": "Coolness has to be borrowed from somewhere. The intuitive source is fame. The referral data points at people you already know."
+      "lede": "Coolness has to be borrowed from somewhere. The obvious source is fame. The data points somewhere else — at the people you already know."
     }
   ]
 }

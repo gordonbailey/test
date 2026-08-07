@@ -1,13 +1,64 @@
-<!-- Customer Intelligence overview. A group page: it frames the strategy the
-     three strands were run against, states the problem and the answer, then
-     hands off to the three project pages. -->
+<!-- Customer Intelligence overview. A group page: states the question all three
+     projects were run against, then hands off to the three project pages. -->
 
-<h2>The strategy this sits inside</h2>
+<h2>The question</h2>
+<p class="sub"><b>How do we tell a customer something true about their own fundraising that they could not work out on their own?</b></p>
+
+<p class="sub">A nonprofit can see its total raised, its average gift, its conversion rate — and has no way to tell whether any of it is good. City of Hope asked exactly that in an interview: <i>is this a good conversion rate?</i> Without an answer, an account manager has an opinion instead of a recommendation.</p>
+
+<p class="sub">A platform average is no help, because a $2M food bank and a $200M hospital foundation are not the same business. The comparison has to hold cause and size steady, and it has to end in something the organization can do.</p>
+
+<div class="note good"><b>The answer, built and running.</b> <b>3,161 accounts</b> are grouped with organizations genuinely like them — same cause, same size — and scored inside that group. Each one gets a percentile, a gap in dollars, and up to three things to try, ranked by expected lift. <a href="#/benchmarking" data-jump="benchmarking">Open the benchmarking engine</a>.</div>
+
+<h2>Three projects</h2>
+<p class="sub">One asked customers what they need. One checked what the market already sells. One built the answer to the gap both found.</p>
+
+<div class="cardgrid reveal">
+  <a class="pcard" href="#/interviews" data-jump="interviews">
+    <span class="sp live"><i aria-hidden="true"></i>Live</span>
+    <div class="nm">Interview synthesis</div>
+    <div class="bl">39 admins across 33 organizations. They do not want more AI. They want AI they can control, understand and check. Reporting was the biggest source of pain.</div>
+    <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+  </a>
+  <a class="pcard" href="#/compintel" data-jump="compintel">
+    <span class="sp live"><i aria-hidden="true"></i>Live</span>
+    <div class="nm">Competitive intelligence</div>
+    <div class="bl">Nine vendors, eight AI launches in a year, every claim graded on its evidence. All nine now talk about trust. None of them proves anything.</div>
+    <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+  </a>
+  <a class="pcard" href="#/benchmarking" data-jump="benchmarking">
+    <span class="sp live"><i aria-hidden="true"></i>Live</span>
+    <div class="nm">Benchmarking</div>
+    <div class="bl">3,161 accounts scored against genuine peers, with the shortfall turned into a short list of what to try. 38 peer groups; 73% of the variation explained.</div>
+    <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+  </a>
+</div>
+
+<h2>They ran separately and found the same gap</h2>
+
+<div class="card reveal">
+  <div class="sk">
+    <h3>Customers asked for benchmarks by name, and nobody sells them</h3>
+    <p style="color:var(--ink-2)">Peer benchmarking exists in the market in four shapes: consultant cohorts, annual studies, quarterly reports, and one in-product claim nobody can verify. <b>No vendor shows real-time comparison inside the workflow, and none has an answer for an organization sitting below its peers.</b></p>
+  </div>
+  <div class="sk">
+    <h3>"Prove it worked" is the customer's ask and the market's blind spot</h3>
+    <p style="color:var(--ink-2)">Vine Maple Place turned Intelligent Ask on and could not tell whether it helped. Cedars-Sinai had its worst Giving Tuesday after two changes at once and could not tell which one did it. All nine competitors publish trust language; <b>not one offers lift an organization can check in its own numbers</b>.</p>
+  </div>
+  <div class="sk">
+    <h3>Attribution is where customer pain becomes an engineering problem</h3>
+    <p style="color:var(--ink-2)">96% of Salvation Army transactions carry no referral data. Feed My Starving Children cannot export the tracking tags in its own links. That is what <a href="#/instrumentation" data-jump="instrumentation">Instrumentation</a> and <a href="#/utm" data-jump="utm">UTM</a> fix, which is why those two sit outside this group but belong to the same argument.</p>
+  </div>
+</div>
+
+<div class="note warn"><b>Read the three together with care.</b> The interviews are qualitative and recruited, the competitive scan reads vendor marketing rather than behavior, and the benchmarking engine runs on one CRM export. Three sources with three different weaknesses agreeing is encouraging, not proof.</div>
+
+<h2>Background reading</h2>
 <div class="card reveal deckcard">
   <div>
     <p class="eyebrow" style="margin-bottom:4px">The doc</p>
     <div class="dt">Customer Intelligence Strategy</div>
-    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">What customer intelligence is for at GoFundMe Pro, and how the pieces compose. The three strands below were run against this frame. Proprietary &amp; confidential; GoFundMe access required.</p>
+    <p class="sub tight" style="margin:6px 0 0;font-size:.87rem">What customer intelligence is for at GoFundMe Pro, and how the pieces fit together. Proprietary &amp; confidential; GoFundMe access required.</p>
   </div>
   <div class="dl">
     <a class="btn primary" href="https://docs.google.com/document/d/1veFXagMhUMK1sSwqK81MAs87NPJOf7k_TrvzhAeyjXM/edit" target="_blank" rel="noopener">
@@ -20,74 +71,6 @@
 
 <div class="card reveal" style="margin-top:16px">
   <div class="lnks">
-    <div class="lnk"><span class="lk">Sheet</span><div><a href="https://docs.google.com/spreadsheets/d/1P42u4qe8tIiZ7eSiyKNvTJnKkxen4ChpFi4AarALr0k/edit" target="_blank" rel="noopener">Competitive capability audit and gap analysis</a><span class="lm">The claim inventory behind the competitive scan: per-vendor capabilities graded shipped, claimed-but-unverified or not-found, and the gaps nobody occupies. Also linked from <a href="#/compintel" data-jump="compintel">competitive intelligence</a></span></div></div>
+    <div class="lnk"><span class="lk">Sheet</span><div><a href="https://docs.google.com/spreadsheets/d/1P42u4qe8tIiZ7eSiyKNvTJnKkxen4ChpFi4AarALr0k/edit" target="_blank" rel="noopener">Competitive capability audit and gap analysis</a><span class="lm">Every vendor claim graded shipped, claimed-but-unproven, or not found. Also on the <a href="#/compintel-audit" data-jump="compintel-audit">audit page</a>.</span></div></div>
   </div>
 </div>
-
-<h2>The problem, and the answer</h2>
-<p class="sub">All three strands attack the same question: <b>how do we tell a customer something true about their own fundraising that they could not work out on their own?</b></p>
-
-<div class="grid3 reveal">
-  <div class="card flat">
-    <span class="pill warn">The problem</span>
-    <h3 style="margin-top:11px">A number with no reference point</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">A nonprofit sees its conversion rate, its total raised, its average gift, and cannot tell whether any of it is good. City of Hope asked exactly that in an interview: <i>is this a good conversion rate?</i> Without an answer, an account manager has an opinion rather than a recommendation, and every renewal conversation starts from scratch.</p>
-  </div>
-  <div class="card flat">
-    <span class="pill info">What is needed</span>
-    <h3 style="margin-top:11px">A comparison that survives scrutiny</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">Platform averages do not survive contact with a customer: a $2M food bank is not comparable to a $200M hospital foundation. The comparison has to hold cause and size constant, and it has to end in something the organization can <i>do</i> rather than a percentile it can only feel bad about.</p>
-  </div>
-  <div class="card flat">
-    <span class="pill good">The answer</span>
-    <h3 style="margin-top:11px">Realistic potential, through peer cohorts</h3>
-    <p class="sub" style="margin:0;font-size:.89rem">Group every eligible account with organizations genuinely like it, score it inside that group, and convert the shortfall into a ranked list of levers with an expected dollar lift on each. The output is not "you are behind" but "here is the realistic ceiling for an organization like you, and the two moves that close most of the distance".</p>
-  </div>
-</div>
-
-<div class="note good"><b>Built and working:</b> <b>3,161 accounts</b> across <b>38 peer groups</b>, with <b>73%</b> of the variation in funds raised explained inside those groups. Every account gets a percentile, a coachable gap in dollars, and up to three ranked levers — plus a scorecard PDF a seller can hand to the customer. See <a href="#/benchmarking" data-jump="benchmarking">the fundraising benchmarking engine</a>.</div>
-
-<h2>Three strands</h2>
-<p class="sub">One asked customers what they need. One checked what the market already claims to offer. One built the answer to the gap both pointed at.</p>
-
-<div class="cardgrid reveal">
-  <a class="pcard" href="#/interviews" data-jump="interviews">
-    <span class="sp live"><i aria-hidden="true"></i>Live</span>
-    <div class="nm">Interview synthesis</div>
-    <div class="bl">39 admin interviews across 33 organizations. The unmet need is not more AI — it is AI that is controllable, explainable and measurable. Reporting turned out to be the largest pain cluster in the dataset.</div>
-    <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-  </a>
-  <a class="pcard" href="#/compintel" data-jump="compintel">
-    <span class="sp live"><i aria-hidden="true"></i>Live</span>
-    <div class="nm">Competitive intelligence</div>
-    <div class="bl">Nine vendors, eight AI launches in twelve months, every claim graded on its evidence. Trust language has converged across the whole market; verifiability is unclaimed by all nine.</div>
-    <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-  </a>
-  <a class="pcard" href="#/benchmarking" data-jump="benchmarking">
-    <span class="sp live"><i aria-hidden="true"></i>Live</span>
-    <div class="nm">Benchmarking</div>
-    <div class="bl">3,161 accounts grouped with genuine peers by cause and size, scored inside that group, with the shortfall turned into a ranked list of levers. 38 peer groups; 73% of variation explained.</div>
-    <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-  </a>
-</div>
-
-<h2>Where they meet</h2>
-<p class="sub">The three ran separately and landed on the same gap.</p>
-
-<div class="card reveal">
-  <div class="sk">
-    <h3>Customers asked for benchmarks by name — and the market does not supply them</h3>
-    <p style="color:var(--ink-2)">City of Hope sees a conversion rate with no context and asks whether it is good. Meanwhile peer benchmarking exists in the market in four shapes — consultant cohorts, annual studies, quarterly reports, and one unverifiable in-product claim — but <b>no vendor evidences real-time, per-org comparison inside the workflow, and none has an answer for an organization sitting below its peers</b>. The benchmarking engine was built against that gap.</p>
-  </div>
-  <div class="sk">
-    <h3>"Prove it worked" is both the customer ask and the market's blind spot</h3>
-    <p style="color:var(--ink-2)">Vine Maple Place turned Intelligent Ask on and could not tell whether it helped. Cedars-Sinai had its worst Giving Tuesday after two simultaneous changes and could not attribute it. Independently, all nine competitors publish trust and explainability language, and <b>not one offers lift an organization can check in its own numbers</b>.</p>
-  </div>
-  <div class="sk">
-    <h3>Attribution is where the customer pain becomes an engineering problem</h3>
-    <p style="color:var(--ink-2)">96% of Salvation Army transactions carry no referral data. FMSC cannot export the UTM parameters in its own links. Source codes drop during P2P setup and at site boundaries. That is the customer-visible symptom of what the
-      <a href="#/instrumentation" data-jump="instrumentation">Instrumentation</a> and <a href="#/utm" data-jump="utm">UTM</a> projects address — which is why those two sit outside this group but belong to the same argument.</p>
-  </div>
-</div>
-
-<div class="note warn"><b>Read these together with care.</b> The interviews are qualitative and recruited, the competitive scan is vendor marketing rather than verified behavior, and the benchmarking engine runs on a single CRM export snapshot. Three sources with three different weaknesses agreeing is encouraging, not proof. Each page carries its own limits under <i>what it does not cover</i>.</div>

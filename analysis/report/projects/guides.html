@@ -2,35 +2,35 @@
      at them. The content lives on the child pages. -->
 
 <h2>Why these exist</h2>
-<p class="sub">Everything else in this portfolio is analysis: a question asked and answered. These two are reference material, written to be <b>reusable by someone who was not here</b>. The test is whether a new product manager, in their first week, can get a useful answer out of one without asking anybody and without being confidently misled.</p>
+<p class="sub">Everything else here is analysis: a question asked and answered. These two are reference material, written to be <b>useful to someone who was not here</b>. The test is whether a new product manager, in their first week, can get a real answer out of one without asking anybody and without being confidently misled.</p>
 
 <div class="cardgrid reveal">
   <a class="pcard" href="#/guide-dataarch" data-jump="guide-dataarch">
     <span class="sp live"><i aria-hidden="true"></i>Live</span>
     <div class="nm">Data arch repo guide</div>
-    <div class="bl">Runs live in-page: 1,202 repositories in ten clusters, four journeys traced end to end, a decision tree for "where do I look?", and a triage tool for "what broke?". Built from GitHub metadata, and explicit about it.</div>
+    <div class="bl">Runs live on the page. 1,202 code repositories sorted into ten groups, four journeys traced end to end, and a tool for "something broke, where do I look?"</div>
     <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
   </a>
   <a class="pcard" href="#/guide-nonfunc" data-jump="guide-nonfunc">
     <span class="sp live"><i aria-hidden="true"></i>Live</span>
     <div class="nm">Non-functional guide</div>
-    <div class="bl">Runs live in-page: the 24 requirements that decide whether a release survives production, each with a plain definition, the questions to ask engineering, and the spec language. Plus a 53-item release-readiness process, flashcards and a quiz.</div>
+    <div class="bl">Runs live on the page. The 24 things that decide whether a release survives contact with real users, each with a plain definition and the questions to ask engineering. Plus a launch checklist, flashcards and a quiz.</div>
     <div class="go">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
   </a>
 </div>
 
-<h2>What makes a handover guide work</h2>
+<h2>Three things a handover guide has to do</h2>
 <div class="card reveal">
   <div class="sk">
     <h3>State your confidence on every claim</h3>
-    <p style="color:var(--ink-2)">In the repo guide, ownership is labeled <b>documented</b>, <b>inferred</b> or <b>contested</b>, and the 271 repos it could not classify are shown as unclassified rather than forced into a cluster. A guide that hides its uncertainty gets trusted during an incident and sends someone to the wrong place.</p>
+    <p style="color:var(--ink-2)">In the repo guide, every owner is labeled <b>documented</b>, <b>guessed</b> or <b>disputed</b>, and the 271 repositories it could not sort are shown as unsorted rather than forced into a group. A guide that hides what it does not know gets trusted during an outage and sends someone to the wrong place.</p>
   </div>
   <div class="sk">
     <h3>Teach the question, not just the answer</h3>
-    <p style="color:var(--ink-2)">The non-functional guide gives every requirement <b>the questions to ask engineering</b> and the spec language to write down. The repo guide's wayfinder walks the same path a patient senior engineer would. Neither aims to make the reader an expert, only to make the next conversation a competent one.</p>
+    <p style="color:var(--ink-2)">Every entry in the non-functional guide comes with <b>the questions to ask engineering</b> and the wording to write down. Neither guide tries to make you an expert. They try to make your next conversation a competent one.</p>
   </div>
   <div class="sk">
     <h3>Hosting is most of the value</h3>
-    <p style="color:var(--ink-2)">Both are single self-contained HTML files, which is why they work offline and why they can disappear at handover. <b>Both now run inside their own page here</b>, and the source files sit in the repo alongside this site. What is still missing is an internal URL an engineer can open mid-incident — the same risk visible in the <a href="#/utm" data-jump="utm">UTM</a> tickets, where a referenced Confluence page sits in someone's personal space.</p>
+    <p style="color:var(--ink-2)">Both are single files, which is why they work offline and why they can vanish at handover. <b>Both now run inside their own page here.</b> What is still missing is an internal link someone can open in the middle of an outage.</p>
   </div>
 </div>
