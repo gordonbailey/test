@@ -364,8 +364,11 @@ def render_view(n):
     else:
         cand = os.path.join(HERE, 'projects', n['id'] + '.html')
         inner = open(cand).read() if os.path.exists(cand) else render_skeleton(n)
+    # `.pbody` scopes the section numbering: a CSS counter walks its direct h2s
+    # so every project page gets the same numbered spine as the findings tab,
+    # without fifteen files hand-numbering their own headings.
     return (f'<div class="view" data-view="{n["id"]}" hidden>'
-            + render_phead(n) + inner + '</div>')
+            + render_phead(n) + f'<div class="pbody">{inner}</div></div>')
 
 
 footer = f'''

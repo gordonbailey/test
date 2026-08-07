@@ -179,6 +179,55 @@
 .pr.rs{grid-template-columns:1fr 176px 96px 92px}
 .pr.rs .v2:first-of-type{text-align:left}
 
+
+/* ---- section numbering ----
+   The findings tab hand-numbers its sections and reads far better for it. Every
+   project page carries the same five-heading spine, so a counter gives them the
+   same navigable structure without numbering fifteen files by hand. */
+.pbody{counter-reset:sec}
+.pbody>h2{
+  counter-increment:sec;display:flex;align-items:baseline;gap:14px;
+  margin-top:64px;padding-top:22px;border-top:1px solid var(--line-2);
+}
+.pbody>h2:first-of-type{margin-top:10px;padding-top:0;border-top:none}
+.pbody>h2::before{
+  content:counter(sec,decimal-leading-zero);
+  color:var(--ink-3);font-weight:600;font-size:.82em;font-variant-numeric:tabular-nums;
+  flex:none;
+}
+/* An h3 inside a numbered section is a step within it, not a peer of it. The
+   two were within a hair of each other in weight, which is what made the pages
+   read as a flat list of headings. */
+.pbody h3{
+  font-size:.94rem;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em;
+  font-weight:700;margin:34px 0 8px;
+}
+.pbody .sk h3,.pbody .card h3,.pbody .acc h3,.pbody details h3{
+  font-size:1rem;color:var(--ink);text-transform:none;letter-spacing:-.01em;
+  font-weight:650;margin:26px 0 10px;
+}
+.pbody .card h3:first-child,.pbody .sk h3{margin-top:0}
+
+/* ---- accordion list ----
+   One row per item, collapsed. Used for the caveats and next steps, which are
+   the two blocks every page ends on: worth having, rarely read top to bottom. */
+.acc{display:flex;flex-direction:column;gap:8px}
+.acc details{border:1px solid var(--hair);border-radius:var(--r-sm);background:var(--surface);
+  overflow:hidden;box-shadow:var(--shadow)}
+.acc summary{padding:13px 16px;cursor:pointer;font-weight:650;font-size:.9rem;list-style:none;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;line-height:1.45}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary:hover{background:var(--line-2)}
+.acc summary .caret{width:15px;height:15px;color:var(--ink-3);flex:none;
+  transition:transform .28s var(--ease)}
+.acc details[open] summary .caret{transform:rotate(90deg)}
+.acc details[open] summary{border-bottom:1px solid var(--line-2)}
+.acc .accbody{padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--ink-2);
+  animation:panelIn .3s var(--ease-out) both}
+.acc .accbody p{margin:0}
+.acc .accnum{color:var(--ink-3);font-weight:600;font-variant-numeric:tabular-nums;
+  margin-right:2px;flex:none}
+
 /* ---- talk track ---- */
 .tt{display:flex;flex-direction:column;gap:16px}
 .ttb .k{font-size:.69rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;

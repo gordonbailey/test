@@ -13,6 +13,13 @@
 <!-- ══════════════════════════ HOW IT WORKS ══════════════════════════ -->
 <div class="panel" id="panel-guide" role="tabpanel" aria-labelledby="tab-guide">
 
+  <div class="stats reveal" style="margin-top:26px">
+    <div class="stat"><div class="k">Accounts reviewed</div><div class="v" data-count="6759">6,759</div><div class="d">from the CRM export</div></div>
+    <div class="stat"><div class="k">Comparable</div><div class="v" data-count="3161">3,161</div><div class="d">had enough clean data</div></div>
+    <div class="stat"><div class="k">Peer groups</div><div class="v" data-count="38">38</div><div class="d">cause area × size</div></div>
+    <div class="stat accent"><div class="k">Model accuracy</div><div class="v">73%</div><div class="d">of variation explained</div></div>
+  </div>
+
   <p class="eyebrow">The problem</p>
   <h2 style="margin-top:0">"Raised $180,000" doesn't tell you anything</h2>
   <p class="sub">$180k is a brilliant year for a small animal rescue and a poor one for a hospital foundation. "Good" only means something <b>next to organizations genuinely like you</b>.</p>
@@ -36,12 +43,6 @@
   <div class="note warn"><b>What this version does, and what it does not.</b> The range above is worked out <b>per organization, per year</b>. The fuller version of the idea works <b>per campaign</b>, and also reads success from <i>momentum</i> (this week against the peer group's week) and the <i>shape of the donation curve</i>. None of that is possible from this data — it has annual and all-time totals, no campaign records and no weekly figures. The peer-group machinery is the same either way, so campaign data would drop straight into it.</div>
 
 
-  <div class="stats reveal" style="margin-top:26px">
-    <div class="stat"><div class="k">Accounts reviewed</div><div class="v" data-count="6759">6,759</div><div class="d">from the CRM export</div></div>
-    <div class="stat"><div class="k">Comparable</div><div class="v" data-count="3161">3,161</div><div class="d">had enough clean data</div></div>
-    <div class="stat"><div class="k">Peer groups</div><div class="v" data-count="38">38</div><div class="d">cause area × size</div></div>
-    <div class="stat accent"><div class="k">Model accuracy</div><div class="v">73%</div><div class="d">of variation explained</div></div>
-  </div>
 
   <h2>The five steps</h2>
   <div class="card reveal"><div class="bars" id="g-steps" style="--lw:34px;--vw:0px;--lwm:28px;--vwm:0px"></div></div>
@@ -200,33 +201,48 @@
 <!-- ══════════════════════════ COHORTS ══════════════════════════ -->
 <div class="panel" id="panel-cohorts" role="tabpanel" aria-labelledby="tab-cohorts" hidden>
   <p class="eyebrow">Peer groups</p>
-  <h2 style="margin-top:0">The 38 peer groups</h2>
-  <p class="sub">A peer group is one cause area at one size — the organizations any given account is actually measured against. Pick one to see its spread and its members.</p>
+  <h2 style="margin-top:0">Who each organization is measured against</h2>
+  <p class="sub">A peer group is one cause area at one size. It is the basis of every score on this site: an organization is never compared to the platform, only to these people.</p>
+
+  <div class="stats reveal">
+    <div class="stat"><div class="k">Peer groups</div><div class="v" data-count="38">38</div><div class="d">cause area × size</div></div>
+    <div class="stat accent"><div class="k">Typical group</div><div class="v" data-count="62">62</div><div class="d">organizations in it</div></div>
+    <div class="stat"><div class="k">Biggest group</div><div class="v" data-count="327">327</div><div class="d">Human Services, $1M–$5M</div></div>
+    <div class="stat"><div class="k">Matched on size only</div><div class="v" data-count="388">388</div><div class="d">too few peers in their cause</div></div>
+  </div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">01</span> &nbsp;Pick a group</h2>
+  <p class="sub">Every group, one bar each. The bar shows the range its members actually raise.</p>
   <div class="card reveal">
     <div class="controls" style="margin-bottom:14px">
-      <div class="fld"><label for="c-sector">Sector</label><select id="c-sector"></select></div>
-      <div class="fld"><label for="c-band">Size band</label><select id="c-band"></select></div>
-      <div class="fld"><label for="c-metric">Metric</label><select id="c-metric"></select></div>
+      <div class="fld"><label for="c-sector">Cause area</label><select id="c-sector"></select></div>
+      <div class="fld"><label for="c-band">Size</label><select id="c-band"></select></div>
+      <div class="fld"><label for="c-metric">Measure</label><select id="c-metric"></select></div>
       <div class="fld"><label for="c-sort">Sort by</label>
         <select id="c-sort">
-          <option value="n">Group size</option>
-          <option value="med">Median (metric)</option>
+          <option value="n">How many organizations</option>
+          <option value="med">Typical result</option>
           <option value="exc">Standouts (count)</option>
           <option value="excshare">Standouts (share)</option>
-          <option value="spread">Spread (p75 ÷ median)</option>
+          <option value="spread">How spread out</option>
           <option value="name">Name (A–Z)</option>
         </select>
       </div>
     </div>
     <p class="sub tight" id="c-hint" style="font-size:.82rem;color:var(--ink-3);margin-bottom:10px"></p>
     <div class="legend">
-      <span><i style="background:var(--track)"></i>25th–75th percentile</span>
-      <span><i style="background:var(--ink-3);width:2px;height:13px;border-radius:1px"></i>median</span>
-      <span><i style="background:var(--s3)"></i>standouts (≥5× median)</span>
+      <span><i style="background:var(--track)"></i>the middle half of the group</span>
+      <span><i style="background:var(--ink-3);width:2px;height:13px;border-radius:1px"></i>the typical organization</span>
+      <span><i style="background:var(--s3)"></i>standouts, raising 5× the middle or more</span>
     </div>
     <div id="cohorts"></div>
   </div>
+  <div class="note"><b>How to read a bar.</b> The shaded block is where the middle half of the group sits, and the line inside it is the typical organization. A long bar means peers who look alike on paper still get very different results. That is normal, and it is why nobody here is told they "should" be at the middle.</div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">02</span> &nbsp;Look inside one</h2>
+  <p class="sub">Selecting a group opens its full membership, its benchmarks on every measure, and its standouts by name.</p>
   <div id="c-detail" style="margin-top:18px"></div>
+  <div class="note warn"><b>Eight groups are matched on size alone.</b> Where too few organizations shared both a cause and a size, the cause match was dropped rather than reporting a score built on five peers. 388 accounts sit in one of those, so their comparison is fair on size and blind to what they do.</div>
 </div>
 
 <!-- ══════════════════════════ ACCOUNT ══════════════════════════ -->
@@ -239,8 +255,11 @@
 
   <div class="hide-in-present">
     <p class="eyebrow">Account</p>
-    <h2 style="margin-top:0">Look up an organization</h2>
-    <p class="sub">Search by name to see where it stands against its peer group and what to recommend.</p>
+    <h2 style="margin-top:0">Look up one organization</h2>
+    <p class="sub">Everything on the other tabs, narrowed to a single customer: where they stand, what is holding them back, and what to say about it.</p>
+
+    <h2><span style="color:var(--ink-3);font-weight:600">01</span> &nbsp;Find them</h2>
+    <p class="sub">Search any of the 3,161 organizations by name, or pick a seller to see only their accounts.</p>
 
     <div class="acctcontrols">
     <div class="searchwrap">
@@ -261,7 +280,7 @@
     <div id="book" hidden style="margin-top:24px">
       <div class="stats" id="book-stats"></div>
       <h3 style="margin-top:22px" id="book-h"></h3>
-      <p class="sub tight" style="font-size:.85rem">Ranked by size of the coachable gap. Select one to open its scorecard.</p>
+      <p class="sub tight" style="font-size:.85rem">Biggest opportunity first. Pick one to open its scorecard.</p>
       <div class="card" style="padding:8px"><div class="peers" id="book-list" style="max-height:none"></div></div>
     </div>
   </div>
@@ -295,8 +314,12 @@
   </div>
 
   <div id="acct" hidden>
+    <h2 class="hide-in-present"><span style="color:var(--ink-3);font-weight:600">02</span> &nbsp;Read the scorecard</h2>
+    <p class="sub hide-in-present">Where they sit among their peers, the gap in dollars, and up to three things to try — biggest first.</p>
     <div class="hero" id="a-hero"></div>
 
+    <h2 class="hide-in-present"><span style="color:var(--ink-3);font-weight:600">03</span> &nbsp;Take it to the customer</h2>
+    <p class="sub hide-in-present">Presentation mode hides every peer and competitor name, so the screen is safe to share. The two exports carry no names either.</p>
     <div class="toolbar hide-in-present" style="margin-top:18px">
       <label class="switch">
         <input type="checkbox" id="present-toggle">
@@ -366,7 +389,20 @@
 <div class="panel" id="panel-research" role="tabpanel" aria-labelledby="tab-research" hidden>
   <p class="eyebrow">For marketing and sales</p>
   <h2 style="margin-top:0">Who to interview</h2>
-  <p class="sub">Who to approach for one-to-one interviews, for a thought leadership report. In every peer group, the three organizations furthest ahead of their peers and the three furthest behind. Same cause, same size, so the difference between them is what they <b>do</b>.</p>
+  <p class="sub">Who to approach for one-to-one interviews, for a thought leadership report. In every peer group, the three organizations furthest ahead of their peers and the three furthest behind.</p>
+
+  <div class="stats reveal">
+    <div class="stat"><div class="k">Peer groups to sample</div><div class="v" data-count="38">38</div><div class="d">big enough to have two ends</div></div>
+    <div class="stat accent"><div class="k">Names on the list</div><div class="v" data-count="228">228</div><div class="d">114 ahead · 114 behind</div></div>
+    <div class="stat"><div class="k">Interviews you need</div><div class="v">12–18</div><div class="d">two or three groups</div></div>
+    <div class="stat"><div class="k">Held back</div><div class="v" data-count="374">374</div><div class="d">too far ahead to copy</div></div>
+  </div>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">01</span> &nbsp;Why matched pairs</h2>
+  <p class="sub">Picking the best and worst <i>inside one peer group</i> holds cause and size steady, so what separates them is much more likely to be what they <b>do</b>. A national health foundation outraising a local food bank tells you nothing. A food bank outraising six comparable food banks by 4× has a mechanism behind it.</p>
+
+  <h2><span style="color:var(--ink-3);font-weight:600">02</span> &nbsp;Get the names</h2>
+  <p class="sub">The list gives you every group at once. Switch to the detail view for one group's full reasoning and the hypothesis to probe.</p>
 
   <div class="seg hide-in-present" id="rs-mode" role="tablist" aria-label="View">
     <button class="segbtn on" data-mode="table" aria-selected="true" role="tab">The list</button>

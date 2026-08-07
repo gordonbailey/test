@@ -155,12 +155,27 @@
 </details>
 
 <h2>What it does not cover</h2>
-<div class="card reveal">
-  <div class="sk"><h3>Nothing tests that the tags survive embedded forms</h3><p>A test was specified — put a donation through and check all five tags come out the other end, naming whichever handoff dropped them. It was closed without being built when the storage design changed. Until it exists, four files can be edited in ways that silently break attribution on embedded forms. The test was written and syntax-checked but never pushed.</p></div>
-  <div class="sk"><h3>One donation path still loses the tags, and a customer is waiting</h3><p>Designations write to the old table, so the tags never reach the new one. IRUSA is the named customer. Open between Shiran and Tony.</p></div>
-  <div class="sk"><h3>Two old tickets are stale rather than closed</h3><p>PRO-2098 and PRO-5251 both sit open although the work moved past them. Not a delivery risk, but the kind of thing that makes a board unreadable a year later.</p></div>
-  <div class="sk"><h3>Five tags only, and no attribution model</h3><p>This delivers the raw tags on each donation. It does not decide which one gets the credit when a donor arrives twice, and it does not cover Google or Facebook click IDs. Peer-to-peer is out of scope for now.</p></div>
-  <div class="sk"><h3>Nobody is measuring whether customers tag their links at all</h3><p>The whole feature is worthless to a nonprofit that never tags anything, and there is no tracker for that.</p></div>
+<div class="acc reveal">
+  <details>
+    <summary><span>Nothing tests that the tags survive embedded forms</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></summary>
+    <div class="accbody"><p>A test was specified — put a donation through and check all five tags come out the other end, naming whichever handoff dropped them. It was closed without being built when the storage design changed. Until it exists, four files can be edited in ways that silently break attribution on embedded forms. The test was written and syntax-checked but never pushed.</p></div>
+  </details>
+  <details>
+    <summary><span>One donation path still loses the tags, and a customer is waiting</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></summary>
+    <div class="accbody"><p>Designations write to the old table, so the tags never reach the new one. IRUSA is the named customer. Open between Shiran and Tony.</p></div>
+  </details>
+  <details>
+    <summary><span>Two old tickets are stale rather than closed</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></summary>
+    <div class="accbody"><p>PRO-2098 and PRO-5251 both sit open although the work moved past them. Not a delivery risk, but the kind of thing that makes a board unreadable a year later.</p></div>
+  </details>
+  <details>
+    <summary><span>Five tags only, and no attribution model</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></summary>
+    <div class="accbody"><p>This delivers the raw tags on each donation. It does not decide which one gets the credit when a donor arrives twice, and it does not cover Google or Facebook click IDs. Peer-to-peer is out of scope for now.</p></div>
+  </details>
+  <details>
+    <summary><span>Nobody is measuring whether customers tag their links at all</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></summary>
+    <div class="accbody"><p>The whole feature is worthless to a nonprofit that never tags anything, and there is no tracker for that.</p></div>
+  </details>
 </div>
 
 <h2>Pick this up next</h2>
