@@ -93,7 +93,9 @@ function rsPartition(g, want){
      which they do by running a different model — mass-market with a small
      average gift, or one very large campaign. They are interesting, and they
      are the worst possible source of advice another organization could copy.
-     The main list is the best performers whose margin is large but ordinary. */
+     The detail view's shortlist is the best performers whose margin is large
+     but ordinary. The list view ranks straight, because hiding them there hid
+     every account anyone would recognise. */
   const started = ranked.filter(r => !rsIsActivation(r));
   const outliers = started.filter(r => r.a.x);
   const topPool = started.filter(r => !r.a.x);
@@ -109,9 +111,17 @@ function rsPartition(g, want){
   const taken = new Set(top.map(r => r.i));
   const bot = botPool.filter(r => !taken.has(r.i)).slice(-per).reverse();
 
+  /* The straight ranking, outliers and all. Filtering standouts out of a list
+     headed "ahead of their peers" removes every account anyone at GoFundMe
+     would name: all 38 groups have a standout at number one, and the 374
+     standouts are 12% of accounts but 76% of the money. The list shows them
+     with their multiple visible; only the sampling frame in the detail view
+     holds them out. */
+  const topRaw = started.slice(0, want);
+
   return {
     ranked, activation, outliers: outliers.slice(0, want), nOutliers: outliers.length,
-    top, bot, per, room,
+    top, topRaw, bot, per, room,
     capped: per < want,
     heldPartial: started.filter(rsIsPartial).length,
   };
@@ -230,6 +240,12 @@ function rsShortlistText(){
    Every peer group on one screen, three names either side. The deep dive
    answers "what should I ask this group?"; this answers "who do I call?",
    which is the question someone actually opens the tab with. */
+/* Beating your peer group is normal at the top: 109 of the 114 names in this
+   table clear 5x, so the engine's standout flag marks almost everything here
+   and separates nothing. 25x is where the multiple stops being a performance
+   fact -- 43 of 114 -- and starts being a different model or a bad size band. */
+const RS_EXTREME = 25;
+
 const rsSectorEl = document.getElementById('rs-sector'),
       rsTbodyEl = document.getElementById('rs-tbody'),
       rsTableNote = document.getElementById('rs-table-note');
@@ -250,30 +266,35 @@ function renderTable(){
   const cell = (list, mark, tone) => list.length
     ? `<div class="rsl">${list.map(r => `<button data-i="${r.i}" title="${esc(r.a.n)}">
         <span class="nm">${esc(r.a.n)}</span>
-        <span class="mk" style="color:${tone}">${mark(r)}</span></button>`).join('')}</div>`
+        <span class="mk" style="color:${tone(r)}">${mark(r)}</span></button>`).join('')}</div>`
     : '<div class="none">— none eligible</div>';
 
-  rsTbodyEl.innerHTML = rows.map(({g, top, bot}) => `<tr>
+  rsTbodyEl.innerHTML = rows.map(({g, topRaw, bot}) => `<tr>
     <td><div class="gname">${esc(rsSector(g))}</div>
         <div class="gmeta">${esc(L.cohorts[g.c].band)} · ${g.n} orgs</div></td>
-    <td>${cell(top, r => `${rsRatio(r.a.cr)}`, 'var(--good-ink)')}</td>
-    <td>${cell(bot, r => `${money(r.a.gap)} behind`, 'var(--warn-ink)')}</td>
+    <td>${cell(topRaw, r => rsRatio(r.a.cr),
+               r => r.a.cr >= RS_EXTREME ? 'var(--warn-ink)' : 'var(--good-ink)')}</td>
+    <td>${cell(bot, r => `${money(r.a.gap)} behind`, () => 'var(--warn-ink)')}</td>
   </tr>`).join('');
 
-  const listed = rows.reduce((n, r) => n + r.top.length + r.bot.length, 0);
-  rsTableNote.textContent = `${listed} organizations across ${rows.length} peer groups. `
+  const listed = rows.reduce((n, r) => n + r.topRaw.length + r.bot.length, 0);
+  const extreme = rows.reduce((n, r) => n + r.topRaw.filter(x => x.a.cr >= RS_EXTREME).length, 0);
+  rsTableNote.innerHTML = `${listed} organizations across ${rows.length} peer groups. `
     + 'Click any name to open its full profile. Groups smaller than 12 are not shown — '
-    + 'their top and bottom are the same handful of organizations.';
+    + 'their top and bottom are the same handful of organizations. '
+    + `The <b>${extreme} multiples in amber</b> are ${RS_EXTREME}× or more: at that distance the `
+    + 'organization is running a different model, or its size band is wrong. Read those as a '
+    + 'story to tell, not a playbook to copy.';
 
   rsTbodyEl.querySelectorAll('button[data-i]').forEach(b =>
     b.addEventListener('click', () => openAccount(+b.dataset.i)));
 }
 
 function rsTableText(){
-  return rsTableRows().flatMap(({g, top, bot}) => [
+  return rsTableRows().flatMap(({g, topRaw, bot}) => [
     `${g.label} (${g.n} orgs, median ${money(L.cohorts[g.c].med)})`,
     '  Ahead — ask what is working:',
-    ...(top.length ? top.map(r => `    - ${r.a.n} (${rsRatio(r.a.cr)})`) : ['    - none eligible']),
+    ...(topRaw.length ? topRaw.map(r => `    - ${r.a.n} (${rsRatio(r.a.cr)}${r.a.x ? ', different model' : ''})`) : ['    - none eligible']),
     '  Behind — ask what is getting in the way:',
     ...(bot.length ? bot.map(r => `    - ${r.a.n} (${money(r.a.gap)} behind median)`) : ['    - none eligible']),
     '',

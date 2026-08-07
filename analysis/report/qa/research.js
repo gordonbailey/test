@@ -121,6 +121,19 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
   }
   await p.selectOption('#rs-sector', '');
 
+  /* Named-account guard. The first build of the list filtered structural
+     outliers out of the "ahead" column, which quietly removed every account
+     anyone at GoFundMe would recognise -- all 38 groups have one at number
+     one. Nothing in the layout or the counts showed it; the only tell was a
+     person asking where Tim Tebow was. These five have to stay visible. */
+  const MUST_APPEAR = ['Tim Tebow Foundation', 'Tunnel to Towers', 'World Central Kitchen',
+                       'Doctors Without Borders', 'Shriners Hospitals'];
+  const shown = await p.$$eval('#rs-tbody .rsl .nm', e => e.map(x => x.textContent));
+  for (const nm of MUST_APPEAR) {
+    n++;
+    if (!shown.some(s => s.includes(nm))) bad.push(`"${nm}" missing from the list`);
+  }
+
   // A name in the table opens that account, same as in the detail view.
   await p.click('#rs-tbody .rsl button');
   await p.waitForFunction(() => !document.getElementById('panel-acct').hidden, null, { timeout: 3000 })
