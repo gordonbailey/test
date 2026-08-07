@@ -24,6 +24,11 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
   await p.goto('file:///home/user/test/analysis/report/report.html');
   await p.evaluate(() => { location.hash = '#/benchmarking/research'; });
   await p.waitForTimeout(400);
+  // Sections ship closed; the controls live inside one.
+  const openSections = () => p.evaluate(() =>
+    document.querySelectorAll('#panel-research .sect').forEach(d => d.open = true));
+  await openSections();
+  await p.waitForTimeout(200);
 
   const groups = await p.$$eval('#rs-cohort option', o => o.map(x => x.value));
   let n = 0, emptyBottom = 0, withOutliers = 0, withOnboard = 0;
@@ -83,6 +88,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
      the panel never scrolls sideways rather than trusting the CSS. */
   for (const w of [1600, 1280, 1000, 768, 560, 420]) {
     await p.setViewportSize({ width: w, height: 900 });
+    await openSections();
     await p.click('#rs-mode .segbtn[data-mode="table"]');
     await p.waitForTimeout(120);
     const t = await p.evaluate(() => {
@@ -144,6 +150,8 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
   // Click the sub-tab rather than reassigning the hash: it is already
   // #/benchmarking/research, so the assignment fires no hashchange.
   await p.click('#tab-research');
+  await p.waitForTimeout(200);
+  await openSections();
   await p.waitForTimeout(200);
   await p.click('#rs-mode .segbtn[data-mode="detail"]');
   await p.waitForTimeout(150);

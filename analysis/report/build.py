@@ -352,6 +352,77 @@ def guide_payload(n):
     return len(raw)
 
 
+# ---- collapsible sections ---------------------------------------------------
+# Every page has the same shape: intro, then a handful of big sections. Left
+# expanded, a reader has to scroll past all of it to find the one part they
+# came for. So each top-level h2 and everything under it becomes one closed
+# block, and the page collapses to its own table of contents.
+#
+# The one-line summary under each heading matters more than it looks: without
+# it a closed page is a stack of unlabelled bars, and the reader has to open
+# every one to find anything.
+SECTION_BLURBS = {
+    'the problem':            'Who was stuck, on what, and why it mattered.',
+    'what was done':          'The actual work, in order, including what was tried and dropped.',
+    'what came out of it':    'Findings, decisions and numbers.',
+    'the tickets':            'Every ticket, checked against Jira rather than the slide.',
+    'what it does not cover': 'Scope held back on purpose, and the known soft spots.',
+    'pick this up next':      'The first thing the next person should do.',
+}
+
+_H2 = re.compile(r'<h2(?![^>]*\bclass="[^"]*\bnosect\b)[^>]*>(.*?)</h2>', re.S)
+_CARET = ('<svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+          'stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>')
+
+
+def _div_end(s, start):
+    """Index just past the </div> that closes the <div> opening at `start`."""
+    depth = 0
+    for m in re.finditer(r'<div\b|</div>', s[start:]):
+        if m.group(0) == '</div>':
+            depth -= 1
+            if depth == 0:
+                return start + m.end()
+        else:
+            depth += 1
+    raise ValueError('unbalanced div at %d' % start)
+
+
+def _at_top_level(html, pos):
+    """True when `pos` sits outside every div/details in `html`."""
+    depth = 0
+    for m in re.finditer(r'<div\b|</div>|<details\b|</details>', html[:pos]):
+        depth += -1 if m.group(0).startswith('</') else 1
+    return depth == 0
+
+
+def sectionize(html, open_first=False):
+    """Wrap every top-level h2 and its body in a closed <details>.
+
+    Only h2s at the top level qualify. The account tab numbers its steps with
+    h2s nested inside the scorecard container, and treating one of those as a
+    section boundary swallowed the rest of the panel into a collapsed block --
+    the scorecard rendered inside a closed <details> and never appeared.
+    """
+    heads = [h for h in _H2.finditer(html) if _at_top_level(html, h.start())]
+    if len(heads) < 2:
+        return html
+    out = [html[:heads[0].start()]]
+    for i, h in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(html)
+        title = re.sub(r'<[^>]+>', '', h.group(1)).strip()
+        blurb = SECTION_BLURBS.get(title.lower(), '')
+        body_html = html[h.end():end].strip()
+        op = ' open' if (open_first and i == 0) else ''
+        out.append(
+            f'<details class="sect"{op}>'
+            f'<summary><span class="sh"><span class="st">{h.group(1)}</span>'
+            + (f'<span class="sd">{blurb}</span>' if blurb else '')
+            + f'</span>{_CARET}</summary>'
+            f'<div class="sectbody">{body_html}</div></details>')
+    return ''.join(out)
+
+
 def render_view(n):
     inner = n.get('body')
     if inner == '__BENCHMARKING__':
@@ -364,9 +435,27 @@ def render_view(n):
     else:
         cand = os.path.join(HERE, 'projects', n['id'] + '.html')
         inner = open(cand).read() if os.path.exists(cand) else render_skeleton(n)
-    # `.pbody` scopes the section numbering: a CSS counter walks its direct h2s
-    # so every project page gets the same numbered spine as the findings tab,
-    # without fifteen files hand-numbering their own headings.
+    # Sub-tab panels are sectionized one at a time so a section never swallows
+    # the panel boundary; a project page is one run. The panel's extent is found
+    # by counting div tags rather than by matching its closing tag -- a regex for
+    # that silently ate everything after the last panel, which reparented four
+    # later views out of .wrap and was only visible as a layout-sweep failure.
+    if n.get('body') == '__BENCHMARKING__':
+        out, i = [], 0
+        for m in re.finditer(r'<div class="panel"[^>]*>', inner):
+            if m.start() < i:
+                continue
+            end = _div_end(inner, m.start())
+            out.append(inner[i:m.end()])
+            out.append(sectionize(inner[m.end():end - len('</div>')]))
+            out.append('</div>')
+            i = end
+        out.append(inner[i:])
+        inner = ''.join(out)
+    else:
+        inner = sectionize(inner)
+    # `.pbody` scopes the section numbering: a CSS counter walks its sections so
+    # every page gets the same numbered spine without hand-numbering the files.
     return (f'<div class="view" data-view="{n["id"]}" hidden>'
             + render_phead(n) + f'<div class="pbody">{inner}</div></div>')
 
@@ -398,7 +487,7 @@ for _m in re.finditer(r'data-guide="([\w-]+)"', markup):
 # rendered by the same code path as the charts it contains.
 app = (app.replace('__RD__', rd)
           .replace('__EXTRA__', extra)
-          .replace('__METHOD__', json.dumps(method)))
+          .replace('__METHOD__', json.dumps(sectionize(method))))
 nav = [{'id': n['id'], 'title': n['title'], 'short': n.get('short', n['title']),
         'parent': n.get('parent'), 'status': n.get('status', 'awaiting')} for n in NODES]
 nav.append({'id': 'home', 'title': SITE['title'], 'short': 'Home', 'parent': None,
