@@ -14,7 +14,7 @@
 const NODES = __NODES__;
 const BY_ID = Object.fromEntries(NODES.map(n => [n.id, n]));
 const SUBTABS = {guide:'tab-guide', findings:'tab-find', cohorts:'tab-cohorts',
-                 account:'tab-acct', methodology:'tab-method'};
+                 account:'tab-acct', research:'tab-research', methodology:'tab-method'};
 const SUBSLUG = Object.fromEntries(Object.entries(SUBTABS).map(([k, v]) => [v, k]));
 
 const railEl   = document.getElementById('rail');

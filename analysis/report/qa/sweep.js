@@ -34,7 +34,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
       await p.waitForTimeout(140);
       // benchmarking has five sub-tabs; check each
       const subs = id === 'benchmarking'
-        ? ['guide', 'findings', 'cohorts', 'account', 'methodology'] : [null];
+        ? ['guide', 'findings', 'cohorts', 'account', 'research', 'methodology'] : [null];
       for (const s of subs) {
         if (s) { await p.evaluate(s => { location.hash = '#/benchmarking/' + s; }, s); await p.waitForTimeout(160); }
         const r = await p.evaluate(() => {

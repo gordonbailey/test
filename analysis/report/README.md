@@ -59,15 +59,26 @@ projects" section rather than disappearing.
 
 ## QA
 
-`node analysis/report/qa/sweep.js` renders `report.html` at nine widths and
-walks every view discovered from the rail — 189 checks — asserting no
-horizontal overflow, exactly one visible view, that view inside `.wrap`, and no
-text spilling its own box. New projects are covered automatically.
+Four scripts, all in `analysis/report/qa/`.
 
-It reads `report.html` directly and prints the number of checks it actually
-ran. Both details matter: the version of this script that lived in `/tmp` read a
-*copy* of the page and reported a hardcoded count, so it kept reporting a clean
-sweep against a build that was hours out of date.
+- **`sweep.js`** renders `report.html` at nine widths and walks every view
+  discovered from the rail, plus the benchmarking sub-tabs — 198 checks —
+  asserting no horizontal overflow, exactly one visible view, that view inside
+  `.wrap`, and no text spilling its own box. New projects are covered
+  automatically.
+- **`research.js`** walks all 38 peer groups in the research-targets tab at both
+  shortlist sizes, checking the lists stay disjoint, neither end empties, and no
+  tag overruns its track. The sweep only ever sees the first group, and the
+  bugs were all in the others.
+- **`sandbox.js`** and **`guides.js`** run against `serve.js`, which hosts the
+  page inside a sandboxed iframe with the artifact's own flags. `pushState`
+  throws there, canvas export behaves differently, and a `srcdoc` guide will not
+  mount from `file://` — none of it reproduces locally.
+
+Every script reads the built `report.html` fresh and prints the number of checks
+it actually ran. Both details matter: an early version of `sweep.js` lived in
+`/tmp`, read a *copy* of the page, and reported a hardcoded count — so it kept
+reporting a clean sweep against a build that was hours out of date.
 
 ## Client exports
 

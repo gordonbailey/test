@@ -39,6 +39,7 @@ method = here('method.html')
 app    = here('app.js')
 acct   = here('account.js')
 scard  = here('scorecard.js')
+resrch = here('research.js')
 shell  = here('shell.js')
 reg    = json.loads(here('projects.json'))
 rd     = open(A + 'report_data_compact.json').read()
@@ -436,7 +437,7 @@ head = head.replace('__TITLE__', esc(SITE['title']))
 out = (head + shcss + acss + markup
        + '<script type="application/json" id="lookup-data">' + safe + '</script>\n'
        + '\n'.join(GUIDE_PAYLOADS) + '\n'
-       + '<script>\n' + app + '\n' + acct + '\n' + scard + '\n' + shell + '\n</script>\n')
+       + '<script>\n' + app + '\n' + acct + '\n' + scard + '\n' + resrch + '\n' + shell + '\n</script>\n')
 out_path = os.environ.get('OUT', os.path.join(HERE, 'report.html'))
 open(out_path, 'w').write(out)
 print('wrote', out_path)

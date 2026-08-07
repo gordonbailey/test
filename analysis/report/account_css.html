@@ -144,6 +144,12 @@
 .pr .s2{font-size:.73rem;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pr .v2{font-size:.82rem;font-variant-numeric:tabular-nums;text-align:right}
 .pr .v2 small{display:block;color:var(--ink-3);font-size:.7rem}
+/* Research shortlist rows carry a tag column. 176px is set by the longest
+   label the tags produce ("$614K below median"), measured rather than guessed —
+   a nowrap pill overruns its track silently, with no scrollbar and no clipping
+   to give it away. */
+.pr.rs{grid-template-columns:1fr 176px 96px 92px}
+.pr.rs .v2:first-of-type{text-align:left}
 
 /* ---- talk track ---- */
 .tt{display:flex;flex-direction:column;gap:16px}
@@ -185,6 +191,11 @@ body.present .presentbar{display:flex}
   .act .lift{grid-column:2;text-align:left}
   .pr{grid-template-columns:1fr 78px}
   .pr .v2:last-child{display:none}
+  /* The tag and the money both go; the percentile is the one number that
+     still means something without room for the other two. */
+  .pr.rs{grid-template-columns:1fr 78px}
+  .pr.rs .v2:first-of-type,.pr.rs .v2:nth-of-type(2){display:none}
+  .pr.rs .v2:last-child{display:block}
 }
 </style>
 <style>
